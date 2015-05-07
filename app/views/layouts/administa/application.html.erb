@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Administa</title>
+
+  <%= stylesheet_link_tag    "administa/application", media: "all" %>
+  <%= javascript_include_tag "administa/application" %>
+  <%= csrf_meta_tags %>
+
+  <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+  <!-- Font Awesome Icons -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <!-- Ionicons -->
+  <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="skin-blue">
+    <!-- The Body contents will be rendered by React components in browser -->
+    <%= yield %>
+</body>
+</html>

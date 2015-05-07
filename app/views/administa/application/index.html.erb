@@ -1,0 +1,9 @@
+<div id="initial-data" data-json="<%= @result.to_json %>" />
+
+<script type="text/javascript">
+  jQuery(function(){
+
+    var data =  Administa.initialData();
+    Administa.render(data);
+  });
+</script>

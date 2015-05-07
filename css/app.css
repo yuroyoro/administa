@@ -1,0 +1,17 @@
+.main {
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.content-wrapper{
+}
+
+.form-group blockquote {
+  font-size: 14px;
+  padding: 0px 20px;
+}
+
+.resource-list .box-body {
+  scroll: auto;
+}
