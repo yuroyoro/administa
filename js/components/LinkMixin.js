@@ -4,6 +4,27 @@ import ResourceActions from 'actions/ResourceActions';
 var Link = Router.Link;
 
 export default {
+  transitionToShow(name, id, pagination) {
+    var options = {
+      name:  name,
+      id:    id,
+      page:  pagination.page,
+      limit: pagination.limit,
+      order: pagination.order,
+      q:     pagination.q
+    };
+
+    var params = { name: name, id: id };
+    var query = this.linkToListQuery(options);
+
+    console.log("--transitionToShow");
+    console.log(params);
+    console.log(query);
+    console.log("---");
+
+    this.transitionTo('show', params, query);
+  },
+
   linkToEdit(options = {}) {
     let name  = options.name;
     let id    = options.id;
@@ -17,7 +38,7 @@ export default {
       return true;
     };
 
-    var classes = options.classes || "btn btn-primary btn-xs"
+    var classes = options.classes || "btn btn-primary btn-xs btn-flat"
 
     var link = <Link to='edit' params={ params } query={ query } onClick={ f } className={classes} >{ label }</Link>;
     return link;
@@ -36,7 +57,7 @@ export default {
       return true;
     };
 
-    var classes = options.classes || "btn btn-primary btn-xs"
+    var classes = options.classes || "btn btn-primary btn-xs btn-flat"
 
     var link = <Link to='show' params={ params } query={ query } onClick={ f } className={classes}>{ label }</Link>;
     return link;
@@ -62,6 +83,17 @@ export default {
     );
   },
 
+  linkAttrs(name, id, pagination){
+    return {
+      name:  name,
+      id:    id,
+      page:  pagination.page,
+      limit: pagination.limit,
+      order: pagination.order,
+      q:     pagination.q
+    }
+  },
+
   linkToListQuery(options = {}) {
     return {
       page:  options.page,
@@ -73,9 +105,10 @@ export default {
 
   linkToListHandler(options = {}) {
     var query = this.linkToListQuery(options);
+    var transition = !(options.transition == false);
     var f = () => {
-     ResourceActions.list(options.name, query);
-      return true;
+      ResourceActions.list(options.name, query);
+      return transition;
     };
 
     return f;

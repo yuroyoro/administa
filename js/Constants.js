@@ -14,8 +14,11 @@ var keyMirror = function(obj) {
 };
 
 export default keyMirror({
-  INITIALIZE: null,
-  RESOURCE_FETCH: null,
-  RESOURCE_LIST: null,
-  RESOURCE_UPDATED: null,
+  INITIALIZE:         null,
+  RESOURCE_FETCH:     null,
+  RESOURCE_LIST:      null,
+  RESOURCE_UPDATED:   null,
+  DIALOG_OPENED:      null,
+  DIALOG_CLOSED:      null
+
 });

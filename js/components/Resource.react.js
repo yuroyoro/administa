@@ -10,19 +10,24 @@ export default React.createClass({
   displayName: 'Resource',
 
   getInitialState() {
-    return ResourceStore.getState();
+    return ResourceStore.getState(this.props.params.name);
   },
 
   componentDidMount() {
-    ResourceStore.addChangeListener(this._onChange);
+    ResourceStore.addEventListener(this.props.params.name, this._onChange);
   },
 
   componentWillUnmount() {
-    ResourceStore.removeChangeListener(this._onChange);
+    ResourceStore.removeEventListener(this.props.params.name, this._onChange);
   },
 
   _onChange() {
-    this.setState(ResourceStore.getState());
+    var st = ResourceStore.getState(this.props.params.name);
+    console.log("Resoruce: _onChange");
+    console.log(st);
+
+    this.setState(st);
+    // this.setState(ResourceStore.getState(this.props.params.name));
   },
 
   contextTypes: {
@@ -35,12 +40,12 @@ export default React.createClass({
 
     var leftcol = 12;
     var rightcol= 12;
-    var id   = this.state.id   || this.props.params.id;
-    var name = this.state.name || this.props.params.name;
-    var resource   = this.state.resource   || {};
-    var resources  = this.state.resources  || [];
-    var settings   = this.state.settings   || {};
-    var pagination = this.state.pagination || {};
+    var id   = this.state.currentId || this.props.params.id;
+    var name = this.state.name      || this.props.params.name;
+    var resource   = this.state.currentResource || {};
+    var resources  = this.state.resources       || [];
+    var settings   = this.state.settings        || {};
+    var pagination = this.state.pagination      || {};
 
     console.log('resource = ');
     console.log(resource);

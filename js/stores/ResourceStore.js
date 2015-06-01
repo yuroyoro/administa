@@ -3,41 +3,89 @@ import Constants     from '../Constants';
 import AppDispatcher from '../AppDispatcher';
 import assign        from 'object-assign';
 
+var states = {};
 
-var CHANGE_EVENT = 'change';
+class ResourceState {
+  constructor(name, data = {}) {
+    this.name            = name            || '';
+    this.currentId       = data.id;
+    this.currentResource = data.resource;
+    this.settings        = data.settings   || {};
+    this.resources       = data.resources  || [];
+    this.pagination      = data.pagination || {};
+  }
 
-var id   = null;
-var name = '';
-var settings  = {}
-var resource  = null;
-var resources = [];
-var pagination = {};
+  update(other) {
+    if (other.currentId)       this.currentId       = other.currentId;
+    if (other.currentResource) this.currentResource = other.currentResource;
+    if (other.resources)       this.resources       = other.resources;
+    if (other.settings)        this.settings        = other.settings;
+    if (other.pagination)      this.pagination      = other.pagination;
+    return this;
+  }
+
+  clone() {
+    return new ResourceState( this.name, {
+      id:         this.currentId,
+      resource:   this.currentResource,
+      settings:   this.settings,
+      resources:  this.resources,
+      pagination: this.pagination
+    });
+  }
+}
 
 var ResourceStore = assign({}, Events.EventEmitter.prototype,  {
 
-  emitChange() {
-    this.emit(CHANGE_EVENT);
+  eventTag(name) {
+    return "resource:"  + name;
   },
 
-  addChangeListener(callback) {
-    this.on(CHANGE_EVENT, callback);
+  emitEvent(name) {
+    this.emit(this.eventTag(name));
+
+    if(name != "*") {
+      this.emit(this.eventTag("*"));
+    }
   },
 
-  removeChangeListener(callback) {
-    this.removeListener(CHANGE_EVENT, callback);
+  addEventListener(name, callback) {
+    this.on(this.eventTag(name), callback);
   },
 
-  getState() {
-    console.log('store getState');
-    return {
-      id:         id,
-      name:       name,
-      resource:   resource,
-      resources:  resources,
-      settings:   settings,
-      pagination: pagination
-    };
-  }
+  removeEventListener(name, callback) {
+    this.removeListener(this.eventTag(name), callback);
+  },
+
+  updateState(name, data) {
+    var old   = this.getState(name);
+    var state = new ResourceState(name, data);
+
+    console.log('update state');
+    console.log('old :');
+    console.log(old);
+    console.log('new ');
+    console.log(state);
+    if(old) {
+      state = old.clone().update(state);
+    }
+
+    console.log('result');
+    console.log(state);
+    this.setState(name, state);
+  },
+
+  setState(name, state) {
+    states[name] = state;
+  },
+
+  getState(name) {
+    return states[name];
+  },
+
+  getAllState() {
+    return states;
+  },
 
 });
 
@@ -46,45 +94,45 @@ AppDispatcher.register((action) => {
     case Constants.INITIALIZE:
       console.log('store INITIALIZE');
       var data = action.data;
-      name       = data.name;
-      id         = data.id;
-      settings   = data.settings;
-      resource   = data.resource;
-      resources  = data.resources;
-      pagination = data.pagination;
+      console.log(data);
+      var name = data.name;
 
-      ResourceStore.emitChange();
+      var state = new ResourceState(name, data);
+      console.log(state);
+
+      ResourceStore.setState(name, state);
+      ResourceStore.emitEvent(name);
+
       break;
-
     case Constants.RESOURCE_FETCH:
       console.log('store RESOURCE_FETCH');
-      console.log(action);
-      name     = action.name;
-      resource = action.resource;
-      id       = resource.id;
 
-      ResourceStore.emitChange();
+      var data = action.data;
+      var name = data.name;
+
+      ResourceStore.updateState(name, data);
+      ResourceStore.emitEvent(name);
+
       break;
-
     case Constants.RESOURCE_LIST:
       console.log('store RESOURCE_LIST');
-      name       = action.name;
-      resources  = action.resources;
-      pagination = action.pagination;
+      var data = action.data;
+      var name = data.name;
 
-      ResourceStore.emitChange();
+      ResourceStore.updateState(name, data);
+      ResourceStore.emitEvent(name);
+
       break;
-
     case Constants.RESOURCE_UPDATED:
       console.log('store RESOURCE_UPDATED');
-      console.log(action);
-      name     = action.name;
-      resource = action.resource;
-      id       = resource.id;
 
-      ResourceStore.emitChange();
+      var data = action.data;
+      var name = data.name;
+
+      ResourceStore.updateState(name, data);
+      ResourceStore.emitEvent(name);
+
       break;
-
     default: // no op
   }
 });

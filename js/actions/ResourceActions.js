@@ -23,9 +23,9 @@ export default {
       console.log('fetch done:' + url);
       console.log(data);
       AppDispatcher.dispatch({
-        type:     Constants.RESOURCE_FETCH,
-        name:     name,
-        resource: data.resource
+        type: Constants.RESOURCE_FETCH,
+        name: name,
+        data: data
       });
     })
     .fail((xhr, status, err) => {
@@ -47,10 +47,9 @@ export default {
     .done((data) => {
       console.log(data);
       AppDispatcher.dispatch({
-        type:      Constants.RESOURCE_LIST,
-        name:      name,
-        resources: data.resources,
-        pagination: data.pagination
+        type: Constants.RESOURCE_LIST,
+        name: name,
+        data: data
       });
     })
     .fail((xhr, status, err) => {
@@ -72,17 +71,15 @@ export default {
     .done((data) => {
       console.log(data);
       AppDispatcher.dispatch({
-        type:     Constants.RESOURCE_UPDATED,
-        name:     name,
-        resource: data.resource
+        type: Constants.RESOURCE_UPDATED,
+        name: name,
+        data: data
       });
     })
     .fail((xhr, status, err) => {
       console.error(url, status, err.toString());
     }).promise();
-
   }
-
 }
 
 

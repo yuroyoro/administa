@@ -1,0 +1,96 @@
+import Events        from 'events'
+import Constants     from '../Constants';
+import AppDispatcher from '../AppDispatcher';
+import assign        from 'object-assign';
+
+var dialogs = {};
+
+class DialogState {
+  constructor(name, component, props) {
+    this.name      = name;
+    this.component = component;
+    this.props     = props;
+    this.opened    = false;
+  }
+
+  open() {
+    this.opened = true;
+  }
+
+  close() {
+    this.opened = false;
+  }
+}
+
+var DialogStore = assign({}, Events.EventEmitter.prototype,  {
+
+  eventTag(name) {
+    return "dialog:"  + name;
+  },
+
+  emitEvent(name) {
+    this.emit(this.eventTag(name));
+
+    if(name != "*") {
+      this.emit(this.eventTag("*"));
+    }
+  },
+
+  addEventListener(name, callback) {
+    this.on(this.eventTag(name), callback);
+  },
+
+  removeEventListener(name, callback) {
+    this.removeListener(this.eventTag(name), callback);
+  },
+
+  setState(name, dialog) {
+    dialogs[name] = dialog;
+    console.log('DialogStore: setState: ' + name);
+    console.log(dialog);
+    console.log(dialogs);
+
+  },
+
+  getState(name) {
+    return dialogs[name];
+  },
+
+  getAllState() {
+    return dialogs;
+  },
+});
+
+AppDispatcher.register((action) => {
+  switch(action.type) {
+    case Constants.DIALOG_OPENED:
+      var data = action.data;
+      var name = data.name;
+
+      var dialog = new DialogState(name, data.component, data.props);
+
+      dialog.open();
+      DialogStore.setState(name, dialog);
+      console.log('DialogStore: OPENED');
+      console.log(dialog);
+
+      DialogStore.emitEvent(name);
+      break;
+
+    case Constants.DIALOG_CLOSED:
+      var data = action.data;
+      var name = data.name;
+
+      console.log('DialogStore: CLOSED');
+      var dialog = DialogStore.getState(name);
+      if( dialog ) {
+        dialog.close();
+        DialogStore.setState(name, dialog);
+        DialogStore.emitEvent(name);
+      }
+
+      break;
+    default: // no op
+  }
+});
+export default DialogStore;

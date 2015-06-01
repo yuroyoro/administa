@@ -25,6 +25,11 @@ export default React.createClass({
     let name = this.props.name;
     let id   = resource.id;
 
+    console.log('editLink');
+    console.log(name);
+    console.log(resource);
+    console.log(id);
+
     var linkAttrs = {
       name:  name,
       id:    id,
@@ -35,12 +40,15 @@ export default React.createClass({
       q:     this.props.pagination.q
     }
 
-    return this.linkToEdit(linkAttrs);
+    var res = this.linkToEdit(linkAttrs);
+    console.log(res);
+    console.log('done');
+    return res;
   },
 
   properties() {
     return this.props.settings.show.columns.map((col) => {
-      return <Property column={ col } value={ this.props.resource[col] } key={ col }/>;
+      return <Property column={ col } resource={ this.props.resource } settings={ this.props.settings } key={ col.name }/>;
     });
   },
 
@@ -50,12 +58,13 @@ export default React.createClass({
     var classes = "resource-detail" ;
     classes += " col-md-" + this.props.col;
 
-    if (!resource) {
+    if (!resource.id) {
       return <div className={ classes } />
     }
 
     var properties = this.properties();
 
+    console.log("call editLink");
     return(
       <div className={ classes }>
         <div className="box box-primary">

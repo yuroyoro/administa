@@ -5,7 +5,12 @@ module Administa
       def show
 
         @result = index_result
-        @result[:resource] = resource(params)
+
+        includes = model.includes(:show)
+        resource = model.find(params[:id], includes)
+
+        @result[:id]       =  resource.id
+        @result[:resource] =  model.as_json(resource, includes:includes)
 
         respond_to do |format|
           format.html { render :index }
@@ -13,10 +18,6 @@ module Administa
         end
       end
 
-      protected
-        def resource(options = {})
-          model.find(options[:id])
-        end
     end
   end
 end

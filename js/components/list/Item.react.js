@@ -1,6 +1,7 @@
 import Router          from 'react-router';
 import ResourceActions from 'actions/ResourceActions';
 import LinkMixin       from 'components/LinkMixin';
+import PropertyMixin   from 'components/PropertyMixin';
 
 var Link = Router.Link;
 var PT = React.PropTypes
@@ -8,42 +9,41 @@ var PT = React.PropTypes
 export default React.createClass({
   displayName: 'ResourceItem',
 
-  mixins: [LinkMixin],
+  mixins: [LinkMixin, PropertyMixin, Router.Navigation ],
 
   propTypes: {
-    resource: PT.object.isRequired,
-    settings: PT.object.isRequired
+    name:           PT.string.isRequired,
+    resource:       PT.object.isRequired,
+    columns:        PT.array.isRequired,
+    search_columns: PT.array.isRequired,
+    pagination:     PT.object.isRequired,
+    showlink:       PT.bool,
+    onclick:        PT.func,
   },
 
   showLink(resource){
-    let name = this.props.name;
-    let id   = resource.id;
 
-    var linkAttrs = {
-      name:  name,
-      id:    id,
-      label: 'show',
-      page:  this.props.pagination.page,
-      limit: this.props.pagination.limit,
-      order: this.props.pagination.order,
-      q:     this.props.pagination.q
-    }
+    var attrs = this.linkAttrs(this.props.name, resource.id, this.props.pagination);
+    attrs.label = 'show';
 
-    return this.linkToShow(linkAttrs);
+    return this.linkToShow(attrs);
   },
 
   render() {
     var resource = this.props.resource;
     var classes = this.props.selected ? "info" : "";
 
-    var settings = this.props.settings.index;
-    var cols = settings.columns.map((col) => {
-      return (<td key={ col } >{ resource[col] }</td>);
+    var cols = this.props.columns.map((col) => {
+      var label = this.toLabel(col, resource, this.props.search_columns);
+
+      return (<td key={ col.name } >{ label }</td>);
     });
-    cols.push( <td key='administa-resource-action'>{ this.showLink(resource) }</td> );
+    if( this.props.showlink ){
+      cols.push( <td key='administa-resource-action'>{ this.showLink(resource) }</td> );
+    }
 
     return(
-      <tr key={ resource.id } className={ classes }>
+      <tr key={ resource.id } className={ classes } onClick={ this.props.onclick} >
         { cols }
       </tr>
     );

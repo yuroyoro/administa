@@ -1,21 +1,39 @@
-import ResourceStore   from 'stores/ResourceStore';
+import Router          from 'react-router';
+
 import ResourceActions from 'actions/ResourceActions';
 import ResourceItem    from './Item.react';
 import Pagination      from './Pagination.react';
 import SearchBox       from './SearchBox.react';
+import LinkMixin       from 'components/LinkMixin';
+import PropertyMixin   from 'components/PropertyMixin';
 
 var PT = React.PropTypes
 
 export default React.createClass({
   displayName: 'ResourceList',
 
+  mixins: [LinkMixin, PropertyMixin, Router.Navigation ],
+
   propTypes: {
-    name:      PT.string,
-    id:        PT.number,
-    col:       PT.number,
-    resources: PT.arrayOf(PT.object),
-    settings:  PT.object.isRequired,
+    name:       PT.string,
+    id:         PT.number,
+    col:        PT.number,
+    resources:  PT.arrayOf(PT.object),
+    settings:   PT.object.isRequired,
     pagination: PT.object,
+  },
+
+  clickItem(resource) {
+    let name       = this.props.name;
+    let id         = resource.id;
+    let pagination = this.props.pagination;
+
+    let attrs      = this.linkAttrs(name, id, pagination);
+    let query      = this.linkToListQuery(attrs);
+
+    ResourceActions.fetch(name, id, query).then(() => {
+      this.transitionToShow(name, id, pagination);
+    });
   },
 
   render() {
@@ -26,21 +44,29 @@ export default React.createClass({
     var classes = "resource-list" ;
     classes += " col-md-" + this.props.col;
 
-    var settings = this.props.settings.index;
-    var headers = settings.columns.map((col) => {
-      return (<th key= { col } >{ col }</th>);
+    var index_settings = this.props.settings.index;
+    var headers = index_settings.columns.map((col) => {
+      var name = this.toProperyName(col);
+      return (<th key= { name } >{ name }</th>);
     });
     headers.push(<th key='administa-actions'>actions</th> );
 
     var items = this.props.resources.map((resource) => {
+      let resource = resource;
       var selected = resource.id == this.props.id;
       var attrs = {
-        resource: resource,
-        key: resource.id,
-        selected: selected
+        name:           this.props.name,
+        resource:       resource,
+        key:            resource.id,
+        selected:       selected,
+        showlink:       true,
+        columns:        index_settings.columns,
+        search_columns: this.props.settings.search_columns,
+        pagination:     this.props.pagination,
+        onclick:        () => { this.clickItem(resource) },
       };
 
-      return (<Item {...attrs} {...this.props} key={resource.id} />);
+      return (<Item {...attrs}  />);
     });
 
     return(

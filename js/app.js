@@ -24,10 +24,13 @@ import Header        from 'components/Header.react';
 import Menu          from 'components/Menu.react';
 import ContentHeader from 'components/ContentHeader.react';
 import Footer        from 'components/Footer.react';
+import Loader        from 'Loader';
 
 import Resource       from 'components/Resource.react';
 import ResourceDetail from 'components/detail/Detail.react';
 import ResourceEdit   from 'components/form/Edit.react';
+
+import Dialogs        from 'components/Dialogs.react';
 
 // expose React to global (workarround)
 global.React = React;
@@ -50,8 +53,8 @@ var App = React.createClass({
         </div>
 
         <Footer/>
+        <Dialogs/>
       </div>
-
     );
   }
 });
@@ -65,6 +68,8 @@ var routes = (
       <Redirect from="administa/:name/" to="resource" />
     </Route>
 );
+
+Loader.setup();
 
 export default {
   initialData() {

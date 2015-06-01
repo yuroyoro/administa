@@ -2,6 +2,8 @@ import Router          from 'react-router';
 import ResourceActions from 'actions/ResourceActions';
 import ShowProperty    from 'components/detail/Property.react';
 import EditProperty    from './Property.react';
+import Association     from './Association.react';
+
 import LinkMixin       from 'components/LinkMixin';
 
 export default React.createClass({
@@ -23,11 +25,15 @@ export default React.createClass({
     var resource = this.props.resource;
 
     return shows.map((col) => {
-      if( edits.indexOf(col) >= 0 ) { // editable
-        return <EditProperty column={ col } value={ resource[col] } key={ col } ref={ col }/>;
+      if( edits.some((e) => e.name == col.name) ){ // editable
+        if( col.association ) {
+          return <Association column={ col } resource={ this.props.resource } settings={ this.props.settings } key={ col.name } ref = { col.name }/>;
+        }
+
+        return <EditProperty column={ col } resource={ this.props.resource } settings={ this.props.settings } key={ col.name } ref = { col.name }/>;
 
       } else { // readonly
-        return <ShowProperty column={ col } value={ resource[col] } key={ col }/>;
+        return <ShowProperty column={ col } resource={ this.props.resource } settings={ this.props.settings } key={ col.name }/>;
       }
     });
   },
@@ -47,30 +53,19 @@ export default React.createClass({
 
 
   handleSave() {
-    console.log("handleSave");
     var data = this.getFormData();
+    console.log("FormData");
     console.log(data);
 
     let name = this.props.name;
     let id   = this.props.id;
-
-    var options = {
-      name:  name,
-      id:    id,
-      page:  this.props.pagination.page,
-      limit: this.props.pagination.limit,
-      order: this.props.pagination.order,
-      q:     this.props.pagination.q
-    }
-    var params = { name: name, id: id };
-    var query = this.linkToListQuery(options);
+    let pagination = this.props.pagination;
 
     ResourceActions.update(name, id, data).then(() => {
-      this.transitionTo('show', params, query);
+      this.transitionToShow(name, id, pagination);
     } );
 
   },
-
 
   render() {
     console.log("resource edit render");
@@ -90,7 +85,7 @@ export default React.createClass({
           <div className="box-header with-border">
             <h3 className='box-title'> Edit: {this.props.name}({this.props.id})</h3>
             <div className="box-tools pull-right">
-              <button type="button" className="btn btn-primary btn-xs" onClick={ this.handleSave }>save</button>
+              <button type="button" className="btn btn-flat btn-primary btn-xs" onClick={ this.handleSave }>save</button>
             </div>
           </div>
           <div className="box-body">

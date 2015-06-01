@@ -2,10 +2,18 @@ import Router          from 'react-router';
 import ResourceActions from 'actions/ResourceActions';
 import LinkMixin       from 'components/LinkMixin';
 
+var PT = React.PropTypes
+
 export default React.createClass({
   displayName: 'ResourceSearchBox',
 
   mixins: [LinkMixin, Router.Navigation],
+
+  propTypes: {
+    name: PT.string,
+    pagination: PT.object,
+    transition: PT.bool,
+  },
 
   getInitialState: function() {
     return {value: this.props.pagination.q};
@@ -37,7 +45,10 @@ export default React.createClass({
     var query = this.linkToListQuery(options);
     ResourceActions.list(name, query);
 
-    this.transitionTo(route, params, query);
+    var transition = !(this.props.transition == false);
+    if( transition ) {
+      this.transitionTo(route, params, query);
+    }
   },
 
 

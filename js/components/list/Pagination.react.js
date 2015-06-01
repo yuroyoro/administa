@@ -15,7 +15,7 @@ export default React.createClass({
     id:        PT.number,
     resource:  PT.object,
     pagination: PT.object,
-
+    transition: PT.bool
   },
 
   paginationLink(label, page) {
@@ -28,13 +28,14 @@ export default React.createClass({
     }
 
     var linkAttrs = {
-      name:  name,
-      id:    id,
-      label: label,
-      page:  page,
-      limit: this.props.pagination.limit,
-      order: this.props.pagination.order,
-      q:     this.props.pagination.q
+      name:       name,
+      id:         id,
+      label:      label,
+      page:       page,
+      limit:      this.props.pagination.limit,
+      order:      this.props.pagination.order,
+      q:          this.props.pagination.q,
+      transition: this.props.transition
     }
 
     return(
@@ -47,6 +48,7 @@ export default React.createClass({
 
   render() {
     var page  = this.props.pagination.page;
+    var count = this.props.pagination.count;
     var total = this.props.pagination.total_pages;
     var from  = page - 2;
     var to    = page + 2;
@@ -76,7 +78,8 @@ export default React.createClass({
       links.push(this.paginationLink('»', total));
     }
 
-    links.push( <li className='disabled' key='administa-records-label'><a href="#">{ total + " records"}</a></li>);
+    links.push( <li className='disabled' key='administa-records-label'><a href="#">{ count + " records"}</a></li>);
+    links.push( <li className='disabled' key='administa-pages-label'><a href="#">{ total + " pages"}</a></li>);
 
     return(
       <ul className="pagination pagination-sm no-margin pull-right">

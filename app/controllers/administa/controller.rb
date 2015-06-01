@@ -13,7 +13,6 @@ module Administa
       respond_to :html, :json
 
       class_attribute :model,   :instance_write => false
-      class_attribute :options, :instance_write => false
     end
 
     module ClassMethods
@@ -29,31 +28,8 @@ module Administa
       #  }
       #
       def administa(model:,  **options)
-        self.model = model
-        self.options = default_settings(model).deep_merge(options)
-      end
-
-      def default_settings(model = self.model)
-        columns = model.column_names
-        show_columns = columns
-        edit_columns = columns - %w(id created_at updated_at)
-        {
-          index: {
-            limit: 20,
-            order: :id,
-            columns: columns.take(8),
-            search_columns: [:name, :title],
-          },
-          show: {
-            columns: show_columns,
-          },
-          edit: {
-            columns: edit_columns,
-          }
-        }
+        self.model = Administa::Model.new(self, model, options)
       end
     end
-
-
   end
 end

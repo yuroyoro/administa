@@ -1,21 +1,28 @@
+import PropertyMixin   from 'components/PropertyMixin';
+
 export default React.createClass({
   displayName: 'ResourceEditProperty',
 
+  mixins: [PropertyMixin],
+
   propTypes: {
-    column:  React.PropTypes.string
+    column:   React.PropTypes.object.isRequired,
+    resource: React.PropTypes.object.isRequired,
+    settings: React.PropTypes.object.isRequired,
   },
 
-  getInitialState: function() {
-    return { value: this.props.value }
+  getInitialState() {
+    return { value: this.props.resource[this.props.column.name]}
   },
 
-  handleChange: function(event) {
+  handleChange(event) {
     this.setState({value: event.target.value});
   },
 
   render() {
-    var column = this.props.column;
+    var column  = this.props.column.name;
     var value = this.state.value;
+
     var name = "resource[" + column + "]";
     return(
       <div className="form-group" key={ column }>

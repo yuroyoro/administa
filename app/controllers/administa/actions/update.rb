@@ -4,7 +4,7 @@ module Administa
 
       def update
 
-        record = resource(params)
+        record = model.find(params[:id])
 
         attrs = params["resource"]
 
@@ -12,6 +12,8 @@ module Administa
         record.save!
 
         @result = index_result
+
+        @result[:id]       = record.id
         @result[:resource] = record
 
         respond_to do |format|
