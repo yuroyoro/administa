@@ -6,9 +6,9 @@ var Link = Router.Link;
 var PT = React.PropTypes
 
 export default React.createClass({
-  displayName: 'ResourcePagination',
+  displayName: 'list/Pagination',
 
-  mixins: [LinkMixin],
+  mixins: [LinkMixin, Router.Navigation],
 
   propTypes: {
     name:      PT.string,

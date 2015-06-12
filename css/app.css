@@ -8,9 +8,22 @@
 }
 
 /* form */
+.form-group .modified {
+  border-color: royalblue;
+  color: royalblue;
+}
+.form-group .invalid{
+  border-color: tomato;
+  color: tomato;
+}
+
 .form-group blockquote {
   font-size: 14px;
   padding: 0px 20px;
+}
+
+.form-group .input-group {
+  margin-bottom: 4px;
 }
 
 .form-control[disabled]{
@@ -27,6 +40,14 @@
 .resource-list .box-body {
   scroll: auto;
 }
+.resource-list .box-tools a,
+.resource-list .box-tools button{
+  margin-right : .75em;
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
 
 .resource-list table tr{
   cursor: pointer ;
@@ -38,6 +59,11 @@
   text-overflow: ellipsis;
   max-width: 150px;
  }
+
+/* pagination */
+.pagination li {
+  cursor: pointer;
+}
 
 /* dialog */
 
@@ -71,6 +97,8 @@
   margin   : auto;
   z-index  : 10;
   min-width: 400px;
+  max-width: 600px;
+  overflow-y: auto;
 }
 
 /* loader */

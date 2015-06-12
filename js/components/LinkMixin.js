@@ -25,6 +25,29 @@ export default {
     this.transitionTo('show', params, query);
   },
 
+  linkToNew(options = {}) {
+    let name  = options.name;
+    let label = options.label;
+
+    var params = { name: name };
+    var query = this.linkToListQuery(options);
+
+    var f = (event) => {
+      event.preventDefault();
+
+      ResourceActions.build(name, query).then(() => {
+        this.transitionTo('new', params, query);
+      });
+      return true;
+    };
+
+    var classes = options.classes || "btn btn-primary btn-xs btn-flat"
+    var href = this.makeHref('new', params, query);
+
+    var link = <a herf={ href } onClick={ f }  className={classes} >{ label }</a>;
+    return link;
+  },
+
   linkToEdit(options = {}) {
     let name  = options.name;
     let id    = options.id;
@@ -33,14 +56,18 @@ export default {
     var params = { name: name, id: id };
     var query = this.linkToListQuery(options);
 
-    var f = () => {
-      ResourceActions.fetch(name, id, query);
+    var f = (event) => {
+      event.preventDefault();
+      ResourceActions.fetch(name, id, query).then(() => {
+        this.transitionTo('edit', params, query);
+      });
       return true;
     };
 
     var classes = options.classes || "btn btn-primary btn-xs btn-flat"
+    var href = this.makeHref('edit', params, query);
 
-    var link = <Link to='edit' params={ params } query={ query } onClick={ f } className={classes} >{ label }</Link>;
+    var link = <a herf={ href } onClick={ f }  className={classes} >{ label }</a>;
     return link;
   },
 
@@ -52,14 +79,19 @@ export default {
     var params = { name: name, id: id };
     var query = this.linkToListQuery(options);
 
-    var f = () => {
-      ResourceActions.fetch(name, id, query);
+    var f = (event) => {
+      event.preventDefault();
+
+      ResourceActions.fetch(name, id, query).then(() => {
+        this.transitionTo('show', params, query);
+      });
       return true;
     };
 
     var classes = options.classes || "btn btn-primary btn-xs btn-flat"
+    var href = this.makeHref('show', params, query);
 
-    var link = <Link to='show' params={ params } query={ query } onClick={ f } className={classes}>{ label }</Link>;
+    var link = <a herf={ href } onClick={ f }  className={classes} >{ label }</a>;
     return link;
   },
 
@@ -74,13 +106,24 @@ export default {
       params.id = id;
       route = 'show';
     }
-
     var query = this.linkToListQuery(options);
-    var f = this.linkToListHandler(options);
+    var transition = !(options.transition == false);
 
-    return(
-      <Link to= { route } params={ params } query={ query } onClick={ f } key={ label } >{ label }</Link>
-    );
+    var f = (event) => {
+      event.preventDefault();
+
+      ResourceActions.list(options.name, query).then(() => {
+        if(transition) {
+          this.transitionTo(route, params, query);
+        }
+      });
+    };
+
+    var classes = options.classes ;
+    var href = this.makeHref(route, params, query);
+
+    var link = <a herf={ href } onClick={ f }  className={classes} key={ label } >{ label }</a>;
+    return link;
   },
 
   linkAttrs(name, id, pagination){
@@ -102,16 +145,5 @@ export default {
       q:     options.q
     }
   },
-
-  linkToListHandler(options = {}) {
-    var query = this.linkToListQuery(options);
-    var transition = !(options.transition == false);
-    var f = () => {
-      ResourceActions.list(options.name, query);
-      return transition;
-    };
-
-    return f;
-  }
 
 }

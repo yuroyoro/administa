@@ -4,11 +4,13 @@ import AppDispatcher from '../AppDispatcher';
 import assign        from 'object-assign';
 
 var dialogs = {};
+var index   = 0;
 
 class DialogState {
-  constructor(name, component, props) {
+  constructor(name, component, index, props) {
     this.name      = name;
     this.component = component;
+    this.index     = index
     this.props     = props;
     this.opened    = false;
   }
@@ -67,7 +69,7 @@ AppDispatcher.register((action) => {
       var data = action.data;
       var name = data.name;
 
-      var dialog = new DialogState(name, data.component, data.props);
+      var dialog = new DialogState(name, data.component, index++, data.props);
 
       dialog.open();
       DialogStore.setState(name, dialog);
@@ -85,6 +87,7 @@ AppDispatcher.register((action) => {
       var dialog = DialogStore.getState(name);
       if( dialog ) {
         dialog.close();
+        --index;
         DialogStore.setState(name, dialog);
         DialogStore.emitEvent(name);
       }

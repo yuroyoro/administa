@@ -15,6 +15,7 @@ var keyMirror = function(obj) {
 
 export default keyMirror({
   INITIALIZE:         null,
+  RESOURCE_BUILD:     null,
   RESOURCE_FETCH:     null,
   RESOURCE_LIST:      null,
   RESOURCE_UPDATED:   null,

@@ -5,7 +5,7 @@ import LinkMixin       from 'components/LinkMixin';
 var PT = React.PropTypes
 
 export default React.createClass({
-  displayName: 'ResourceSearchBox',
+  displayName: 'list/SearchBox',
 
   mixins: [LinkMixin, Router.Navigation],
 
@@ -43,12 +43,12 @@ export default React.createClass({
       q:     this.state.value
     }
     var query = this.linkToListQuery(options);
-    ResourceActions.list(name, query);
-
-    var transition = !(this.props.transition == false);
-    if( transition ) {
-      this.transitionTo(route, params, query);
-    }
+    ResourceActions.list(name, query).then(() => {
+      var transition = !(this.props.transition == false);
+      if( transition ) {
+        this.transitionTo(route, params, query);
+      }
+    });
   },
 
 

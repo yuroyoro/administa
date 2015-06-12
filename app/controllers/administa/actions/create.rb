@@ -1,11 +1,10 @@
 module Administa
   module Actions
-    module Update
+    module Create
 
-      def update
+      def create
 
-        includes = model.includes(:edit)
-        resource = model.find(params[:id], includes)
+        resource = model.klass.new
 
         attrs = params["resource"]
 
@@ -14,7 +13,7 @@ module Administa
           handle_validate_errors(resource.errors)
         end
 
-        @result = show_result(params[:id])
+        @result = show_result(resource.id)
 
         respond_to do |format|
           format.html { render :index }

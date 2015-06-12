@@ -1,7 +1,7 @@
 import PropertyMixin   from 'components/PropertyMixin';
 
 export default React.createClass({
-  displayName: 'ResourceDetailProperty',
+  displayName: 'detail/Property',
 
   mixins: [PropertyMixin],
 

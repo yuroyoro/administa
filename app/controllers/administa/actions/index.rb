@@ -18,8 +18,9 @@ module Administa
           order = params[:order]
           q     = params[:q]
 
+          includes = model.includes(:index)
           resources = model.
-            select().
+            select(includes: includes).
             filter_by_keywords(q).
             order(order).
             paginate(page: page, limit:limit)

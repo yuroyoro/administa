@@ -5,6 +5,8 @@ module Administa
     included do
       include ::Administa::Actions::Index
       include ::Administa::Actions::Show
+      include ::Administa::Actions::New
+      include ::Administa::Actions::Create
       include ::Administa::Actions::Edit
       include ::Administa::Actions::Update
       include ::Administa::ErrorHandlers

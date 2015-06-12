@@ -28,7 +28,7 @@ import Loader        from 'Loader';
 
 import Resource       from 'components/Resource.react';
 import ResourceDetail from 'components/detail/Detail.react';
-import ResourceEdit   from 'components/form/Edit.react';
+import ResourceForm   from 'components/form/Form.react';
 
 import Dialogs        from 'components/Dialogs.react';
 
@@ -62,7 +62,8 @@ var App = React.createClass({
 var routes = (
     <Route name="app" path="/" handler={App} >
       <Route name="resource" path="administa/:name" handler={Resource} >
-        <Route name="edit" path=":id/edit" handler={ResourceEdit} />
+        <Route name="new"  path="new"      handler={ResourceForm  } />
+        <Route name="edit" path=":id/edit" handler={ResourceForm  } />
         <Route name="show" path=":id"      handler={ResourceDetail}   />
       </Route>
       <Redirect from="administa/:name/" to="resource" />

@@ -1,7 +1,7 @@
 import PropertyMixin   from 'components/PropertyMixin';
 
 export default React.createClass({
-  displayName: 'ResourceEditProperty',
+  displayName: 'form/Property',
 
   mixins: [PropertyMixin],
 
@@ -9,25 +9,52 @@ export default React.createClass({
     column:   React.PropTypes.object.isRequired,
     resource: React.PropTypes.object.isRequired,
     settings: React.PropTypes.object.isRequired,
+    disabled: React.PropTypes.bool
   },
 
   getInitialState() {
-    return { value: this.props.resource[this.props.column.name]}
+    return {
+      value: this.props.resource[this.props.column.name],
+      dirty: false,
+    }
   },
 
   handleChange(event) {
-    this.setState({value: event.target.value});
+    var initial = this.props.resource[this.props.column.name];
+    var value  = event.target.value;
+    this.setState({
+      value: value,
+      dirty: (value != initial),
+    });
+  },
+
+  getFormValue() {
+    return this.getResourceValue();
+  },
+
+  getResourceValue() {
+    var value = {};
+    value[this.props.column.name] = this.state.value;
+    return value;
+  },
+
+  isDirty() {
+    return this.state.dirty;
   },
 
   render() {
-    var column  = this.props.column.name;
+    var name  = this.props.column.name;
     var value = this.state.value;
 
-    var name = "resource[" + column + "]";
+    var classes = "form-control input-sm";
+    if(this.isDirty()){
+      classes += " modified";
+    }
+
     return(
-      <div className="form-group" key={ column }>
-         <label htmlFor={ name } >{ column }</label>
-         <input type="text" className="form-control input-sm"  name={ name } value={ value } onChange={ this.handleChange } />
+      <div className="form-group" key={ name }>
+         <label htmlFor={ name } >{ name }</label>
+         <input type="text" className={ classes } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
       </div>
     );
   },

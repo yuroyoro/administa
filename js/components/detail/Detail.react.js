@@ -3,9 +3,9 @@ import LinkMixin       from 'components/LinkMixin';
 import Property        from './Property.react';
 
 export default React.createClass({
-  displayName: 'ResourceDetail',
+  displayName: 'detali/Detail',
 
-  mixins: [LinkMixin],
+  mixins: [LinkMixin, Router.Navigation],
 
   propTypes: {
     name: React.PropTypes.string,
@@ -40,10 +40,7 @@ export default React.createClass({
       q:     this.props.pagination.q
     }
 
-    var res = this.linkToEdit(linkAttrs);
-    console.log(res);
-    console.log('done');
-    return res;
+    return this.linkToEdit(linkAttrs);
   },
 
   properties() {
@@ -64,7 +61,6 @@ export default React.createClass({
 
     var properties = this.properties();
 
-    console.log("call editLink");
     return(
       <div className={ classes }>
         <div className="box box-primary">

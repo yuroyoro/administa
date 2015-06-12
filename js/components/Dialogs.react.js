@@ -27,20 +27,24 @@ export default React.createClass({
 
   render() {
 
-    var dialogs = [];
-
-    for(var k in this.state) {
-      var dialog = this.state[k];
-      dialogs.push(<Dialog
-          key={ dialog.name }
-          name={ dialog.name }
-          opened={ dialog.opened }
-          component={ dialog.component }
-          componentProps={ dialog.props }/>);
-    }
+    var dialogs = Object.keys(this.state).
+      map((k) => { return this.state[k]; }).
+      filter((d) => { return d.opened; }).
+      sort((d1, d2) => { return d1 > d2 ; }).
+      map((dialog) => {
+        return (<Dialog
+            key            = { dialog.name }
+            name           = { dialog.name }
+            opened         = { dialog.opened }
+            component      = { dialog.component }
+            onclose        = { dialog.onclose }
+            index          = { dialog.index }
+            componentProps = { dialog.props }
+            />);
+      });
 
     return (
-      <div id="dialogs">
+      <div className="dialogs">
         { dialogs }
       </div>
     );

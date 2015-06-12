@@ -7,12 +7,13 @@ import PropertyMixin   from 'components/PropertyMixin';
 var PT = React.PropTypes
 
 export default React.createClass({
-  displayName: 'ResourceSelection',
+  displayName: 'list/Selection',
 
   mixins: [PropertyMixin],
 
   propTypes: {
     name:       PT.string,
+    title:      PT.string,
     onselect:   PT.func,
   },
 
@@ -63,6 +64,15 @@ export default React.createClass({
         }
       }
     }
+    if( columns.length == 1 ) {
+      for(var i = 0; i < cols.length; i++) {
+        var col = cols[i];
+        if( col.name != 'id' && col.name != 'created_at' && col.name != 'updated_at') {
+          columns.push(col);
+          break;
+        }
+      }
+    }
 
     console.log(columns);
     var headers = columns.map((col) => {
@@ -86,13 +96,15 @@ export default React.createClass({
       return (<Item {...attrs} {...this.props}  />);
     });
 
+    var title = this.props.title || this.props.name;
+
     return(
 
       <div className={ classes }>
         <div className="box box-primary">
 
           <div className="box-header with-border">
-            <h3 className="box-title"> {this.props.name} </h3>
+            <h3 className="box-title"> { title } </h3>
             <div className="box-tools pull-right ">
 
               <SearchBox transition={ false } {...this.state}/>

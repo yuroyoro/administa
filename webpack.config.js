@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var bower_dir = __dirname + '/bower_components';
-var ForceReplaceSourceMapppingURLPlugin = require('./js/plugin/ForceReplaceSourceMapppingURLPlugin');
 
 module.exports = {
 
@@ -41,10 +40,6 @@ module.exports = {
     // take the vendors chunk and create a vendors.js from the "vendors" in entry section.
     new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
 
-    new ForceReplaceSourceMapppingURLPlugin([
-        { asset: 'app.bundle.js', sourceMappingURL: 'build/app.bundle.js.map'},
-        { asset: 'vendors.js', sourceMappingURL: 'build/vendors.js.map'},
-    ] ),
 
     //
     new webpack.ProvidePlugin({

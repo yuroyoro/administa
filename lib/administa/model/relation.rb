@@ -3,9 +3,9 @@ module Administa
     class Relation
       include Administa::Model::Finder
 
-      attr_accessor :model, :relation, :pagination_metadata
-      def initialize(model, relation)
-        self.model = model
+      attr_accessor :klass, :relation, :pagination_metadata
+      def initialize(klass, relation)
+        self.klass = klass
         self.relation = relation
       end
 
@@ -16,7 +16,7 @@ module Administa
       def select(options = {})
         rel = relation.includes(options[:includes])
 
-        self.class.new(model, rel)
+        self.class.new(klass, rel)
       end
 
       def filter_by_keywords(keyword)
@@ -24,9 +24,9 @@ module Administa
 
         words = keyword.split(/\s/).map{ |w| "%#{w.gsub(/%/,  '%%')}%" }
 
-        columns = model.column_names & model.options[:search_columns].map(&:to_s)
+        columns = klass.column_names & klass.options[:search_columns].map(&:to_s)
 
-        arel = model.arel_table
+        arel = klass.arel_table
         query = columns.map{|col|
           arel[col].matches_all(words)
         }.inject{|q1, q2| q1.or(q2) }
@@ -34,25 +34,25 @@ module Administa
         query = query.or(arel[:id].eq(keyword.to_i)) if keyword =~ /^\d+$/
 
         rel = relation.where(query)
-        self.class.new(model, rel)
+        self.class.new(klass, rel)
       end
 
       def order(*args)
-        o = args.compact.presence || model.options[:order]
+        o = args.compact.presence || klass.options[:order]
 
-        self.class.new(model, relation.order(o))
+        self.class.new(klass, relation.order(o))
       end
 
-      def paginate(page: 1, limit: model.options[:limit])
+      def paginate(page: 1, limit: klass.options[:limit])
         page  ||= 1
-        limit ||= model.options[:limit]
+        limit ||= klass.options[:limit]
 
         offset = (page == 1 ? 0 : limit * (page - 1))
 
         count = relation.count
         rel = relation.limit(limit).offset(offset)
 
-        result = self.class.new(model, rel)
+        result = self.class.new(klass, rel)
         result.calculate_pagination_metadata(count, page, limit, offset)
         result
       end

@@ -7,7 +7,7 @@ var Link = Router.Link;
 var PT = React.PropTypes
 
 export default React.createClass({
-  displayName: 'ResourceItem',
+  displayName: 'list/Item',
 
   mixins: [LinkMixin, PropertyMixin, Router.Navigation ],
 

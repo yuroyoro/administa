@@ -2,7 +2,7 @@ module Administa
   class Model
     module Finder
       def all
-        Administa::Model::Relation.new(self, model.all)
+        Administa::Model::Relation.new(self, klass.all)
       end
 
       def select(options = {})
@@ -10,9 +10,8 @@ module Administa
       end
 
       def find(id, includes = {})
-        model.includes(includes).find(id)
+        klass.includes(includes).find(id)
       end
-
     end
   end
 end

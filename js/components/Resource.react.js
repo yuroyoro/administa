@@ -50,7 +50,7 @@ export default React.createClass({
     console.log('resource = ');
     console.log(resource);
 
-    if(id && resource) {
+    if(resource) {
       leftcol = 8;
       rightcol= 4;
       id = Number(id);

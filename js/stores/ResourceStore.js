@@ -73,6 +73,7 @@ var ResourceStore = assign({}, Events.EventEmitter.prototype,  {
     console.log('result');
     console.log(state);
     this.setState(name, state);
+    return state;
   },
 
   setState(name, state) {
@@ -116,6 +117,27 @@ AppDispatcher.register((action) => {
       break;
     case Constants.RESOURCE_LIST:
       console.log('store RESOURCE_LIST');
+      var data = action.data;
+      var name = data.name;
+
+      ResourceStore.updateState(name, data);
+      ResourceStore.emitEvent(name);
+
+      break;
+    case Constants.RESOURCE_BUILD:
+      console.log('store RESOURCE_BUILD');
+
+      var data = action.data;
+      var name = data.name;
+
+      var state = ResourceStore.updateState(name, data);
+      state.currentId = null; // clear currentid
+      ResourceStore.emitEvent(name);
+
+      break;
+    case Constants.RESOURCE_CREATED:
+      console.log('store RESOURCE_CREATED');
+
       var data = action.data;
       var name = data.name;
 

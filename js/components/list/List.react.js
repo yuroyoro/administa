@@ -10,7 +10,7 @@ import PropertyMixin   from 'components/PropertyMixin';
 var PT = React.PropTypes
 
 export default React.createClass({
-  displayName: 'ResourceList',
+  displayName: 'list/List',
 
   mixins: [LinkMixin, PropertyMixin, Router.Navigation ],
 
@@ -34,6 +34,25 @@ export default React.createClass({
     ResourceActions.fetch(name, id, query).then(() => {
       this.transitionToShow(name, id, pagination);
     });
+  },
+
+
+  newLink(){
+    let name = this.props.name;
+
+    console.log('newLink');
+    console.log(name);
+
+    var linkAttrs = {
+      name:  name,
+      label: 'create',
+      page:  this.props.pagination.page,
+      limit: this.props.pagination.limit,
+      order: this.props.pagination.order,
+      q:     this.props.pagination.q
+    }
+
+    return this.linkToNew(linkAttrs);
   },
 
   render() {
@@ -78,6 +97,9 @@ export default React.createClass({
             <div className="box-tools pull-right ">
 
               <SearchBox {...this.props}/>
+              <div className="pull-right input-group input-group-sm">
+                { this.newLink() }
+              </div>
 
             </div>
           </div>
