@@ -60,6 +60,7 @@ export default React.createClass({
     var attrs = {
       name: name,
       id:   id,
+      label: settings.label,
       settings: settings,
       pagination: pagination,
       errors: errors,

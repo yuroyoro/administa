@@ -52,6 +52,10 @@ export default React.createClass({
     return this.props.column.association.pluralized;
   },
 
+  associationLabel() {
+    return this.props.column.association.label;
+  },
+
   dialogName(prefix) {
     return prefix + ":" + this.associationName();
   },
@@ -73,7 +77,7 @@ export default React.createClass({
   },
 
   openSelection() {
-    var title = this.associationName();
+    var title = this.associationLabel();
     var name  = this.props.column.association.path;
 
     ResourceActions.list(name).then(() => {
@@ -233,7 +237,7 @@ export default React.createClass({
   render() {
     var displayText = '';
     if(this.state.target) {
-      displayText = this.extractLabel(this.associationName(), this.state.target, this.props.settings.search_columns);
+      displayText = this.extractLabel(this.associationLabel(), this.state.target, this.props.settings.search_columns);
     }
 
     var classes = "form-control input-sm";

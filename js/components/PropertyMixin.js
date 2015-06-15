@@ -1,7 +1,15 @@
 export default {
 
   toProperyName(col) {
-    var name = col.name
+    var name = col.label;
+    if(col.association) {
+      name = col.association.label;
+    }
+    return name;
+  },
+
+  toProperyKey(col) {
+    var name = col.name;
     if(col.association) {
       name = col.association.name;
     }
@@ -9,7 +17,7 @@ export default {
   },
 
   toLabel(col, resource, search_columns) {
-    var name = this.toProperyName(col);
+    var name = this.toProperyKey(col);
     var val  = resource[name];
 
     if(col.association) {
@@ -22,7 +30,7 @@ export default {
       if(col.association.type == 'has_many' || col.association.type == 'through') {
         val = [];
         for(var i = 0; i < nested.length; i++) {
-          var s = this.extractLabel(name, nested[i], search_columns);
+          var s = this.extractLabel(col.association.label, nested[i], search_columns);
           val.push(<div key={i}>{s}</div>);
         }
 

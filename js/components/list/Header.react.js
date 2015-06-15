@@ -1,13 +1,13 @@
 var PT = React.PropTypes
 
 export default React.createClass({
-  displayName: 'ResourceHeader',
+  displayName: 'list/Header',
 
   propTypes: {
-    name:      PT.string
+    label:      PT.string
   },
 
   render() {
-    return <th> { this.props.name } </th>;
+    return <th> { this.props.label } </th>;
   }
 });

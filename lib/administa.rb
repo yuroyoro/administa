@@ -4,7 +4,6 @@ require "administa/model"
 
 #
 # TODO
-# - メッセージ国際化対応
 # - 認証
 # - メニュー
 # - 削除
@@ -19,6 +18,7 @@ require "administa/model"
 # - has_many through対応
 # - validation
 # - 子associationをnewした後、再度ダイアログ開くと、選択されているassociationの情報が消える
+# - メッセージ国際化対応
 #
 module Administa
 

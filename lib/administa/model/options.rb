@@ -3,6 +3,9 @@ module Administa
   class Model
     module Options
 
+      def settings
+        translate(options)
+      end
 
       def setup_options!(klass, options)
 
@@ -200,6 +203,22 @@ module Administa
             Rails.logger.debug "#{association_name} isn't specified in 'accepts_nested_attributes_for' of #{klass}. You should add #{attributes_name} if you want to edit #{name} association "
           end
         end
+      end
+
+      def translate(options)
+        scope = "activerecord.attributes.#{self.name}"
+        [:index, :show, :create, :edit].each do |action|
+          columns = options.try(:[], action).try(:[], :columns)
+          columns.each do |col|
+            col[:label] = I18n.t(col[:name], scope: scope, default: col[:name].to_s)
+            if col[:association]
+              col[:association][:label] = I18n.t(col[:association][:label], scope: scope, default: col[:association][:name].to_s)
+            end
+          end
+        end
+
+        options[:label]= I18n.t(self.name, scope: 'activerecord.models', default: self.name.to_s)
+        options
       end
     end
   end

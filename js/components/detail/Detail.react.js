@@ -65,7 +65,7 @@ export default React.createClass({
       <div className={ classes }>
         <div className="box box-primary">
           <div className="box-header with-border">
-            <h3 className='box-title'> Detail : {this.props.name}({this.props.id})</h3>
+            <h3 className='box-title'> Detail : {this.props.label}(id:{this.props.id})</h3>
             <div className="box-tools pull-right">
               { this.editLink(resource) }
             </div>

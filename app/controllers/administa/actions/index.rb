@@ -27,7 +27,7 @@ module Administa
 
           result = {
             name:       model.name.pluralize,
-            settings:   model.options,
+            settings:   model.settings,
             resources:  model.as_json(resources.to_a, includes: model.includes(:index)),
             pagination: resources.pagination_metadata.merge(:q => q)
           }

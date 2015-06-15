@@ -93,7 +93,7 @@ export default React.createClass({
         <div className="box box-primary">
 
           <div className="box-header with-border">
-            <h3 className="box-title"> {this.props.name} </h3>
+            <h3 className="box-title"> {this.props.settings.label} </h3>
             <div className="box-tools pull-right ">
 
               <SearchBox {...this.props}/>

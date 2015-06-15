@@ -211,9 +211,9 @@ export default React.createClass({
 
     console.log(resource);
 
-    var title = `New: ${this.props.name}`;
+    var title = `New: ${this.props.label}`;
     if (this.props.id) {
-      title = `Edit: ${this.props.name}(${this.props.id})`;
+      title = `Edit: ${this.props.settings.label}(id:${this.props.id})`;
     }
 
     var properties = this.properties();

@@ -41,9 +41,10 @@ export default React.createClass({
   },
 
   render() {
-    var name  = this.props.column.name;
-    var label = name;
-    var value = this.state.value;
+    var name   = this.props.column.name;
+    var column = this.props.column;
+    var label  = this.toProperyName(column);
+    var value  = this.state.value;
 
     return(
       <div className={ this.formClasses() } key={ name }>
