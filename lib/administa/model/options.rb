@@ -118,8 +118,9 @@ module Administa
 
       def create_association_meta(assoc)
         nested_options = klass.nested_attributes_options
-        nested = nested_options[assoc.name]
-        type   = assoc.macro
+        nested         = nested_options[assoc.name]
+        type           = assoc.macro
+        foreign_key    = assoc.foreign_key
 
         attributes_name = "#{assoc.name}_attributes"
         editable = (not readonly?(attributes_name))
@@ -133,13 +134,14 @@ module Administa
           when :belongs_to
             selectable = (not readonly?(assoc.foreign_key))
           when :has_many, :through
-            selectable = (not readonly?("#{assoc.name.to_s.singularize}_ids"))
+            foreign_key = "#{assoc.name.to_s.singularize}_ids"
+            selectable = (not readonly?(foreign_key))
         end
 
         {
           name:       assoc.name,
-          type:       assoc.macro,
-          foreign_key: assoc.foreign_key,
+          type:       type,
+          foreign_key: foreign_key,
           pluralized: assoc.name.to_s.pluralize,
           path:       assoc.class_name.to_s.underscore.pluralize,
           select:     selectable,

@@ -7,6 +7,7 @@ import Property        from './Property.react';
 import BelongsTo       from './BelongsTo.react';
 import HasOne          from './HasOne.react';
 import HasMany         from './HasMany.react';
+import Through         from './Through.react';
 import LinkMixin       from 'components/LinkMixin';
 
 export default React.createClass({
@@ -67,7 +68,7 @@ export default React.createClass({
             PropertyComponent = HasMany;
             break;
           case 'through':
-            // todo
+            PropertyComponent = Through;
             break;
         }
       }

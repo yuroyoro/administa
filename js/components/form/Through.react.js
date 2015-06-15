@@ -2,7 +2,7 @@ import PropertyMixin   from 'components/PropertyMixin';
 import Association     from './Association.react';
 
 export default React.createClass({
-  displayName: 'form/HasMany',
+  displayName: 'form/Through',
 
   mixins: [PropertyMixin],
 
@@ -25,18 +25,35 @@ export default React.createClass({
     var keys = Object.keys(this.refs);
     var result = {};
     var targets = [];
+    var ids     = [];
     var name = this.props.column.association.name;
+    var dirty   = false;
 
     for (var i = 0, len = keys.length; i < len; i++) {
       var key = keys[i];
       var property = this.refs[key];
+      var target = property.state.target;
+      if(target.id) {
+        ids.push(target.id);
+      }
       if(property.isDirty()) {
-        var value = property.getFormValue();
-        targets.push(value[name]);
+        dirty = true
+        switch (property.state.reason) {
+          case 'created':
+          case 'edited':
+            var value = property.getFormValue();
+            targets.push(value[name]);
+            break;
+          case 'selected':
+            break;
+        }
       }
     }
 
     result[name] = targets;
+    if(dirty) {
+      result[this.props.column.association.foreign_key] = ids;
+    }
     return result;
   },
 

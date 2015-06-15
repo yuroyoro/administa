@@ -21,8 +21,7 @@ module Administa
       def transform_attributes(attr, klass = nil)
         role       = self.options[:attr_accessible_role] || :default
         authorizer = klass.active_authorizer[role]
-        white_list = klass.column_names.map(&:to_sym)
-        white_list.reject!{|name| authorizer.deny?(name) } if authorizer
+        white_list = (authorizer ? authorizer.to_a : klass.column_names).map(&:to_sym)
         white_list.unshift(:id)
 
         res = attr.slice(*white_list)

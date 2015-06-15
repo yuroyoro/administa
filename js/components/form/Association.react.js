@@ -61,12 +61,13 @@ export default React.createClass({
       this.setState({
         target: null,
         dirty:  true,
+        reason: "cleared",
       });
     }
   },
 
   onSelect(selected) {
-    this.setState({ target: selected, dirty: true, });
+    this.setState({ target: selected, dirty: true, reason: "selected"});
 
     DialogActions.close(this.dialogName("selection"));
   },
@@ -170,7 +171,11 @@ export default React.createClass({
     console.log(data);
 
     if( dirty ) {
-      this.setState({ target: resource, dirty: true, formdata: data });
+      var reason = "created";
+      if( resource.id ) {
+        reason = "edited"
+      }
+      this.setState({ target: resource, dirty: true, formdata: data, reason: reason});
     }
 
     DialogActions.close(this.dialogName("create"));
