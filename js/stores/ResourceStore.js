@@ -13,14 +13,24 @@ class ResourceState {
     this.settings        = data.settings   || {};
     this.resources       = data.resources  || [];
     this.pagination      = data.pagination || {};
+    this.errors          = data.errors     || {};
   }
 
   update(other) {
-    if (other.currentId)       this.currentId       = other.currentId;
-    if (other.currentResource) this.currentResource = other.currentResource;
-    if (other.resources)       this.resources       = other.resources;
-    if (other.settings)        this.settings        = other.settings;
-    if (other.pagination)      this.pagination      = other.pagination;
+    var setUnlessEmpty = function(attr, self) {
+      var v = other[attr];
+      if(v && Object.keys(v).length > 0) {
+        self[attr] = v;
+      }
+    };
+
+    if (other.currentId) this.currentId = other.currentId;
+
+    setUnlessEmpty("currentResource", this);
+    setUnlessEmpty("resources",       this);
+    setUnlessEmpty("settings",        this);
+    setUnlessEmpty("pagination",      this);
+    setUnlessEmpty("errors",          this);
     return this;
   }
 
@@ -30,7 +40,8 @@ class ResourceState {
       resource:   this.currentResource,
       settings:   this.settings,
       resources:  this.resources,
-      pagination: this.pagination
+      pagination: this.pagination,
+
     });
   }
 }
@@ -109,7 +120,7 @@ AppDispatcher.register((action) => {
       console.log('store RESOURCE_FETCH');
 
       var data = action.data;
-      var name = data.name;
+      var name = action.name;
 
       ResourceStore.updateState(name, data);
       ResourceStore.emitEvent(name);
@@ -118,7 +129,7 @@ AppDispatcher.register((action) => {
     case Constants.RESOURCE_LIST:
       console.log('store RESOURCE_LIST');
       var data = action.data;
-      var name = data.name;
+      var name = action.name;
 
       ResourceStore.updateState(name, data);
       ResourceStore.emitEvent(name);
@@ -128,7 +139,7 @@ AppDispatcher.register((action) => {
       console.log('store RESOURCE_BUILD');
 
       var data = action.data;
-      var name = data.name;
+      var name = action.name;
 
       var state = ResourceStore.updateState(name, data);
       state.currentId = null; // clear currentid
@@ -139,7 +150,7 @@ AppDispatcher.register((action) => {
       console.log('store RESOURCE_CREATED');
 
       var data = action.data;
-      var name = data.name;
+      var name = action.name;
 
       ResourceStore.updateState(name, data);
       ResourceStore.emitEvent(name);
@@ -149,12 +160,21 @@ AppDispatcher.register((action) => {
       console.log('store RESOURCE_UPDATED');
 
       var data = action.data;
-      var name = data.name;
+      var name = action.name;
 
       ResourceStore.updateState(name, data);
       ResourceStore.emitEvent(name);
 
       break;
+    case Constants.RESOURCE_INVALID:
+      console.log('store RESOURCE_INVALID');
+
+      var data = action.data;
+      var name = action.name;
+
+      ResourceStore.updateState(name, data);
+      ResourceStore.emitEvent(name);
+
     default: // no op
   }
 });

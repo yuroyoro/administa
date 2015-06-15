@@ -1,17 +1,10 @@
+import InputMixin      from './InputMixin';
 import PropertyMixin   from 'components/PropertyMixin';
-import Association     from './Association.react';
 
 export default React.createClass({
   displayName: 'form/HasOne',
 
-  mixins: [PropertyMixin],
-
-  propTypes: {
-    column:   React.PropTypes.object.isRequired,
-    resource: React.PropTypes.object.isRequired,
-    settings: React.PropTypes.object.isRequired,
-    disabled: React.PropTypes.bool
-  },
+  mixins: [PropertyMixin, InputMixin],
 
   getFormValue() {
     return this.refs.association.getFormValue();
@@ -25,6 +18,10 @@ export default React.createClass({
     return this.refs.association.isDirty()
   },
 
+  hasError() {
+    return this.props.invalid;
+  },
+
   render() {
     var column      = this.props.column;
     var name        = column.name;
@@ -32,21 +29,12 @@ export default React.createClass({
     var association = this.props.column.association;
     var target      = this.props.resource[association.name];
 
-    var attrs = {
-      name:     name,
-      column:   column,
-      resource: this.props.resource,
-      settings: this.props.settings,
-      buttons:  { select: association.select, clear: association.select, create: association.create, edit: association.update },
-      disabled: this.props.disabled,
-      target:   target,
-    }
-
     return(
-      <div className="form-group" key={ name }>
+      <div className={ this.formClasses() } key={ name }>
          <label >{ label }</label>
 
-         <Association {...attrs} ref='association'/>
+         { this.createAssociation(target, {ref: 'association'}) }
+         { this.errorsBlock(label) }
       </div>
     );
   },

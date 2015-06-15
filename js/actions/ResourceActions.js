@@ -101,6 +101,15 @@ export default {
       });
     })
     .fail((xhr, status, err) => {
+      if( xhr.status == 422) {
+        var res = xhr.responseJSON;
+        AppDispatcher.dispatch({
+          type: Constants.RESOURCE_INVALID,
+          name: name,
+          data: res
+        });
+      }
+
       console.error(url, status, err.toString());
     }).promise();
   },
@@ -126,6 +135,14 @@ export default {
       });
     })
     .fail((xhr, status, err) => {
+      if( xhr.status == 422) {
+        var res = xhr.responseJSON;
+        AppDispatcher.dispatch({
+          type: Constants.RESOURCE_INVALID,
+          name: name,
+          data: res
+        });
+      }
       console.error(url, status, err.toString());
     }).promise();
   }

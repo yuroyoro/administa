@@ -46,6 +46,7 @@ export default React.createClass({
     var resources  = this.state.resources       || [];
     var settings   = this.state.settings        || {};
     var pagination = this.state.pagination      || {};
+    var errors     = this.state.errors          || {};
 
     console.log('resource = ');
     console.log(resource);
@@ -60,7 +61,8 @@ export default React.createClass({
       name: name,
       id:   id,
       settings: settings,
-      pagination: pagination
+      pagination: pagination,
+      errors: errors,
     };
 
     var list_attrs = {

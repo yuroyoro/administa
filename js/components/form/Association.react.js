@@ -19,7 +19,7 @@ export default React.createClass({
     settings: React.PropTypes.object.isRequired,
     target:   React.PropTypes.object,
     buttons:  React.PropTypes.object,
-
+    invalid:  React.PropTypes.bool,
   },
 
   getInitialState() {
@@ -239,6 +239,10 @@ export default React.createClass({
     var classes = "form-control input-sm";
     if(this.isDirty()){
       classes += " modified";
+    }
+
+    if(this.props.invalid) {
+      classes += " invalid";
     }
 
     return(

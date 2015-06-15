@@ -19,6 +19,7 @@ export default keyMirror({
   RESOURCE_FETCH:     null,
   RESOURCE_LIST:      null,
   RESOURCE_UPDATED:   null,
+  RESOURCE_INVALID:   null,
   DIALOG_OPENED:      null,
   DIALOG_CLOSED:      null
 

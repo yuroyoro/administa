@@ -1,16 +1,10 @@
+import InputMixin      from './InputMixin';
 import PropertyMixin   from 'components/PropertyMixin';
 
 export default React.createClass({
-  displayName: 'form/Property',
+  displayName: 'form/Input',
 
-  mixins: [PropertyMixin],
-
-  propTypes: {
-    column:   React.PropTypes.object.isRequired,
-    resource: React.PropTypes.object.isRequired,
-    settings: React.PropTypes.object.isRequired,
-    disabled: React.PropTypes.bool
-  },
+  mixins: [PropertyMixin, InputMixin],
 
   getInitialState() {
     return {
@@ -42,19 +36,20 @@ export default React.createClass({
     return this.state.dirty;
   },
 
+  hasError() {
+    return this.props.invalid;
+  },
+
   render() {
     var name  = this.props.column.name;
+    var label = name;
     var value = this.state.value;
 
-    var classes = "form-control input-sm";
-    if(this.isDirty()){
-      classes += " modified";
-    }
-
     return(
-      <div className="form-group" key={ name }>
-         <label htmlFor={ name } >{ name }</label>
-         <input type="text" className={ classes } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
+      <div className={ this.formClasses() } key={ name }>
+         <label htmlFor={ name } >{ label }</label>
+         <input type="text" className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
+         { this.errorsBlock(label) }
       </div>
     );
   },

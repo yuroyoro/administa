@@ -2,8 +2,8 @@ import Router          from 'react-router';
 import assign          from 'object-assign';
 import ResourceActions from 'actions/ResourceActions';
 import ResourceStore   from 'stores/ResourceStore';
-import ShowProperty    from 'components/detail/Property.react';
-import Property        from './Property.react';
+import Property        from 'components/detail/Property.react';
+import Input           from './Input.react';
 import BelongsTo       from './BelongsTo.react';
 import HasOne          from './HasOne.react';
 import HasMany         from './HasMany.react';
@@ -21,6 +21,7 @@ export default React.createClass({
     col:      React.PropTypes.number,
     resource: React.PropTypes.object.isRequired,
     settings: React.PropTypes.object,
+    errors:   React.PropTypes.object,
     onsubmit: React.PropTypes.func,
     classes:  React.PropTypes.array,
     dirty:    React.PropTypes.bool,
@@ -35,6 +36,8 @@ export default React.createClass({
     }
 
     var resource = this.props.resource;
+    var errors   = this.props.errors;
+    var errorsPresent = (errors && Object.keys(errors).length > 0);
 
     return cols.map((col) => {
 
@@ -45,35 +48,47 @@ export default React.createClass({
         key: col.name,
       };
 
-      var PropertyComponent = ShowProperty;
+      if( errorsPresent ) {
+        var msg = errors[col.name];
+        if(!msg && col.association){
+          msg = errors[col.association.name];
+        }
+
+        if( msg ) {
+          attrs.invalid = true;
+          attrs.errors  = msg;
+        }
+      }
+
+      var TheComponent = Property;
 
       if( col.readonly ){
-        return <PropertyComponent {...attrs} />
+        return <TheComponent {...attrs} />
       }
 
       // editable
       attrs.ref = col.name;
 
-      PropertyComponent = Property;
+      TheComponent = Input;
       if( col.association ) {
         var atype = col.association.type;
         switch(atype) {
           case 'belongs_to':
-            PropertyComponent = BelongsTo;
+            TheComponent = BelongsTo;
             break;
           case 'has_one':
-            PropertyComponent = HasOne;
+            TheComponent = HasOne;
             break;
           case 'has_many':
-            PropertyComponent = HasMany;
+            TheComponent = HasMany;
             break;
           case 'through':
-            PropertyComponent = Through;
+            TheComponent = Through;
             break;
         }
       }
 
-      return <PropertyComponent {...attrs} />
+      return <TheComponent {...attrs} />
     });
   },
 
