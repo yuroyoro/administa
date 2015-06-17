@@ -15,10 +15,12 @@ var RouteHandler  = Router.RouteHandler;
 // require stylesheets
 require("bootstrap.css")
 require("adminlte.css")
-require("app.css")
 require("adminlte-skins-blue.css")
+require("adminlte-skins-black.css")
+require("app.css")
 
 import ResourceActions from 'actions/ResourceActions';
+import MenuActions     from 'actions/MenuActions';
 
 import Header        from 'components/Header.react';
 import Menu          from 'components/Menu.react';
@@ -78,11 +80,16 @@ export default {
     return data;
   },
 
+  menus() {
+    return JSON.parse(document.getElementById('initial-data').getAttribute('menu-json'));
+  },
+
   render(data) {
 
     console.log('render');
     console.log(data);
     ResourceActions.initialize(data);
+    MenuActions.initialize(this.menus());
 
     Router.run(routes, Router.HistoryLocation, (Handler, state) => {
       let params = state.params;

@@ -217,8 +217,12 @@ module Administa
           end
         end
 
-        options[:label]= I18n.t(self.name, scope: 'activerecord.models', default: self.name.to_s)
+        options[:label]= self.label
         options
+      end
+
+      def label
+        I18n.t(self.name, scope: 'activerecord.models', default: self.name.to_s)
       end
     end
   end

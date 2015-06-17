@@ -51,7 +51,7 @@ export default React.createClass({
     console.log('resource = ');
     console.log(resource);
 
-    if(resource) {
+    if(resource && Object.keys(resource).length != 0) {
       leftcol = 8;
       rightcol= 4;
       id = Number(id);

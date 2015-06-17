@@ -1,4 +1,7 @@
-<div id="initial-data" data-json="<%= @result.to_json %>" />
+<div id="initial-data"
+    data-json="<%= @result.to_json %>"
+    menu-json="<%= Administa::Config.menus(controller).to_json %>"
+/>
 
 <script type="text/javascript">
   jQuery(function(){

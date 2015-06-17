@@ -23,10 +23,11 @@ module.exports = {
   resolve: {
     modulesDirectories: ['node_modules', 'bower_components', 'css', 'js'],
     alias: {
-      adminlte:                  'admin-lte/dist/js/app.js',
-      'adminlte.css':            'admin-lte/dist/css/AdminLTE.css',
-      'adminlte-skins-blue.css': 'admin-lte/dist/css/skins/skin-blue.min.css',
-      'bootstrap.css':           'bootstrap/dist/css/bootstrap.css'
+      adminlte:                   'admin-lte/dist/js/app.js',
+      'adminlte.css':             'admin-lte/dist/css/AdminLTE.css',
+      'adminlte-skins-blue.css':  'admin-lte/dist/css/skins/skin-blue.min.css',
+      'adminlte-skins-black.css': 'admin-lte/dist/css/skins/skin-black.min.css',
+      'bootstrap.css':            'bootstrap/dist/css/bootstrap.css'
     }
   },
 

@@ -5,13 +5,16 @@ require "administa/model"
 #
 # TODO
 # - 認証
-# - メニュー
 # - 削除
+# - permalink
 # - animation入れる
 # - genratorつける
 # - test書きたい
 # - file upload
 # - enum
+# - boolean
+# - datetime picker
+# - メニュー階層化
 #
 # Done;
 # - has_many対応
@@ -19,6 +22,7 @@ require "administa/model"
 # - validation
 # - 子associationをnewした後、再度ダイアログ開くと、選択されているassociationの情報が消える
 # - メッセージ国際化対応
+# - メニュー
 #
 module Administa
 
