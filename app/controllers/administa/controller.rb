@@ -14,24 +14,35 @@ module Administa
       layout 'administa/application'
       respond_to :html, :json
 
-      class_attribute :model,   :instance_write => false
+      class_attribute :model, :instance_write => false
+
+      before_filter :_authenticate!
+      helper_method :user_info
     end
 
     module ClassMethods
 
-      # Configure Administa options
-      #
-      #  model: (required)
-      #
-      #  index: {
-      #    limit: 20,
-      #    order: :id,
-      #    columns: [:id, :name]
-      #  }
-      #
       def administa(model:,  **options)
         self.model = Administa::Model.new(self, model, options)
       end
     end
+
+    def _authenticate!
+      instance_eval(&Administa.config.authenticate_with)
+    end
+
+    def _current_user
+      instance_eval(&Administa.config.current_user_method)
+    end
+
+    def user_info
+      user = _current_user
+      {
+        name:  Administa.config.user_name_proc.call(user),
+        email: Administa.config.user_email_proc.call(user),
+        icon:  Administa.config.user_icon_image_proc.call(user),
+      }
+    end
+
   end
 end

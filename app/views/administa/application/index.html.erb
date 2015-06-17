@@ -1,6 +1,7 @@
 <div id="initial-data"
     data-json="<%= @result.to_json %>"
-    menu-json="<%= Administa::Config.menus(controller).to_json %>"
+    user-json="<%= user_info.to_json %>"
+    menu-json="<%= Administa.config.menus(controller).to_json %>"
 />
 
 <script type="text/javascript">

@@ -21,6 +21,8 @@ export default keyMirror({
   RESOURCE_UPDATED:   null,
   RESOURCE_INVALID:   null,
   DIALOG_OPENED:      null,
-  DIALOG_CLOSED:      null
+  DIALOG_CLOSED:      null,
+  MENU_INITIALIZED:   null,
+  USER_INITIALIZED:   null,
 
 });

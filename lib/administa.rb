@@ -14,7 +14,6 @@ require "administa/model"
 # - enum
 # - boolean
 # - datetime picker
-# - メニュー階層化
 #
 # Done;
 # - has_many対応
@@ -23,15 +22,16 @@ require "administa/model"
 # - 子associationをnewした後、再度ダイアログ開くと、選択されているassociationの情報が消える
 # - メッセージ国際化対応
 # - メニュー
+# - メニュー階層化
 #
 module Administa
 
   def self.config(&block)
-    config = Administa::Config
+    @config ||= Administa::Config.new
     if block_given?
-      yield config
+      yield @config
     end
 
-    config
+    @config
   end
 end

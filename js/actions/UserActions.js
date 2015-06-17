@@ -5,7 +5,7 @@ export default {
 
   initialize(data) {
     AppDispatcher.dispatch({
-      type: Constants.MENU_INITIALIZED,
+      type: Constants.USER_INITIALIZED,
       data: data
     });
   }

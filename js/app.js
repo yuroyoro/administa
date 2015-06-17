@@ -21,6 +21,7 @@ require("app.css")
 
 import ResourceActions from 'actions/ResourceActions';
 import MenuActions     from 'actions/MenuActions';
+import UserActions     from 'actions/UserActions';
 
 import Header        from 'components/Header.react';
 import Menu          from 'components/Menu.react';
@@ -80,6 +81,10 @@ export default {
     return data;
   },
 
+  user() {
+    return JSON.parse(document.getElementById('initial-data').getAttribute('user-json'));
+  },
+
   menus() {
     return JSON.parse(document.getElementById('initial-data').getAttribute('menu-json'));
   },
@@ -89,6 +94,7 @@ export default {
     console.log('render');
     console.log(data);
     ResourceActions.initialize(data);
+    UserActions.initialize(this.user());
     MenuActions.initialize(this.menus());
 
     Router.run(routes, Router.HistoryLocation, (Handler, state) => {

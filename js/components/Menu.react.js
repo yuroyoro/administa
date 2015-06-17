@@ -98,11 +98,11 @@ export default React.createClass({
   generate(m, key) {
     switch(m.type) {
       case "label":
-        return this.label(m);
+        return this.label(m, key);
       case "group":
-        return this.group(m);
+        return this.group(m, key);
       case "menu":
-        return this.menu(m);
+        return this.menu(m, key);
       default:
         //noop
     }
@@ -121,6 +121,19 @@ export default React.createClass({
 
         <!-- sidebar: style can be found in sidebar.less -->
         <section className="sidebar">
+
+          <!-- Sidebar Menu -->
+          <ul className="sidebar-menu">
+            { this.menus() }
+          </ul><!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+    );
+  },
+})
+
+/*
 
           <!-- Sidebar user panel (optional) -->
           <div className="user-panel">
@@ -144,19 +157,6 @@ export default React.createClass({
             </div>
           </form>
           <!-- /.search form -->
-
-          <!-- Sidebar Menu -->
-          <ul className="sidebar-menu">
-            { this.menus() }
-          </ul><!-- /.sidebar-menu -->
-        </section>
-        <!-- /.sidebar -->
-      </aside>
-    );
-  },
-})
-
-/*
             <li className="header">HEADER</li>
             <!-- Optionally, you can add icons to the links -->
             <li className="active"><a href="#"><span>Link</span></a></li>

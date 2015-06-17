@@ -1,5 +1,25 @@
+import UserStore   from 'stores/UserStore';
 
 export default React.createClass({
+  displayName: 'Header',
+
+  getInitialState() {
+    return { user: UserStore.getState() };
+  },
+
+  componentDidMount() {
+    UserStore.addEventListener(this._onChange);
+  },
+
+  componentWillUnmount() {
+    UserStore.removeEventListener(this._onChange);
+  },
+
+  _onChange() {
+    var user = UserStore.getState();
+    this.setState({ user: user});
+  },
+
   render() {
     return(
       <!-- Main Header -->
@@ -14,18 +34,15 @@ export default React.createClass({
           <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span className="sr-only">Toggle navigation</span>
           </a>
-          <!-- Navbar Right Menu -->
+          <!-- Navbar Right User -->
           <div className="navbar-custom-menu">
             <ul className="nav navbar-nav">
 
-              <!-- User Account Menu -->
+              <!-- User Account User -->
               <li className="dropdown user user-menu">
-                <!-- Menu Toggle Button -->
                 <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-                  <!-- The user image in the navbar-->
-                  <img src="http://www.gravatar.com/avatar/f9e7f1e6a9654f137e12cf84ce14e34d.png" className="user-image" alt="User Image"/>
-                  <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span className="hidden-xs">yuroyoro</span>
+                  <img src={ this.state.user.icon } className="user-image" alt="User Image"/>
+                  <span className="hidden-xs">{ this.state.user.name }</span>
                 </a>
               </li>
             </ul>
