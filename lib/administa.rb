@@ -4,7 +4,6 @@ require "administa/model"
 
 #
 # TODO
-# - 認証
 # - 削除
 # - permalink
 # - animation入れる
@@ -16,6 +15,7 @@ require "administa/model"
 # - datetime picker
 #
 # Done;
+# - 認証
 # - has_many対応
 # - has_many through対応
 # - validation

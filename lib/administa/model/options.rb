@@ -79,13 +79,17 @@ module Administa
       def columns_meta(name)
         return @columns_meta[name] if @columns_meta && @columns_meta[name]
 
-        col = klass.column_for_attribute(name)
+        col = klass.columns_hash[name.to_s]
         return unless col
 
-        assocs = klass.reflect_on_all_associations
+        assocs    = klass.reflect_on_all_associations
+        uploaders = (klass.respond_to?(:uploaders) && klass.uploaders) || {}
+
+        type = uploaders[col.name.to_sym].nil? ? col.type : :file # carrierwave?
+
         meta = {
           name: col.name,
-          type: col.type,
+          type: type,
           readonly: readonly?(col.name),
         }
 
@@ -183,7 +187,7 @@ module Administa
         association = col[:association]
 
         if col[:readonly]
-          unless association
+          unless association && name != :id
             Rails.logger.debug "#{name} isn't specified in 'attr_accessible of' #{klass}. You should add #{name} if you want to edit"
             return
           end
