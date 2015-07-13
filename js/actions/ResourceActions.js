@@ -1,5 +1,6 @@
 import AppDispatcher from '../AppDispatcher';
 import Constants     from '../Constants';
+import Utils         from 'Utils';
 
 export default {
 
@@ -85,14 +86,7 @@ export default {
 
     console.log('create:' + url);
 
-    return $.ajax({
-      url: url,
-      type: "POST",
-      dataType: 'json',
-      contentType: 'application/json',
-      data: JSON.stringify(data),
-    })
-    .done((data) => {
+    return this.sendRequiest("POST", url, data).done((data) => {
       console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_CREATED,
@@ -119,14 +113,7 @@ export default {
 
     console.log('update:' + url);
 
-    return $.ajax({
-      url: url,
-      type: "PUT",
-      dataType: 'json',
-      contentType: 'application/json',
-      data: JSON.stringify(data),
-    })
-    .done((data) => {
+    return this.sendRequiest("PUT", url, data).done((data) => {
       console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_UPDATED,
@@ -145,6 +132,125 @@ export default {
       }
       console.error(url, status, err.toString());
     }).promise();
+  },
+
+  sendRequiest(method, url, data) {
+    var reqdata = this.requestData(data);
+    var ajaxparams = {
+      url: url,
+      type: method,
+      dataType: 'json',
+    };
+
+    if( reqdata instanceof FormData ){
+      ajaxparams.data = reqdata;
+      ajaxparams.processData = false;
+      ajaxparams.contentType = false;
+    } else {
+      ajaxparams.data = JSON.stringify(reqdata);
+      ajaxparams.contentType =  'application/json';
+    }
+
+    return $.ajax(ajaxparams);
+  },
+
+  requestData(data) {
+    var res   = this.separateJsonAndFiles(data);
+    var json  = res.json;
+    var files = res.files;
+
+    if( Utils.empty(files) ) {
+      return json;
+    }
+
+    var formdata = new FormData();
+    formdata = this.constructFormData(formdata, json);
+    formdata = this.constructFormData(formdata, files);
+
+    return formdata;
+  },
+
+  constructFormData(formdata, data, prefix) {
+
+    var keys = Object.keys(data);
+    for (var i = 0, len = keys.length; i < len; i++) {
+      var key = keys[i];
+      var v = data[key];
+
+      var name = key;
+      if( prefix ) {
+        name = `${prefix}[${key}]`;
+      }
+
+      if( v instanceof File ) {
+        formdata.append(name, v, v.name);
+        continue;
+      }
+
+      if( v instanceof Array ) {
+        v.forEach((child) => {
+          this.constructFormData(formdata, child, name);
+        });
+        continue;
+      }
+
+      if( v instanceof Object) {
+        this.constructFormData(formdata, v, name);
+        continue;
+      }
+      formdata.append(name, v);
+    }
+
+    return formdata;
+  },
+
+  separateJsonAndFiles(data) {
+    var json  = {};
+    var files = {};
+
+    var keys = Object.keys(data);
+    for (var i = 0, len = keys.length; i < len; i++) {
+      var name = keys[i];
+      var v = data[name];
+
+      if( v instanceof File ) {
+        files[name] = v;
+        continue;
+      }
+
+      if( v instanceof Array ) {
+        var childJson = [];
+        var childFiles= [];
+        v.forEach((child) => {
+          var res = this.separateJsonAndFiles(v);
+          childJson.push(res.json);
+          childFiles.push(res.files);
+        });
+
+        if( Utils.present(childJson) ) {
+          json[name] = childJson;
+        }
+        if( Utils.present(childFiles) ) {
+          files[name] = childFiles;
+        }
+        continue;
+      }
+
+      if( v instanceof Object) {
+        var res = this.separateJsonAndFiles(v);
+        if( Utils.present(res.json) ) {
+          json[name]  = res.json;
+        }
+        if( Utils.present(res.files) ) {
+          files[name] = res.files;
+        }
+        continue;
+      }
+
+      json[name] = v;
+    }
+
+    return { json: json, files: files };
   }
 }
 

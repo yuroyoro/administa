@@ -9,6 +9,7 @@ import HasOne          from './HasOne.react';
 import HasMany         from './HasMany.react';
 import Through         from './Through.react';
 import LinkMixin       from 'components/LinkMixin';
+import Utils           from 'Utils';
 
 export default React.createClass({
   displayName: 'form/Form',
@@ -27,7 +28,7 @@ export default React.createClass({
     dirty:    React.PropTypes.bool,
   },
 
-  properties() {
+  columns() {
     var cols = null;
     if(this.props.id){
       cols = this.props.settings.edit.columns;
@@ -35,9 +36,15 @@ export default React.createClass({
       cols = this.props.settings.create.columns;
     }
 
+    return cols;
+  },
+
+  properties() {
+    var cols = this.columns();
+
     var resource = this.props.resource;
     var errors   = this.props.errors;
-    var errorsPresent = (errors && Object.keys(errors).length > 0);
+    var errorsPresent = Utils.present(errors);
 
     return cols.map((col) => {
 
@@ -90,6 +97,10 @@ export default React.createClass({
 
       return <TheComponent {...attrs} />
     });
+  },
+
+  hasFileField () {
+    return this.columns().some((c) => { return c.type == "file" });
   },
 
   getFormData(){
@@ -229,7 +240,9 @@ export default React.createClass({
             </div>
           </div>
           <div className="box-body">
-            { properties }
+            <form>
+              { properties }
+            </form>
           </div>
         </div>
       </div>

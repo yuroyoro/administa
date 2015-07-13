@@ -12,6 +12,8 @@ export default React.createClass({
 
   },
 
+
+
   render() {
     var column   = this.props.column;
     var name = this.toProperyName(column);
@@ -19,11 +21,23 @@ export default React.createClass({
     var resource = this.props.resource;
 
     var value = this.toLabel(column, resource, this.props.settings.search_columns);
+    var tag = null;
+
+    switch( this.props.column.type ) {
+      case "file" :
+        var imgtag = null;
+        if( value.url ) {
+          tag = <span><img src={ value.url } />{ value.url }</span>;
+        }
+         break;
+      default:
+         tag = value;
+    }
 
     return(
       <div className="form-group" key={ name }>
          <label htmlFor={ name }>{ name }</label>
-         <blockquote> { value }</blockquote>
+         <blockquote> { tag }</blockquote>
       </div>
     );
   },
