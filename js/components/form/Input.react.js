@@ -19,6 +19,9 @@ export default React.createClass({
     if ( this.props.column.type == 'file') {
       value  = jQuery(event.target).prop('files')[0];
     }
+    if ( this.props.column.type == 'boolean') {
+      value = event.target.checked;
+    }
     this.setState({
       value: value,
       dirty: (value != initial),
@@ -62,6 +65,12 @@ export default React.createClass({
          );
 
          break;
+      case "boolean" :
+        var text = 'on';
+        if(!this.state.value) text = 'off';
+
+        return <div className="checkbox"><label><input type="checkbox"  className={ this.inputStatusClasses() } name={ name } checked={ !!value } disabled={this.props.disabled} onChange={ this.handleChange } />{ text }</label></div>
+          break;
       default:
         return <input type="text"  className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
     }

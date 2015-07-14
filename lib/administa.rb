@@ -9,7 +9,6 @@ require "administa/model"
 # - animation入れる
 # - genratorつける
 # - test書きたい
-# - file upload
 # - enum
 # - boolean
 # - datetime picker
@@ -23,6 +22,7 @@ require "administa/model"
 # - メッセージ国際化対応
 # - メニュー
 # - メニュー階層化
+# - file upload
 #
 module Administa
 

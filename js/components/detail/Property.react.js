@@ -30,6 +30,10 @@ export default React.createClass({
           tag = <span><img src={ value.url } />{ value.url }</span>;
         }
          break;
+      case "boolean" :
+         tag = 'on';
+         if(!value) tag = 'off';
+         break;
       default:
          tag = value;
     }

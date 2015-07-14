@@ -22,11 +22,17 @@ export default {
 
   inputClasses() {
     var classes = "form-control input-sm";
+    classes += "" +  this.inputStatusClasses();
+    return classes;
+  },
+
+  inputStatusClasses() {
+    var classes = "";
     if(this.isDirty()){
-      classes += " modified";
+      classes += "modified";
     }
     if(this.hasError()){
-      classes += " invalid";
+      classes += "invalid";
     }
     return classes;
   },
