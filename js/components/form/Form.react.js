@@ -17,15 +17,16 @@ export default React.createClass({
   mixins: [LinkMixin, Router.Navigation],
 
   propTypes: {
-    name:     React.PropTypes.string,
-    id:       React.PropTypes.number,
-    col:      React.PropTypes.number,
-    resource: React.PropTypes.object.isRequired,
-    settings: React.PropTypes.object,
-    errors:   React.PropTypes.object,
-    onsubmit: React.PropTypes.func,
-    classes:  React.PropTypes.array,
-    dirty:    React.PropTypes.bool,
+    name:      React.PropTypes.string,
+    id:        React.PropTypes.number,
+    col:       React.PropTypes.number,
+    resource:  React.PropTypes.object.isRequired,
+    settings:  React.PropTypes.object,
+    errors:    React.PropTypes.object,
+    onsubmit:  React.PropTypes.func,
+    classes:   React.PropTypes.array,
+    dirty:     React.PropTypes.bool,
+    csrfToken: React.PropTypes.string,
   },
 
   columns() {
@@ -185,7 +186,7 @@ export default React.createClass({
     let name = this.props.name;
     let pagination = this.props.pagination;
 
-    ResourceActions.create(name, { resource: data }).then(() => {
+    ResourceActions.create(name, { resource: data, csrfToken: this.props.csrfToken }).then(() => {
       var state = ResourceStore.getState(name);
       var id = state.currentId;
       this.transitionToShow(name, id, pagination);
@@ -199,7 +200,7 @@ export default React.createClass({
     let id   = this.props.id;
     let pagination = this.props.pagination;
 
-    ResourceActions.update(name, id, { resource: data }).then(() => {
+    ResourceActions.update(name, id, { resource: data, csrfToken: this.props.csrfToken }).then(() => {
       this.transitionToShow(name, id, pagination);
     } );
   },

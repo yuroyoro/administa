@@ -11,6 +11,7 @@ module Administa
 
         @result[:id]       =  resource.id
         @result[:resource] =  model.as_json(resource, includes:includes)
+        @result[:csrf_token] = form_authenticity_token
 
         respond_to do |format|
           format.html { render :index }

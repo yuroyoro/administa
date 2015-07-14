@@ -135,12 +135,22 @@ export default {
   },
 
   sendRequiest(method, url, data) {
+    var csrfToken = data.csrfToken;
+    delete data.csrfToken;
+
     var reqdata = this.requestData(data);
     var ajaxparams = {
       url: url,
       type: method,
       dataType: 'json',
     };
+
+
+    if( csrfToken ) {
+      ajaxparams.headers = {
+        'X-CSRF-Token': csrfToken
+      }
+    }
 
     if( reqdata instanceof FormData ){
       ajaxparams.data = reqdata;

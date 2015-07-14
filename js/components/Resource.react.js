@@ -47,6 +47,7 @@ export default React.createClass({
     var settings   = this.state.settings        || {};
     var pagination = this.state.pagination      || {};
     var errors     = this.state.errors          || {};
+    var csrfToken  = this.state.csrfToken       || "";
 
     console.log('resource = ');
     console.log(resource);
@@ -58,12 +59,13 @@ export default React.createClass({
     }
 
     var attrs = {
-      name: name,
-      id:   id,
-      label: settings.label,
-      settings: settings,
+      name:       name,
+      id:         id,
+      label:      settings.label,
+      settings:   settings,
       pagination: pagination,
-      errors: errors,
+      errors:     errors,
+      csrfToken:  csrfToken,
     };
 
     var list_attrs = {
