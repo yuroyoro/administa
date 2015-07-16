@@ -84,14 +84,18 @@ module Administa
 
         assocs    = klass.reflect_on_all_associations
         uploaders = (klass.respond_to?(:uploaders) && klass.uploaders) || {}
+        enums     = enumerized_attributes(klass).try(:[], col.name.to_sym)
 
-        type = uploaders[col.name.to_sym].nil? ? col.type : :file # carrierwave?
+        type = col.type
+        type = :file if uploaders[col.name.to_sym]  # carrierwave?
+        type = :enum if enums
 
         meta = {
           name: col.name,
           type: type,
           readonly: readonly?(col.name),
         }
+        meta[:enums] = enums if enums
 
         assocs.
           find{|a| a.macro == :belongs_to && a.foreign_key == col.name}.
@@ -228,6 +232,15 @@ module Administa
       def label
         I18n.t(self.name, scope: 'activerecord.models', default: self.name.to_s)
       end
+
+      def enumerized_attributes(klass)
+        klass.enumerized_attributes.
+          try(:attributes).
+          inject({}){|h, (k, attr)|
+            h[k.to_sym] = attr.values.try(:map,  &:to_sym); h
+          }
+      end
+
     end
   end
 end

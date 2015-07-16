@@ -71,6 +71,15 @@ export default React.createClass({
 
         return <div className="checkbox"><label><input type="checkbox"  className={ this.inputStatusClasses() } name={ name } checked={ !!value } disabled={this.props.disabled} onChange={ this.handleChange } />{ text }</label></div>
           break;
+      case "enum":
+        var options = this.props.column.enums.map((e) => {
+          return <option value={e} selected={ e === value }>{ e }</option>;
+        });
+
+        return <select className="form-control" name={ name } disabled={this.props.disabled} onChange={ this.handleChange }>
+          { options }
+        </select>
+          break;
       default:
         return <input type="text"  className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
     }
