@@ -9,3 +9,7 @@ test/dummy/.sass-cache
 bower_components/
 node_modules/
 app/assets/javascripts/administa/build/
+Gemfile.lock
+vendor/
+.ruby-version
+test/lib/
