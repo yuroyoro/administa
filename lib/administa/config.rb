@@ -6,14 +6,19 @@ module Administa
     include ::Administa::Config::Auth
     include ::Administa::Config::Menu
 
-    attr_accessor :controllers
-
     def models
       @models ||= self.controllers.to_a.inject({}){|h, controller|
         model = controller.model
         h[model.name.to_sym] = model
         h
       }
+    end
+
+    def controllers
+      # lazy loading
+      run_menu_def unless menu_initialized
+
+      @controllers
     end
   end
 end

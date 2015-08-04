@@ -1,6 +1,9 @@
 module Administa
   class Config
     module Menu
+
+      attr_accessor :menu_initialized
+
       def menus(controller)
         m= Tree.new(&@menu_def)
         m.run(controller).menus
@@ -8,10 +11,14 @@ module Administa
 
       def menu(&block)
         @menu_def = block
+      end
+
+      def run_menu_def
         m = Tree.new(&@menu_def)
         m.run
 
-        self.controllers = m.controllers
+        @controllers = m.controllers
+        self.menu_initialized = true
       end
 
       class Tree
@@ -19,7 +26,7 @@ module Administa
 
         def initialize(&block)
           @menus      = []
-          @controlers = []
+          @controllers = []
           @block      = block
         end
 
@@ -52,7 +59,7 @@ module Administa
           m = Tree.new(&block)
           m.run(@current_controller)
 
-          @controlers += m.controllers.to_a
+          @controllers += m.controllers.to_a
           children = m.menus
           opened=  children.any?{|h| h[:selected] || h[:opened]}
 
@@ -71,7 +78,7 @@ module Administa
         private
         def controller(c, options= {})
           selected = @current_controller.try(:controller_path) == c.controller_path
-          @controlers.push(c)
+          @controllers.push(c)
           {
             type:  :menu,
             path:  "/#{c.controller_path}",
