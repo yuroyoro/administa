@@ -12,8 +12,6 @@ export default React.createClass({
 
   },
 
-
-
   render() {
     var column   = this.props.column;
     var name = this.toProperyName(column);
@@ -41,7 +39,7 @@ export default React.createClass({
     return(
       <div className="form-group" key={ name }>
          <label htmlFor={ name }>{ name }</label>
-         <blockquote> { tag }</blockquote>
+         <blockquote>{ tag }</blockquote>
       </div>
     );
   },

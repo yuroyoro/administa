@@ -5,7 +5,6 @@ require "administa/model"
 #
 # TODO
 # - 削除
-# - permalink
 # - animation入れる
 # - test書きたい
 # - datetime picker
@@ -24,6 +23,7 @@ require "administa/model"
 # - enum
 # - boolean
 # - genratorつける
+# - permalink
 #
 module Administa
 

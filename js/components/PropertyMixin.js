@@ -34,10 +34,19 @@ export default {
           val.push(<div key={i}>{s}</div>);
         }
 
+        val;
+      } else {
+        val = this.extractLabel(name, nested, search_columns);
+      }
+
+      // permlink
+      if( !(nested && nested.id && col.association.controller_path)) {
         return val;
       }
 
-      val = this.extractLabel(name, nested, search_columns);
+      var href =  `/${ col.association.controller_path }/${ nested.id }`;
+      return <a href={ href }>{ val}</a>
+
     }
     return val;
   },

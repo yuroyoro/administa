@@ -149,20 +149,24 @@ module Administa
             selectable = (not readonly?(foreign_key))
         end
 
+        assoc_model_name = assoc.class_name.to_s.underscore
         res = {
           name:       assoc.name,
           type:       type,
           foreign_key: foreign_key,
           pluralized: assoc.name.to_s.pluralize,
-          path:       assoc.class_name.to_s.underscore.pluralize,
+          path:       assoc_model_name.pluralize,
           select:     selectable,
           create:     (editable && nested.present? && !nested[:update_only]),
           update:     (editable && nested.present?),
           destroy:    (nested.present? && !!nested[:allow_destroy]),
         }
 
-        # model = Administa.config.models
+        if model = Administa.config.models[assoc_model_name.to_sym]
+          res[:controller_path] = model.controller.controller_path
+        end
 
+        res
       end
 
       def includes(action)
