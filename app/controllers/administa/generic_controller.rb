@@ -8,8 +8,15 @@ module Administa
     def model
       return @model if @model
 
-      model = params[:model].try(:camelize).try(:singularize).try(:safe_constantize)
+      name = params[:model].try(:camelize).try(:singularize)
+      if @model = Administa.config.modes[name]
+        return @model
+      end
+
+      model = name.try(:safe_constantize)
       @model = Administa::Model.new(self, model, {})
+      @model.setup_options!
+      @model
     end
 
     def reject_except_json

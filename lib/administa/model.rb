@@ -11,16 +11,16 @@ module Administa
     include Administa::Model::Json
     include Administa::Model::Attributes
 
-    attr_accessor :name, :controller, :klass, :options
+    attr_accessor :name, :controller, :klass, :options, :given_options
     def initialize(controller, klass, options = {})
       self.name       = klass.name.underscore
       self.controller = controller
       self.klass      = klass
+      self.given_options = options
 
-      setup_options!(klass, options)
+      Administa.config.add_model(self)
     end
 
     delegate :column_names, :arel_table, :to => :klass
-
   end
 end

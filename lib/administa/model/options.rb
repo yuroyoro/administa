@@ -7,7 +7,7 @@ module Administa
         translate(options)
       end
 
-      def setup_options!(klass, options)
+      def setup_options!(klass = self.klass, options = self.given_options)
 
         options        = default_settings(klass).deep_merge(options)
         self.options = options
@@ -149,7 +149,7 @@ module Administa
             selectable = (not readonly?(foreign_key))
         end
 
-        {
+        res = {
           name:       assoc.name,
           type:       type,
           foreign_key: foreign_key,
@@ -160,6 +160,9 @@ module Administa
           update:     (editable && nested.present?),
           destroy:    (nested.present? && !!nested[:allow_destroy]),
         }
+
+        # model = Administa.config.models
+
       end
 
       def includes(action)

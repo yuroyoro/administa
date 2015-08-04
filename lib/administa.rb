@@ -7,9 +7,9 @@ require "administa/model"
 # - 削除
 # - permalink
 # - animation入れる
-# - genratorつける
 # - test書きたい
 # - datetime picker
+# - ESLInt
 #
 # Done;
 # - 認証
@@ -23,6 +23,7 @@ require "administa/model"
 # - file upload
 # - enum
 # - boolean
+# - genratorつける
 #
 module Administa
 

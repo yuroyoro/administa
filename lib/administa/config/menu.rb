@@ -2,8 +2,6 @@ module Administa
   class Config
     module Menu
 
-      attr_accessor :menu_initialized
-
       def menus(controller)
         m= Tree.new(&@menu_def)
         m.run(controller).menus
@@ -18,7 +16,6 @@ module Administa
         m.run
 
         @controllers = m.controllers
-        self.menu_initialized = true
       end
 
       class Tree
