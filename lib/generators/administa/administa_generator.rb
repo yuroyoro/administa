@@ -1,9 +1,8 @@
 class AdministaGenerator < Rails::Generators::NamedBase
   source_root File.expand_path('../templates', __FILE__)
 
-  class_option :namespace,   type: "string", default: "",                 aliases: '-n'
-  class_option :routes_file, type: "string", default: "config.routes.rb", aliases: '-r'
-  class_option :base_class,  type: "string", default: "",                 aliases: '-b'
+  class_option :namespace,  type: "string", default: "", aliases: '-n'
+  class_option :base_class, type: "string", default: "", aliases: '-b'
 
   def initialize_options
     if options[:namespace].blank?
@@ -52,37 +51,6 @@ class AdministaGenerator < Rails::Generators::NamedBase
                      "    menu #{options[:namespace].camelize}::#{class_name.pluralize}Controller\n",
                      after: "config.menu do\n"
 
-  end
-
-  # config/route.rb
-  #   append route to config/route
-  def setup_routes
-    routes_file = options[:routes_file]
-
-    add_route = lambda{|routing_code|
-      sentinel = /\.routes\.draw do\s*\n/m
-
-      in_root do
-        inject_into_file routes_file, "  #{routing_code}\n", { after: sentinel, verbose: false, force: true }
-      end
-    }
-
-    # generate routs file
-    unless routes_file == "config/routes.rb"
-      unless File.exist? routes_file
-        template "routes.rb", routes_file
-      end
-    else
-      # append namespace
-      add_route.call(<<-ROUTES.strip_heredoc.indent(2))
-        namespace :#{options[:namespace]} do
-        end
-
-        mount Administa::Engine => "/administa"
-      ROUTES
-    end
-
-    insert_into_file routes_file, "    resources :#{file_name.pluralize}\n", after: "namespace :#{options[:namespace]} do\n"
   end
 
   # app/controllers/administa/foo_controller.rb

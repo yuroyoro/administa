@@ -36,13 +36,12 @@ module Administa
 
       def add_dynamic_controller_routes
         ns = self.namespace.to_sym
-        dcs = @dynamic_controllers
+        dcs = self.controllers.map(&:model).map(&:name).map(&:pluralize).map(&:to_sym)
 
         Rails.application.routes.draw do
           namespace ns do
-            dcs.keys.each do |res|
-              puts "added routes #{ns} -> #{res.to_s.pluralize}"
-              resources res.to_s.pluralize.to_sym
+            dcs.each do |res|
+              resources res
             end
           end
         end
@@ -52,13 +51,6 @@ module Administa
 end
 
 class Rails::Application::RoutesReloader
-
-  def execute_if_updated_with_dynamic_routes
-    execute_if_updated_without_dynamic_routes
-
-    Administa.config.add_dynamic_controller_routes
-  end
-  alias_method_chain :execute_if_updated, :dynamic_routes
 
   def load_paths_with_dynamic_routes
     load_paths_without_dynamic_routes
