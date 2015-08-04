@@ -3,18 +3,7 @@ module Administa
     module Attributes
 
       def assign(record, attrs)
-        puts '-' * 80
-        puts ' before:'
-        ap attrs
-        puts '-' * 80
-
         attrs = transform_attributes(attrs, klass)
-
-        puts '-' * 80
-        puts ' atrer:'
-        ap attrs
-        puts '-' * 80
-
         record.assign_attributes(attrs.except(:id, :updated_at, :created_at))
       end
 

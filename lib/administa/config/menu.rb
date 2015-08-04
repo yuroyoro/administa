@@ -3,8 +3,29 @@ module Administa
     module Menu
 
       def menus(controller)
-        m= Tree.new(&@menu_def)
-        m.run(controller).menus
+
+        f = ->(m) {
+          case m[:type]
+          when :menu
+            lf = m.delete(:label_f)
+            m[:label] = lf.call
+            sf = m.delete(:selected_f)
+            m[:selected] = sf.call(controller)
+          when :group
+            m[:label]  = f.call(m[:label].dup)
+            m[:menus]  = m[:menus].map{|sm| f.call(sm.dup) }
+            m[:opened] = m[:label][:selected] || m[:menus].any?{|sm| sm[:opend] || sm[:selected] }
+          when :label
+            lf = m.delete(:label_f)
+            m[:label] = lf.call
+          end
+
+          m
+        }
+
+        @menu_tree.menus.map do |m|
+          f.call(m.dup)
+        end
       end
 
       def menu(&block)
@@ -12,10 +33,10 @@ module Administa
       end
 
       def run_menu_def
-        m = Tree.new(&@menu_def)
-        m.run
+        @menu_tree  = Tree.new(&@menu_def)
+        @menu_tree.run
 
-        @controllers = m.controllers
+        @controllers = @menu_tree.controllers
       end
 
       class Tree
@@ -43,18 +64,28 @@ module Administa
         def label(s, options = {})
           @menus.push({
             type: :label,
-            label: t(s),
+            label_f: -> { t(s) },
           })
         end
 
+        def label_group(title, options = {}, &block)
+          t = label(title, options)
+          add_group(t, options, &block)
+        end
+
         def group(title, options = {}, &block)
-          t = case title
-              when String, Symbol then label(title, options)
-              else controller(title, options)
+          c = case title
+              when String, Symbol then Administa.config.generate_controller(title.to_s)
+              else title
           end
 
+          t = controller(c, options)
+          add_group(t, options, &block)
+        end
+
+        def add_group(title, options = {}, &block)
           m = Tree.new(&block)
-          m.run(@current_controller)
+          m.run
 
           @controllers += m.controllers.to_a
           children = m.menus
@@ -62,25 +93,31 @@ module Administa
 
           @menus.push({
             type:   :group,
-            label:  t,
+            label:  title,
             menus:  children,
             opened: opened,
           })
         end
 
-        def menu(c, options = {})
+        def menu(controller, options = {})
+          c = case controller
+              when String, Symbol then Administa.config.generate_controller(controller.to_s)
+              else controller
+          end
+
           @menus.push(controller(c))
         end
 
         private
         def controller(c, options= {})
-          selected = @current_controller.try(:controller_path) == c.controller_path
+          selected_f = ->(current){ current.try(:controller_path) == c.controller_path }
+          label_f    = -> { c.model.label }
           @controllers.push(c)
           {
-            type:  :menu,
-            path:  "/#{c.controller_path}",
-            label: c.model.label,
-            selected: selected
+            type:       :menu,
+            path:       "/#{c.controller_path}",
+            label_f:    label_f,
+            selected_f: selected_f,
           }
         end
       end

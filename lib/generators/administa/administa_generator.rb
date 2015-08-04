@@ -1,9 +1,18 @@
 class AdministaGenerator < Rails::Generators::NamedBase
   source_root File.expand_path('../templates', __FILE__)
 
-  class_option :namespace,   type: "string", default: "administa",             aliases: '-n'
-  class_option :routes_file, type: "string", default: "config.routes.rb",      aliases: '-r'
-  class_option :base_class,  type: "string", default: "ApplicationController", aliases: '-b'
+  class_option :namespace,   type: "string", default: "",                 aliases: '-n'
+  class_option :routes_file, type: "string", default: "config.routes.rb", aliases: '-r'
+  class_option :base_class,  type: "string", default: "",                 aliases: '-b'
+
+  def initialize_options
+    if options[:namespace].blank?
+      options[:namespace] = Administa.config.namespace.to_s
+    end
+    if options[:base_class].blank?
+      options[:base_class] = Administa.config.base_controller.to_s
+    end
+  end
 
   # connfig/initializers/administa.rb
   def create_initializers

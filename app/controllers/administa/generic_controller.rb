@@ -2,8 +2,11 @@ module Administa
   class GenericController < ActionController::Base
     include Administa::Controller
 
-    before_action :reject_except_json
-
+    if Rails.version < "4.0"
+      before_filter:reject_except_json
+    else
+      before_action :reject_except_json
+    end
 
     def model
       return @model if @model
