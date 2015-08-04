@@ -191,8 +191,8 @@ module Administa
         association = col[:association]
 
         if col[:readonly]
-          unless association && name != :id
-            Rails.logger.debug "#{name} isn't specified in 'attr_accessible of' #{klass}. You should add #{name} if you want to edit"
+          unless association
+            Rails.logger.debug "#{name} isn't specified in 'attr_accessible' of #{klass}. You should add #{name} if you want to edit" unless name.to_sym == :id
             return
           end
 

@@ -2,7 +2,8 @@ module Administa
   class Model
     module Finder
       def all
-        Administa::Model::Relation.new(self, klass.all)
+        rel = (Rails.version < "4.0") ?  klass.scoped : klass.all
+        Administa::Model::Relation.new(self, rel)
       end
 
       def select(options = {})
