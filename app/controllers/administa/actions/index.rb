@@ -30,6 +30,7 @@ module Administa
             settings:   model.settings,
             resources:  model.as_json(resources.to_a, includes: model.includes(:index)),
             pagination: resources.pagination_metadata.merge(:q => q),
+            csrf_token: form_authenticity_token,
           }
 
           result

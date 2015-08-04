@@ -68,7 +68,6 @@ export default React.createClass({
       var name = this.toProperyName(col);
       return (<th key= { name } >{ name }</th>);
     });
-    headers.push(<th key='administa-actions'>actions</th> );
 
     var items = this.props.resources.map((resource) => {
       let resource = resource;
@@ -78,7 +77,6 @@ export default React.createClass({
         resource:       resource,
         key:            resource.id,
         selected:       selected,
-        showlink:       true,
         columns:        index_settings.columns,
         search_columns: this.props.settings.search_columns,
         pagination:     this.props.pagination,

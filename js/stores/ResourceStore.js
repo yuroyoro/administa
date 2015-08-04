@@ -19,6 +19,9 @@ class ResourceState {
 
   update(other) {
     var setUnlessEmpty = function(attr, self) {
+      if( other.hasOwnProperty(attr) == false ) {
+        return
+      }
       var v = other[attr];
       if(v && Object.keys(v).length > 0) {
         self[attr] = v;

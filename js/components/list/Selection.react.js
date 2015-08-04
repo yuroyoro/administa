@@ -86,7 +86,6 @@ export default React.createClass({
         name:           this.props.name,
         resource:       resource,
         key:            resource.id,
-        showlink:       false,
         columns:        columns,
         search_columns: settings.search_columns,
         pagination:     this.state.pagination,

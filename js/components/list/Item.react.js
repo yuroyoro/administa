@@ -17,7 +17,6 @@ export default React.createClass({
     columns:        PT.array.isRequired,
     search_columns: PT.array.isRequired,
     pagination:     PT.object.isRequired,
-    showlink:       PT.bool,
     onclick:        PT.func,
   },
 
@@ -38,9 +37,6 @@ export default React.createClass({
 
       return (<td key={ col.name } >{ label }</td>);
     });
-    if( this.props.showlink ){
-      cols.push( <td key='administa-resource-action'>{ this.showLink(resource) }</td> );
-    }
 
     return(
       <tr key={ resource.id } className={ classes } onClick={ this.props.onclick} >
