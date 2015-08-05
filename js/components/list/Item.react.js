@@ -28,14 +28,16 @@ export default React.createClass({
     return this.linkToShow(attrs);
   },
 
+
   render() {
     var resource = this.props.resource;
     var classes = this.props.selected ? "info" : "";
 
     var cols = this.props.columns.map((col) => {
       var label = this.toLabel(col, resource, this.props.search_columns);
+      var title = this.toTitle(col, resource, this.props.search_columns);
 
-      return (<td key={ col.name } >{ label }</td>);
+      return (<td key={ col.name } alt={ title } title={ title }>{ label }</td>);
     });
 
     return(
