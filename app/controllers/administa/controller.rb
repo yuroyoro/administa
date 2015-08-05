@@ -16,7 +16,11 @@ module Administa
 
       class_attribute :model, :instance_write => false
 
-      before_filter :_authenticate!
+      if Rails.version < "4.0"
+        before_filter :_authenticate!
+      else
+        before_action :_authenticate!
+      end
       helper_method :user_info
     end
 

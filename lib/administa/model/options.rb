@@ -20,7 +20,8 @@ module Administa
           columns = options.try(:[], action).try(:[], :columns)       || global_cols    || default_cols[action][:columns]
           extra   = options.try(:[], action).try(:[], :extra_columns) || global_ex_cols
 
-          column_names = columns.to_a + extra.to_a
+          column_names = (columns.to_a + extra.to_a).
+            inject([]){|arr, col| ([col, "#{col}_id".to_sym] & arr).present? ? arr : arr.push(col) }
 
           options[action] ||= {}
           options[action][:columns] = column_names.map{|col|
@@ -55,17 +56,16 @@ module Administa
       end
 
       def default_colums(klass)
-        columns = klass.column_names
-        show_columns   = columns
+        columns = klass.column_names.map(&:to_sym)
         create_columns = columns - %w(id created_at updated_at)
         edit_columns   = columns - %w(created_at updated_at)
 
         {
           index: {
-            columns: columns.take(8),
+            columns: columns,
           },
           show: {
-            columns: show_columns,
+            columns: columns,
           },
           create: {
             columns: create_columns,
@@ -105,7 +105,7 @@ module Administa
           }
 
         @columns_meta ||= {}
-        @columns_meta[name] = meta
+        @columns_meta[name.to_sym] = meta
 
         meta
       end
@@ -119,12 +119,16 @@ module Administa
         meta = create_association_meta(a)
         editable = [:select, :create, :update, :destroy].any?{|action| meta[action]}
 
-        {
+        res = {
           name:       a.name,
           type:       a.macro,
           readonly:   (not editable),
           association: meta,
         }
+
+        @associations_meta ||= {}
+        @associations_meta[name.to_sym] = res
+        res
       end
 
       def create_association_meta(assoc)

@@ -3,7 +3,7 @@ module Administa
     include Administa::Controller
 
     if Rails.version < "4.0"
-      before_filter:reject_except_json
+      before_filter :reject_except_json
     else
       before_action :reject_except_json
     end

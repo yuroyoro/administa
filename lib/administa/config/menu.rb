@@ -75,7 +75,7 @@ module Administa
 
         def group(title, options = {}, &block)
           c = case title
-              when String, Symbol then Administa.config.generate_controller(title.to_s)
+              when String, Symbol then Administa.config.generate_controller(title.to_s, options)
               else title
           end
 
@@ -101,7 +101,7 @@ module Administa
 
         def menu(controller, options = {})
           c = case controller
-              when String, Symbol then Administa.config.generate_controller(controller.to_s)
+              when String, Symbol then Administa.config.generate_controller(controller.to_s, options)
               else controller
           end
 

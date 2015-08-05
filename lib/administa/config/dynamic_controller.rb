@@ -5,7 +5,7 @@ module Administa
 
       attr_reader :dynamic_controllers
 
-      def generate_controller(name)
+      def generate_controller(name, options = {})
         base      = Administa.config.base_controller
         namespace = Administa.config.namespace.to_s.camelize
 
@@ -23,8 +23,10 @@ module Administa
 
         ns.const_set(controller_name, klass)
         klass.send(:include, ::Administa::Controller)
+
+        model_options = options.merge(model: model)
         klass.class_eval do
-          administa model: model
+          administa model_options
         end
 
         @dynamic_controllers ||= {}
