@@ -245,6 +245,7 @@ module Administa
       end
 
       def enumerized_attributes(klass)
+        return nil unless klass.respond_to? :enumerized_attributes
         klass.enumerized_attributes.
           try(:attributes).
           inject({}){|h, (k, attr)|
