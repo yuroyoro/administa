@@ -190,7 +190,7 @@ module Administa
 
       def readonly?(column)
         role       = self.options[:attr_accessible_role] || :default
-        authorizer = klass.active_authorizer[role]
+        authorizer = (klass.respond_to? :active_authorizer) ? klass.try(:active_authorizer).try(:[], role) : nil
         return false unless authorizer
 
         authorizer.deny?(column)
