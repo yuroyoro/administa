@@ -16,7 +16,7 @@ module Administa
     end
 
     def initialize_models!
-      @models.each do |_, m|
+      @models.to_a.each do |_, m|
         m.setup_options!
       end
     end

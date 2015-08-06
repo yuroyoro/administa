@@ -58,7 +58,7 @@ module Administa
         res
       end
 
-      def klass_of(name, klass = klass)
+      def klass_of(name, klass = self.klass)
         name.to_s.singularize.camelize.constantize
       rescue NameError
         association = klass.reflect_on_all_associations.find{|a| a.plural_name == name.to_s && a.options.key?(:class_name) }
@@ -66,7 +66,7 @@ module Administa
         association && association.options[:class_name].to_s.constantize
       end
 
-      def association_names(klass = klass)
+      def association_names(klass = self.klass)
         klass.reflect_on_all_associations.map{|a| a.collection? ? a.plural_name.to_sym : a.name }
       end
     end
