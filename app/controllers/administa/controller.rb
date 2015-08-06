@@ -31,6 +31,8 @@ module Administa
       end
     end
 
+    private
+
     def _authenticate!
       instance_eval(&Administa.config.authenticate_with)
     end

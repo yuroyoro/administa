@@ -7,6 +7,9 @@ module Administa
         includes = model.includes(:edit)
         resource = model.find(params[:id], includes)
 
+        # TODO: strong parameters
+        params.permit!
+
         attrs = params["resource"]
 
         model.assign(resource, attrs)

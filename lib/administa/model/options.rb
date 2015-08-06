@@ -77,7 +77,7 @@ module Administa
       end
 
       def columns_meta(name)
-        return @columns_meta[name] if @columns_meta && @columns_meta[name]
+        return @columns_meta[name.to_sym] if @columns_meta && @columns_meta[name.to_sym]
 
         col = klass.columns_hash[name.to_s]
         return unless col
@@ -91,7 +91,7 @@ module Administa
         type = :enum if enums
 
         meta = {
-          name: col.name,
+          name: col.name.to_sym,
           type: type,
           readonly: readonly?(col.name),
         }
@@ -111,7 +111,7 @@ module Administa
       end
 
       def associations_meta(name)
-        return @associations_meta[name] if @associations_meta && @associations_meta[name]
+        return @associations_meta[name.to_sym] if @associations_meta && @associations_meta[name.to_sym]
 
         a = klass.reflect_on_association(name)
         return nil unless a
@@ -120,7 +120,7 @@ module Administa
         editable = [:select, :create, :update, :destroy].any?{|action| meta[action]}
 
         res = {
-          name:       a.name,
+          name:       a.name.to_sym,
           type:       a.macro,
           readonly:   (not editable),
           association: meta,

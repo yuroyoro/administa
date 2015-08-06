@@ -6,6 +6,9 @@ module Administa
 
         resource = model.klass.new
 
+        # TODO: strong parameters
+        params.permit!
+
         attrs = params["resource"]
 
         model.assign(resource, attrs)
