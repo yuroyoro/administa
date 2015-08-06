@@ -9,9 +9,9 @@ Gem::Specification.new do |s|
   s.version     = Administa::VERSION
   s.authors     = ["Tomohito Ozaki"]
   s.email       = ["ozaki@yuroyoro.com"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Administa."
-  s.description = "TODO: Description of Administa."
+  s.homepage    = "https://github.com/yuroyoro/administa"
+  s.summary     = "The administration console framework/generator"
+  s.description = "The administration console framework/generator"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
