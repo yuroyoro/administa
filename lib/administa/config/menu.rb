@@ -49,6 +49,7 @@ module Administa
         end
 
         def run(current_controller = nil)
+          return unless @block
           @current_controller = current_controller
           self.instance_eval(&@block)
           self
