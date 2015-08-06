@@ -9,7 +9,7 @@ module Administa
 
       def transform_attributes(attr, klass = nil)
         role       = self.options[:attr_accessible_role] || :default
-        authorizer = klass.active_authorizer[role]
+        authorizer = (klass.respond_to? :active_authorizer) ? klass.try(:active_authorizer).try(:[],  role) : nil
         white_list = (authorizer ? authorizer.to_a : klass.column_names).map(&:to_sym)
         white_list.unshift(:id)
 
