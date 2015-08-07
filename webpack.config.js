@@ -59,8 +59,8 @@ module.exports = {
   module: {
     loaders: [
       // exports Administa object to global
-      { test: require.resolve('js/app'), loader: 'expose?Administa' },
-      { test: require.resolve('bower_components/jquery/dist/jquery'), loader: "expose?jQuery"},
+      { test: require.resolve('./js/app'), loader: 'expose?Administa' },
+      { test: require.resolve('./bower_components/jquery/dist/jquery'), loader: "expose?jQuery"},
 
       // babel-loader : the transpiler es6 to es5
       { test: /\.js$/, loader: 'babel-loader', exclude:  [/node_modules/, /bower_components/],  },
