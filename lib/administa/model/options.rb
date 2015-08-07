@@ -27,7 +27,7 @@ module Administa
           options[action][:columns] = column_names.map{|col|
             c = columns_meta(col) || associations_meta(col)
             unless c
-              raise ConfigurationError, "Unknown column : #{c} in #{klass} : #{action}"
+              raise ConfigurationError, "Unknown column : #{col} in #{klass} : #{action}"
             end
             c
           }
@@ -148,9 +148,12 @@ module Administa
         case type
           when :belongs_to
             selectable = (not readonly?(assoc.foreign_key))
-          when :has_many, :through
+          when :has_many
             foreign_key = "#{assoc.name.to_s.singularize}_ids"
             selectable = (not readonly?(foreign_key))
+          when :through
+            foreign_key = "#{assoc.name.to_s.singularize}_ids"
+            selectable = (not readonly?(foreign_key)) && nested.present?
         end
 
         assoc_model_name = assoc.class_name.to_s.underscore

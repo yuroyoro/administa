@@ -51,8 +51,9 @@ module Administa
         remains.except!(ignore_attrs)
         remains.reject!{|k,v| authorizer.deny?(k) && acceptable_names.include?(k) == false } if authorizer
 
+        methods = klass.instance_methods.map(&:to_s)
         remains.each do |k,v|
-          res[k] = v if klass.instance_methods.include?("#{k}=") || k == "_destroy"
+          res[k] = v if methods.include?("#{k}=") || k == "_destroy"
         end
 
         res

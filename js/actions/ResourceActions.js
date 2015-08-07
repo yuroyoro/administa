@@ -182,6 +182,7 @@ export default {
 
   constructFormData(formdata, data, prefix) {
 
+
     var keys = Object.keys(data);
     for (var i = 0, len = keys.length; i < len; i++) {
       var key = keys[i];
@@ -199,7 +200,11 @@ export default {
 
       if( v instanceof Array ) {
         v.forEach((child) => {
-          this.constructFormData(formdata, child, name);
+          if( Utils.isPrimitive(child) ) {
+            formdata.append(name + "[]", child);
+          } else {
+            this.constructFormData(formdata, child, name + "[]");
+          }
         });
         continue;
       }
@@ -218,6 +223,10 @@ export default {
     var json  = {};
     var files = {};
 
+    if( Utils.isPrimitive(data) ) {
+      return { json: data, files: files };
+    }
+
     var keys = Object.keys(data);
     for (var i = 0, len = keys.length; i < len; i++) {
       var name = keys[i];
@@ -232,9 +241,17 @@ export default {
         var childJson = [];
         var childFiles= [];
         v.forEach((child) => {
-          var res = this.separateJsonAndFiles(v);
-          childJson.push(res.json);
-          childFiles.push(res.files);
+          if( Utils.isPrimitive(child) ) {
+            childJson.push(child);
+          } else {
+            var res = this.separateJsonAndFiles(child);
+            if( Utils.present(res.json) ) {
+              childJson.push(res.json);
+            }
+            if( Utils.present(res.files) ) {
+              childFiles.push(res.files);
+            }
+          }
         });
 
         if( Utils.present(childJson) ) {

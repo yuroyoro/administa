@@ -7324,7 +7324,11 @@ webpackJsonp([0],[
 	
 	      if (v instanceof Array) {
 	        v.forEach(function (child) {
-	          _this.constructFormData(formdata, child, name);
+	          if (Utils.isPrimitive(child)) {
+	            formdata.append(name + "[]", child);
+	          } else {
+	            _this.constructFormData(formdata, child, name + "[]");
+	          }
 	        });
 	        continue;
 	      }
@@ -7345,6 +7349,10 @@ webpackJsonp([0],[
 	    var json = {};
 	    var files = {};
 	
+	    if (Utils.isPrimitive(data)) {
+	      return { json: data, files: files };
+	    }
+	
 	    var keys = Object.keys(data);
 	    for (var i = 0, len = keys.length; i < len; i++) {
 	      var name = keys[i];
@@ -7359,9 +7367,17 @@ webpackJsonp([0],[
 	        var childJson = [];
 	        var childFiles = [];
 	        v.forEach(function (child) {
-	          var res = _this.separateJsonAndFiles(v);
-	          childJson.push(res.json);
-	          childFiles.push(res.files);
+	          if (Utils.isPrimitive(child)) {
+	            childJson.push(child);
+	          } else {
+	            var res = _this.separateJsonAndFiles(child);
+	            if (Utils.present(res.json)) {
+	              childJson.push(res.json);
+	            }
+	            if (Utils.present(res.files)) {
+	              childFiles.push(res.files);
+	            }
+	          }
 	        });
 	
 	        if (Utils.present(childJson)) {
@@ -7458,6 +7474,10 @@ webpackJsonp([0],[
 	
 	  empty: function empty(obj) {
 	    return !obj || Object.keys(obj).length == 0;
+	  },
+	
+	  isPrimitive: function isPrimitive(obj) {
+	    return !(obj instanceof File || obj instanceof Array || obj instanceof Object);
 	  }
 	};
 
@@ -9244,7 +9264,7 @@ webpackJsonp([0],[
 	        val = [];
 	        for (var i = 0; i < nested.length; i++) {
 	          var s = this.extractLabel(col.association.label, nested[i], search_columns);
-	          if (wrap_tag) {
+	          if (!wrap_tag) {
 	            val.push(s);
 	          } else {
 	            s = this.wrapPermlink(s, nested[i], col.association);
@@ -10048,6 +10068,7 @@ webpackJsonp([0],[
 	    var name = this.props.column.name;
 	    var value = this.state.value;
 	
+	    // TODO: refactor
 	    switch (this.props.column.type) {
 	      case "file":
 	        var imgtag = null;
@@ -10061,8 +10082,6 @@ webpackJsonp([0],[
 	          imgtag,
 	          React.createElement("input", { type: "file", className: this.inputClasses(), name: name, disabled: this.props.disabled, onChange: this.handleChange })
 	        );
-	
-	        break;
 	      case "boolean":
 	        var text = "on";
 	        if (!this.state.value) text = "off";
@@ -10077,7 +10096,6 @@ webpackJsonp([0],[
 	            text
 	          )
 	        );
-	        break;
 	      case "enum":
 	        var options = this.props.column.enums.map(function (e) {
 	          return React.createElement(
@@ -10093,6 +10111,10 @@ webpackJsonp([0],[
 	          options
 	        );
 	        break;
+	      case "text":
+	        return React.createElement("textarea", { className: this.inputClasses(), name: name, value: value, disabled: this.props.disabled, onChange: this.handleChange, cols: "56", rows: "5" });
+	      case "integer":
+	        return React.createElement("input", { type: "number", className: this.inputClasses(), name: name, value: value, disabled: this.props.disabled, onChange: this.handleChange });
 	      default:
 	        return React.createElement("input", { type: "text", className: this.inputClasses(), name: name, value: value, disabled: this.props.disabled, onChange: this.handleChange });
 	    }
@@ -10726,7 +10748,11 @@ webpackJsonp([0],[
 	
 	  getFormValue: function getFormValue() {
 	    var value = this.getResourceValue();
-	    delete value[this.props.column.association.name];
+	    var association = this.props.column.association;
+	    if (!(association.create || association.update)) {
+	      // remove if readonly
+	      delete value[association.name];
+	    }
 	
 	    return value;
 	  },
@@ -10737,8 +10763,10 @@ webpackJsonp([0],[
 	    value[name] = null;
 	    var target = this.refs.association.state.target;
 	    if (target) {
-	      value[name] = target.id;
-	      value[this.props.column.association.name] = target;
+	      var association_name = this.props.column.association.name;
+	
+	      value[association_name + "_id"] = target.id;
+	      value[association_name] = target;
 	    }
 	
 	    return value;
@@ -11023,7 +11051,9 @@ webpackJsonp([0],[
 	      }
 	    }
 	
-	    result[name] = targets;
+	    if (targets.length > 0) {
+	      result[name] = targets;
+	    }
 	    if (dirty) {
 	      result[this.props.column.association.foreign_key] = ids;
 	    }

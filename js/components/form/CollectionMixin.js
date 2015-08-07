@@ -4,7 +4,7 @@ export default {
     return {
       targets: targets,
       dirty: false,
-    }
+    };
   },
 
   getResourceValue() {
@@ -32,7 +32,7 @@ export default {
       var key = keys[i];
       var property = this.refs[key];
       if( property.isDirty() ) {
-        return true
+        return true;
       }
     }
     return false;
@@ -63,7 +63,7 @@ export default {
       var attrs = {
         key: `${name}[${i}]`,
         ref: i,
-      }
+      };
       return this.createAssociation(tgt, attrs);
     });
 
@@ -80,4 +80,4 @@ export default {
       </div>
     );
   },
-}
+};

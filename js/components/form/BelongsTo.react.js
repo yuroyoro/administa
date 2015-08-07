@@ -8,7 +8,11 @@ export default React.createClass({
 
   getFormValue() {
     var value = this.getResourceValue();
-    delete value[this.props.column.association.name];
+    var association = this.props.column.association;
+    if(!(association.create || association.update)) {
+      // remove if readonly
+      delete value[association.name];
+    }
 
     return value;
   },
@@ -19,8 +23,10 @@ export default React.createClass({
     value[name] = null;
     var target = this.refs.association.state.target;
     if(target){
-      value[name] = target.id;
-      value[this.props.column.association.name] = target;
+      var association_name = this.props.column.association.name;
+
+      value[association_name + "_id"] = target.id;
+      value[association_name] = target;
     }
 
     return value;

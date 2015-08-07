@@ -39,7 +39,7 @@ export default {
         val = [];
         for(var i = 0; i < nested.length; i++) {
           var s = this.extractLabel(col.association.label, nested[i], search_columns);
-          if( wrap_tag ) {
+          if( !wrap_tag ) {
             val.push(s);
           } else {
             s = this.wrapPermlink(s, nested[i], col.association);

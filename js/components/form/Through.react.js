@@ -36,7 +36,9 @@ export default React.createClass({
       }
     }
 
-    result[name] = targets;
+    if( targets.length > 0) {
+      result[name] = targets;
+    }
     if(dirty) {
       result[this.props.column.association.foreign_key] = ids;
     }
