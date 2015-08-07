@@ -10,7 +10,7 @@ export default React.createClass({
     return {
       value: this.props.resource[this.props.column.name],
       dirty: false,
-    }
+    };
   },
 
   handleChange(event) {
@@ -50,6 +50,7 @@ export default React.createClass({
     var name   = this.props.column.name;
     var value  = this.state.value;
 
+    // TODO: refactor
     switch( this.props.column.type ) {
       case "file" :
         var imgtag = null;
@@ -63,14 +64,11 @@ export default React.createClass({
             <input type="file"  className={ this.inputClasses() } name={ name } disabled={this.props.disabled} onChange={ this.handleChange } />
           </div>
          );
-
-         break;
       case "boolean" :
         var text = 'on';
         if(!this.state.value) text = 'off';
 
         return <div className="checkbox"><label><input type="checkbox"  className={ this.inputStatusClasses() } name={ name } checked={ !!value } disabled={this.props.disabled} onChange={ this.handleChange } />{ text }</label></div>
-          break;
       case "enum":
         var options = this.props.column.enums.map((e) => {
           return <option value={e} >{ e }</option>;
@@ -80,6 +78,10 @@ export default React.createClass({
           { options }
         </select>
           break;
+      case "text":
+        return <textarea className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } cols="56" rows="5"/>
+      case "integer":
+        return <input type="number"  className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
       default:
         return <input type="text"  className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
     }
