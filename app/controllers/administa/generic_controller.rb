@@ -12,7 +12,7 @@ module Administa
       return @model if @model
 
       name = params[:model].try(:camelize).try(:singularize)
-      if @model = Administa.config.modes[name]
+      if @model = Administa.config.models[name]
         return @model
       end
 
