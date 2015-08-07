@@ -73,10 +73,10 @@ export default React.createClass({
           break;
       case "enum":
         var options = this.props.column.enums.map((e) => {
-          return <option value={e} selected={ e === value }>{ e }</option>;
+          return <option value={e} >{ e }</option>;
         });
 
-        return <select className="form-control" name={ name } disabled={this.props.disabled} onChange={ this.handleChange }>
+        return <select className="form-control" name={ name } disabled={this.props.disabled} onChange={ this.handleChange } value={ value }>
           { options }
         </select>
           break;
