@@ -33,7 +33,7 @@ export default {
         var imgtag = null;
         if( val.url ) {
           if ( wrap_tag ) {
-            val = <span><img src={ val.url } />{ value.url }</span>;
+            val = <span><img src={ val.url } />{ val.url }</span>;
           } else {
             val = val.url
           }

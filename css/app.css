@@ -136,6 +136,10 @@
   max-width: 150px;
  }
 
+.resource-list table td img{
+  max-width: 150px;
+}
+
 /* pagination */
 .pagination li {
   cursor: pointer;
