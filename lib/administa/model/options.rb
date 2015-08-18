@@ -4,7 +4,11 @@ module Administa
     module Options
 
       def settings
-        translate(options)
+        translate(options).merge(
+          locale:          I18n.locale,
+          timezone:        Administa.config.timezone,
+          timezone_offset: Administa.config.timezone_offset,
+        )
       end
 
       def setup_options!(klass = self.klass, options = self.given_options)
@@ -14,43 +18,13 @@ module Administa
 
         default_cols   = default_colums(klass)
         global_cols    = options[:columns]
-        global_ex_cols = options[:extra_columns]
+        global_append_cols = options[:append]
+        global_except_cols = options[:except]
 
+        # TODO Refactoring
         [:index, :show, :create, :edit].each do |action|
-          columns = options.try(:[], action).try(:[], :columns)       || global_cols    || default_cols[action][:columns]
-          extra   = options.try(:[], action).try(:[], :extra_columns) || global_ex_cols
-
-          columns = (columns.to_a + extra.to_a).
-            inject([]){|arr, col|
-              names = arr.map{|c| (c.is_a? Hash) ? c[:name].to_sym : c.to_s.to_sym}
-
-              ([col, "#{col}_id".to_sym] & names).present? ? arr : arr.push(col)
-            }
-
           options[action] ||= {}
-          options[action][:columns] = columns.map{|col|
-            name = case col
-                   when String, Symbol then col.to_sym
-                   when Hash           then col[:name].try(:to_sym)
-                   end
-
-            unless name
-              raise ConfigurationError, "given no column name: #{col.inspect} in #{klass} : #{action}"
-            end
-
-            c = columns_meta(name) || associations_meta(name)
-            if col.is_a? Hash
-              c = (c || {}).merge(col)
-              c[:accessor] ||= :method
-
-              raise ConfigurationError, "column type is required: #{col.inspect} in #{klass} : #{action}" unless c[:type]
-            end
-
-            unless c
-              raise ConfigurationError, "Unknown column : #{col} in #{klass} : #{action}"
-            end
-            c
-          }
+          options[action][:columns] = parse_actions_columns_option(action, options, global_cols, global_append_cols, global_except_cols, default_cols)
         end
 
         [:create, :edit].flat_map{|act| options[act][:columns] }.uniq.each do |col|
@@ -64,6 +38,67 @@ module Administa
         @columns_meta = nil
         @associations_meta = nil
         options
+      end
+
+      def parse_actions_columns_option(action, options, global_cols, global_append_cols, global_except_cols, default_cols)
+        actions_option = options.try(:[], action) || {}
+        cols   = actions_option[:columns] || global_cols || default_cols[action][:columns]
+        append = (actions_option[:append] || global_append_cols).to_a
+        except = (actions_option[:except].to_a + global_except_cols.to_a).map(&:to_sym)
+
+        result = (cols + append ).reject{|col|
+          name = (col.is_a? Hash) ? col[:name] : col.to_sym
+          except.include? name
+        }.map{|col|
+          parse_column_option(col)
+        }
+
+        compact_columns(result)
+      end
+
+      def compact_columns(columns)
+        result = columns.inject([]){|arr, col|
+          other = arr.find{|c| c[:name] == col[:name] }
+          if other
+            other.merge!(col)
+          else
+            arr.push(col.dup)
+          end
+
+          arr
+        }
+
+        [:created_at, :updated_at].each do |attr|
+          idx = result.find_index{|col| col[:name] == attr}
+          if idx && idx >= 0 && c = result.delete_at(idx)
+            result.push(c)
+          end
+        end
+        result
+      end
+
+      def parse_column_option(col)
+        name = case col
+               when String, Symbol then col.to_sym
+               when Hash           then col[:name].try(:to_sym)
+               end
+
+        unless name
+          raise ConfigurationError, "given no column name: #{col.inspect} in #{klass} : #{action}"
+        end
+
+        c = columns_meta(name) || associations_meta(name)
+        if col.is_a? Hash
+          c = (c || {}).merge(col)
+          c[:accessor] ||= :method
+
+          raise ConfigurationError, "column type is required: #{col.inspect} in #{klass} : #{action}" unless c[:type]
+        end
+
+        unless c
+          raise ConfigurationError, "Unknown column : #{col} in #{klass} : #{action}"
+        end
+        c
       end
 
       def default_settings(klass)
@@ -141,7 +176,7 @@ module Administa
         editable = [:select, :create, :update, :destroy].any?{|action| meta[action]}
 
         res = {
-          name:       a.name.to_sym,
+          name:       (a.macro == :belongs_to) ? a.foreign_key.to_sym : a.name.to_sym,
           type:       a.macro,
           readonly:   (not editable),
           accessor:   :association,

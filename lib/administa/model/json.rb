@@ -10,6 +10,7 @@ module Administa
         methods = options[:method] || self.options[action][:columns].select{|c| c[:accessor] == :method }.map{|c| c[:name]}
 
         opt = (inc.is_a? Hash) ? inc.merge(methods: methods) : { include: inc, methods: methods }
+
         records.as_json(opt)
       end
 

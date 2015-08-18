@@ -13,11 +13,22 @@ var Redirect      = Router.Redirect;
 var RouteHandler  = Router.RouteHandler;
 
 // require stylesheets
-require("bootstrap.css")
-require("adminlte.css")
-require("adminlte-skins-blue.css")
-require("adminlte-skins-black.css")
-require("app.css")
+require("bootstrap.css");
+require("adminlte.css");
+require("adminlte-skins-blue.css");
+require("adminlte-skins-black.css");
+require("app.css");
+
+//setup datetimepicker with moment.js
+require("jquery.datetimepicker.css");
+require("jquery-datetimepicker");
+
+Date.parseDate = function( input, format ){
+  return moment(input,format).toDate();
+};
+Date.prototype.dateFormat = function( format ){
+  return moment(this).format(format);
+};
 
 import ResourceActions from 'actions/ResourceActions';
 import MenuActions     from 'actions/MenuActions';

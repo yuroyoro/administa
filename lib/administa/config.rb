@@ -8,7 +8,7 @@ module Administa
     include ::Administa::Config::Menu
     include ::Administa::Config::DynamicController
 
-    attr_reader :models, :controllers
+    attr_reader :models, :controllers, :timezone_obj
 
     def initialize!
       run_menu_def
@@ -34,6 +34,16 @@ module Administa
     def base_controller(base = nil)
       @base_controller = base if base
       @base_controller || "ApplicationController"
+    end
+
+    def timezone(tz = nil)
+      @timezone = tz if tz
+      @timezone ||= "Etc/UTC"
+    end
+
+    def timezone_offset
+      timezone_obj = ActiveSupport::TimeZone.new(@timezone)
+      ActiveSupport::TimeZone.seconds_to_utc_offset(timezone_obj.utc_offset)
     end
 
   end

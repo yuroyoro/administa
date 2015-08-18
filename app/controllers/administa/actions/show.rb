@@ -8,7 +8,7 @@ module Administa
 
         respond_to do |format|
           format.html { render :index }
-          format.json { render json: @result }
+          format.json { render json: to_json(@result) }
         end
       end
 

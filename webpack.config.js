@@ -27,7 +27,8 @@ module.exports = {
       'adminlte.css':             'admin-lte/dist/css/AdminLTE.css',
       'adminlte-skins-blue.css':  'admin-lte/dist/css/skins/skin-blue.min.css',
       'adminlte-skins-black.css': 'admin-lte/dist/css/skins/skin-black.min.css',
-      'bootstrap.css':            'bootstrap/dist/css/bootstrap.css'
+      'bootstrap.css':            'bootstrap/dist/css/bootstrap.css',
+      'jquery.datetimepicker.css': 'jquery-datetimepicker/jquery.datetimepicker.css'
     }
   },
 
@@ -48,7 +49,8 @@ module.exports = {
       jQuery: "jquery",
       _:      'lodash',
       React:  'react',
-      Flux:   'flux'
+      Flux:   'flux',
+      moment: 'moment'
     })
 
   ],

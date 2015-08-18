@@ -21,7 +21,7 @@ module Administa
       else
         before_action :_authenticate!
       end
-      helper_method :user_info
+      helper_method :user_info, :to_json
     end
 
     module ClassMethods
@@ -48,6 +48,17 @@ module Administa
         email: Administa.config.user_email_proc.call(user),
         icon:  Administa.config.user_icon_image_proc.call(user),
       }
+    end
+
+    def to_json(obj)
+      # change datetime format : FIXME race condition
+      use_standard_json_time_format =  ActiveSupport::JSON::Encoding.use_standard_json_time_format
+      ActiveSupport::JSON::Encoding.use_standard_json_time_format = false
+      begin
+        obj.to_json
+      ensure
+        ActiveSupport::JSON::Encoding.use_standard_json_time_format = !!use_standard_json_time_format
+      end
     end
 
   end

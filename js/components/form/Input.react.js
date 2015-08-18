@@ -1,6 +1,7 @@
 import InputMixin      from './InputMixin';
 import PropertyMixin   from 'components/PropertyMixin';
 
+
 export default React.createClass({
   displayName: 'form/Input',
 
@@ -13,9 +14,25 @@ export default React.createClass({
     };
   },
 
-  handleChange(event) {
+  componentDidMount() {
+    if ( this.props.column.type == "datetime") {
+      var options = {
+        lang:       this.props.settings.locale,
+        format:     'YYYY/MM/DD HH:mm:ss Z',
+        formatTime: 'HH:mm',
+        formatDate: 'YYYY/MM//DD',
+        onClose: (current_time, input, event) => {
+          this.handleChange(event, jQuery(input).val());
+        }
+      };
+      // in moment.js, default timezone offset is detected by Date.prototype.getTimezoneOffset
+      jQuery("input[name='" + this.props.column.name + "'].datetimepicker").datetimepicker(options);
+    }
+  },
+
+  handleChange(event, value) {
     var initial = this.props.resource[this.props.column.name];
-    var value  = event.target.value;
+    var value  = event.target.value || value;
     if ( this.props.column.type == 'file') {
       value  = jQuery(event.target).prop('files')[0];
     }
@@ -82,6 +99,9 @@ export default React.createClass({
         return <textarea className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } cols="56" rows="5"/>
       case "integer":
         return <input type="number"  className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
+      case "datetime":
+        return <input type="text"  className={ this.inputClasses() + " datetimepicker"} name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
+
       default:
         return <input type="text"  className={ this.inputClasses() } name={ name } value={ value } disabled={this.props.disabled} onChange={ this.handleChange } />
     }

@@ -46,6 +46,10 @@ export default {
            val = 'on'
          }
          break;
+      case "datetime":
+        // convert value with browser timezone by moment.js
+        var format =  'YYYY/MM/DD HH:mm:ss Z';
+        val = moment(val, format).format(format);
     }
 
     if(col.association) {
