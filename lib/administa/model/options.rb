@@ -20,12 +20,32 @@ module Administa
           columns = options.try(:[], action).try(:[], :columns)       || global_cols    || default_cols[action][:columns]
           extra   = options.try(:[], action).try(:[], :extra_columns) || global_ex_cols
 
-          column_names = (columns.to_a + extra.to_a).
-            inject([]){|arr, col| ([col, "#{col}_id".to_sym] & arr).present? ? arr : arr.push(col) }
+          columns = (columns.to_a + extra.to_a).
+            inject([]){|arr, col|
+              names = arr.map{|c| (c.is_a? Hash) ? c[:name].to_sym : c.to_s.to_sym}
+
+              ([col, "#{col}_id".to_sym] & names).present? ? arr : arr.push(col)
+            }
 
           options[action] ||= {}
-          options[action][:columns] = column_names.map{|col|
-            c = columns_meta(col) || associations_meta(col)
+          options[action][:columns] = columns.map{|col|
+            name = case col
+                   when String, Symbol then col.to_sym
+                   when Hash           then col[:name].try(:to_sym)
+                   end
+
+            unless name
+              raise ConfigurationError, "given no column name: #{col.inspect} in #{klass} : #{action}"
+            end
+
+            c = columns_meta(name) || associations_meta(name)
+            if col.is_a? Hash
+              c = (c || {}).merge(col)
+              c[:accessor] ||= :method
+
+              raise ConfigurationError, "column type is required: #{col.inspect} in #{klass} : #{action}" unless c[:type]
+            end
+
             unless c
               raise ConfigurationError, "Unknown column : #{col} in #{klass} : #{action}"
             end
@@ -91,9 +111,10 @@ module Administa
         type = :enum if enums
 
         meta = {
-          name: col.name.to_sym,
-          type: type,
+          name:     col.name.to_sym,
+          type:     type,
           readonly: readonly?(col.name),
+          accessor: :column,
         }
         meta[:enums] = enums if enums
 
@@ -123,6 +144,7 @@ module Administa
           name:       a.name.to_sym,
           type:       a.macro,
           readonly:   (not editable),
+          accessor:   :association,
           association: meta,
         }
 

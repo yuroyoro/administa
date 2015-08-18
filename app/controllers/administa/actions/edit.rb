@@ -5,12 +5,10 @@ module Administa
       def edit
 
         @result = index_result
-
-        includes = model.includes(:edit)
-        resource = model.find(params[:id], includes)
+        resource = model.find(params[:id], action: :edit)
 
         @result[:id]       =  resource.id
-        @result[:resource] =  model.as_json(resource, includes:includes)
+        @result[:resource] =  model.as_json(resource, action: :edit)
 
         respond_to do |format|
           format.html { render :index }

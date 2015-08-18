@@ -28,6 +28,26 @@ export default {
     var name = this.toProperyKey(col);
     var val  = resource[name];
 
+    switch( col.type ) {
+      case "file" :
+        var imgtag = null;
+        if( val.url ) {
+          if ( wrap_tag ) {
+            val = <span><img src={ val.url } />{ value.url }</span>;
+          } else {
+            val = val.url
+          }
+        }
+         break;
+      case "boolean" :
+         if(!val) {
+           val = 'off';
+         } else {
+           val = 'on'
+         }
+         break;
+    }
+
     if(col.association) {
       name = col.association.name;
       var nested = val;

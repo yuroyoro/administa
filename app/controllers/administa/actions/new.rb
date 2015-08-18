@@ -6,11 +6,10 @@ module Administa
 
         @result = index_result
 
-        includes = model.includes(:edit)
         resource = model.klass.new
 
         @result[:id]       =  nil
-        @result[:resource] =  model.as_json(resource, includes:includes)
+        @result[:resource] =  model.as_json(resource, action: :create)
 
         respond_to do |format|
           format.html { render :index }

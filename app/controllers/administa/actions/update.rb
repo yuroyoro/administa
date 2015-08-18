@@ -4,11 +4,10 @@ module Administa
 
       def update
 
-        includes = model.includes(:edit)
-        resource = model.find(params[:id], includes)
+        resource = model.find(params[:id], action: :edit)
 
         # TODO: strong parameters
-        params.permit!
+        params.permit! if params.respond_to? :permit!
 
         attrs = params["resource"]
 

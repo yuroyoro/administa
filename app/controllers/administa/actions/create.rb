@@ -7,7 +7,7 @@ module Administa
         resource = model.klass.new
 
         # TODO: strong parameters
-        params.permit!
+        params.permit! if params.respond_to? :permit!
 
         attrs = params["resource"]
 

@@ -19,27 +19,11 @@ export default React.createClass({
     var resource = this.props.resource;
 
     var value = this.toLabel(column, resource, this.props.settings.search_columns);
-    var tag = null;
-
-    switch( this.props.column.type ) {
-      case "file" :
-        var imgtag = null;
-        if( value.url ) {
-          tag = <span><img src={ value.url } />{ value.url }</span>;
-        }
-         break;
-      case "boolean" :
-         tag = 'on';
-         if(!value) tag = 'off';
-         break;
-      default:
-         tag = value;
-    }
 
     return(
       <div className="form-group" key={ name }>
          <label htmlFor={ name }>{ name }</label>
-         <blockquote>{ tag }</blockquote>
+         <blockquote>{ value }</blockquote>
       </div>
     );
   },

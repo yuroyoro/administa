@@ -16,14 +16,12 @@ module Administa
         def show_result(id)
           result = index_result
 
-          includes = model.includes(:show)
-          resource = model.find(id, includes)
+          resource = model.find(id, action: :show)
 
           result[:id]       =  resource.id
-          result[:resource] =  model.as_json(resource, includes:includes)
+          result[:resource] =  model.as_json(resource, action: :show)
           result
         end
-
 
     end
   end

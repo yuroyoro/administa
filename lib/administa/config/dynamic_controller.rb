@@ -15,7 +15,9 @@ module Administa
         end
 
         controller_name = "#{name.pluralize.camelize}Controller"
-        return if "#{namespace}::#{controller_name}".safe_constantize
+        if controller = "#{namespace}::#{controller_name}".safe_constantize
+          return controller
+        end
 
         base_klass = base.constantize
         klass      = Class.new(base_klass)
