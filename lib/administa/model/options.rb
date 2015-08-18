@@ -254,7 +254,8 @@ module Administa
         [:index, :show, :create, :edit].each do |action|
           columns = options.try(:[], action).try(:[], :columns)
           columns.each do |col|
-            col[:label] = I18n.t(col[:name], scope: scope, default: col[:name].to_s)
+            i18n_scope = col[:i18n_scope] || scope
+            col[:label] = I18n.t(col[:name], scope: i18n_scope, default: col[:name].to_s)
             if col[:association]
               col[:association][:label] = I18n.t(col[:association][:label], scope: scope, default: col[:association][:name].to_s)
             end
