@@ -17,9 +17,9 @@ module Administa
         self.options = options
 
         default_cols   = default_colums(klass)
-        global_cols    = options[:columns]
-        global_append_cols = options[:append]
-        global_except_cols = options[:except]
+        global_cols    = Array.wrap(options[:columns])
+        global_append_cols = Array.wrap(options[:append])
+        global_except_cols = Array.wrap(options[:except])
 
         # TODO Refactoring
         [:index, :show, :create, :edit].each do |action|
@@ -42,15 +42,22 @@ module Administa
 
       def parse_actions_columns_option(action, options, global_cols, global_append_cols, global_except_cols, default_cols)
         actions_option = options.try(:[], action) || {}
-        cols   = actions_option[:columns] || global_cols || default_cols[action][:columns]
-        append = (actions_option[:append] || global_append_cols).to_a
-        except = (actions_option[:except].to_a + global_except_cols.to_a).map(&:to_sym)
+
+        cols   = Array.wrap(actions_option[:columns]).presence ||
+                 global_cols.presence ||
+                 default_cols[action][:columns]
+
+        append = (Array.wrap(actions_option[:append]).presence ||
+                  global_append_cols).to_a
+
+        except = (Array.wrap(actions_option[:except]) +
+                  global_except_cols.to_a).map(&:to_sym)
 
         result = (cols + append ).reject{|col|
           name = (col.is_a? Hash) ? col[:name] : col.to_sym
           except.include? name
         }.map{|col|
-          parse_column_option(col)
+          parse_column_option(col, action)
         }
 
         compact_columns(result)
@@ -77,7 +84,7 @@ module Administa
         result
       end
 
-      def parse_column_option(col)
+      def parse_column_option(col, action)
         name = case col
                when String, Symbol then col.to_sym
                when Hash           then col[:name].try(:to_sym)
@@ -87,7 +94,7 @@ module Administa
           raise ConfigurationError, "given no column name: #{col.inspect} in #{klass} : #{action}"
         end
 
-        c = columns_meta(name) || associations_meta(name)
+        c = columns_meta(name) || associations_meta(name) || accessor_meta(name)
         if col.is_a? Hash
           c = (c || {}).merge(col)
           c[:accessor] ||= :method
@@ -231,6 +238,24 @@ module Administa
         end
 
         res
+      end
+
+      def accessor_meta(name)
+        return @accessor_meta[name.to_sym] if @accessor_meta && @accessor_meta[name.to_sym]
+
+        reader = klass.instance_method(name)
+        writer = klass.instance_method("#{name}=")
+
+        return nil unless reader
+
+        meta = {
+          name:     name.to_sym,
+          type:     :string,
+          readonly: writer.nil?,
+          accessor: :accessor,
+        }
+
+        meta
       end
 
       def includes(action)
