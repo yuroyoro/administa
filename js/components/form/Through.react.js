@@ -32,6 +32,10 @@ export default React.createClass({
             break;
           case 'selected':
             break;
+          case 'cleared':
+            if( property.state.destroy ) {
+              targets.push(property.state.destroy);
+            }
         }
       }
     }

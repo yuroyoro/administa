@@ -240,6 +240,11 @@ export default {
       if( v instanceof Array ) {
         var childJson = [];
         var childFiles= [];
+        if( v.length == 0 ) {
+          json[name] = v;
+          continue;
+        }
+
         v.forEach((child) => {
           if( Utils.isPrimitive(child) ) {
             childJson.push(child);

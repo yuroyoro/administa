@@ -61,9 +61,10 @@ export default React.createClass({
   },
 
   clear() {
-    if(this.state.target) {
+    if(this.state.target && this.state.target.id) {
       this.setState({
         target: null,
+        destroy: { id: this.state.target.id, _destroy: true },
         dirty:  true,
         reason: "cleared",
       });
