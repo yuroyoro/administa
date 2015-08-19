@@ -34,8 +34,12 @@ export default React.createClass({
     var classes = this.props.selected ? "info" : "";
 
     var cols = this.props.columns.map((col) => {
-      var label = this.toLabel(col, resource, this.props.search_columns);
-      var title = this.toTitle(col, resource, this.props.search_columns);
+      var label = this.toLabel( col, resource,
+        { search_columns: this.props.search_columns, wrap_tag: true, ellipsis: true }
+      );
+      var title = this.toLabel( col, resource,
+        { search_columns: this.props.search_columns, wrap_tag: false, ellipsis: true}
+      );
 
       return (<td key={ col.name } alt={ title } title={ title }>{ label }</td>);
     });

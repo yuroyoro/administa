@@ -16,17 +16,12 @@ export default {
     return name;
   },
 
-  toLabel(col, resource, search_columns) {
-    return this.stringifyProperty(col, resource, search_columns, true);
-  },
-
-  toTitle(col, resource, search_columns) {
-    return this.stringifyProperty(col, resource, search_columns, false);
-  },
-
-  stringifyProperty(col, resource, search_columns, wrap_tag) {
+  toLabel(col, resource, options = {}) {
     var name = this.toProperyKey(col);
     var val  = resource[name];
+    var search_columns = options.search_columns;
+    var wrap_tag = options.wrap_tag || false ;
+    var ellipsis = options.ellipsis || false ;
 
     switch( col.type ) {
       case "file" :
@@ -61,13 +56,23 @@ export default {
       }
       if(col.association.type == 'has_many' || col.association.type == 'through') {
         val = [];
-        for(var i = 0; i < nested.length; i++) {
+        var to = nested.length;
+        if (ellipsis && to > 3) to = 3;
+        for(var i = 0; i < to; i++) {
           var s = this.extractLabel(col.association.label, nested[i], search_columns);
           if( !wrap_tag ) {
             val.push(s);
           } else {
             s = this.wrapPermlink(s, nested[i], col.association);
             val.push(<div key={i}>{s}</div>);
+          }
+        }
+
+        if( ellipsis && nested.length > to ) {
+          if( !wrap_tag ) {
+            val.push("...")
+          } else {
+            val.push(<div key={to + 1}>...</div>);
           }
         }
 

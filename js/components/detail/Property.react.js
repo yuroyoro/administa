@@ -18,7 +18,9 @@ export default React.createClass({
 
     var resource = this.props.resource;
 
-    var value = this.toLabel(column, resource, this.props.settings.search_columns);
+    var value = this.toLabel(column, resource,
+      { search_columns: this.props.settings.search_columns, wrap_tag: true }
+    );
 
     return(
       <div className="form-group" key={ name }>
