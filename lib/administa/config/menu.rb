@@ -62,15 +62,20 @@ module Administa
           return s
         end
 
-        def label(s, options = {})
-          @menus.push({
+        def label_def(s, options = {})
+          {
             type: :label,
             label_f: -> { t(s) },
-          })
+            visible:    (options[:visible].nil? ? true : options[:visible]),
+          }
+        end
+
+        def label(s, options = {})
+          @menus.push(label_def(s, options))
         end
 
         def label_group(title, options = {}, &block)
-          t = label(title, options)
+          t = label_def(title, options)
           add_group(t, options, &block)
         end
 
@@ -97,6 +102,7 @@ module Administa
             label:  title,
             menus:  children,
             opened: opened,
+            visible:    (options[:visible].nil? ? true : options[:visible]),
           })
         end
 
@@ -106,7 +112,7 @@ module Administa
               else controller
           end
 
-          @menus.push(controller(c))
+          @menus.push(controller(c, options))
         end
 
         private
@@ -119,6 +125,7 @@ module Administa
             path:       "/#{c.controller_path}",
             label_f:    label_f,
             selected_f: selected_f,
+            visible:    (options[:visible].nil? ? true : options[:visible]),
           }
         end
       end

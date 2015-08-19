@@ -65,6 +65,9 @@ export default React.createClass({
       listyle = "active";
       ulstyle += " menu-open";
     }
+    if(!m.visible) {
+      listyle += " hide";
+    }
 
     return (
       <li key={key} className={ listyle }>
@@ -83,6 +86,9 @@ export default React.createClass({
     if(m.selected) {
       className = "active";
       iconstyle += " text-aqua";
+    }
+    if(!m.visible) {
+      className += " hide";
     }
 
     return (
