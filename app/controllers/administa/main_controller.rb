@@ -1,5 +1,6 @@
 module Administa
   class MainController < Administa::ApplicationController
+    include ::Administa::Base
 
     def index
 

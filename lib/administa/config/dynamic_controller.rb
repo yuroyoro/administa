@@ -48,6 +48,7 @@ module Administa
               resources res
             end
 
+            root to: 'main#index'
             get :main, to: 'main#index'
 
             get    ':model',          to: 'generic#index'

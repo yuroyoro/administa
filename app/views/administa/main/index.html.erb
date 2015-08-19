@@ -1,0 +1,13 @@
+<div id="initial-data"
+    data-json="<%= to_json({}) %>"
+    user-json="<%= to_json(user_info) %>"
+    menu-json="<%= to_json(Administa.config.menus(controller)) %>"
+/>
+
+<script type="text/javascript">
+  jQuery(function(){
+
+    var data =  Administa.initialData();
+    Administa.render(data);
+  });
+</script>

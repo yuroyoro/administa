@@ -36,7 +36,7 @@ import UserActions     from 'actions/UserActions';
 
 import Header        from 'components/Header.react';
 import Menu          from 'components/Menu.react';
-import ContentHeader from 'components/ContentHeader.react';
+import Main          from 'components/Main.react';
 import Footer        from 'components/Footer.react';
 import Loader        from 'Loader';
 
@@ -75,6 +75,9 @@ var App = React.createClass({
 
 var routes = (
     <Route name="app" path="/" handler={App} >
+      <DefaultRoute handler={Main}/>
+      <NotFoundRoute handler={Main}/>
+
       <Route name="resource" path="administa/:name" handler={Resource} >
         <Route name="new"  path="new"      handler={ResourceForm  } />
         <Route name="edit" path=":id/edit" handler={ResourceForm  } />
