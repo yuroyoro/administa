@@ -76,7 +76,7 @@ webpackJsonp([1],[
 	
 	var Menu = _interopRequire(__webpack_require__(/*! components/Menu.react */ 13));
 	
-	var ContentHeader = _interopRequire(__webpack_require__(/*! components/ContentHeader.react */ 14));
+	var Main = _interopRequire(__webpack_require__(/*! components/Main.react */ 171));
 	
 	var Footer = _interopRequire(__webpack_require__(/*! components/Footer.react */ 15));
 	
@@ -120,6 +120,8 @@ webpackJsonp([1],[
 	var routes = React.createElement(
 	  Route,
 	  { name: "app", path: "/", handler: App },
+	  React.createElement(DefaultRoute, { handler: Main }),
+	  React.createElement(NotFoundRoute, { handler: Main }),
 	  React.createElement(
 	    Route,
 	    { name: "resource", path: "administa/:name", handler: Resource },
@@ -907,59 +909,7 @@ webpackJsonp([1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! react */ 1)))
 
 /***/ },
-/* 14 */
-/*!**********************************************!*\
-  !*** ./js/components/ContentHeader.react.js ***!
-  \**********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(React) {"use strict";
-	
-	module.exports = React.createClass({
-	  displayName: "ContentHeader",
-	
-	  render: function render() {
-	    return (
-	      // Content Header (Page header) -->
-	      React.createElement(
-	        "section",
-	        { className: "content-header" },
-	        React.createElement(
-	          "h1",
-	          null,
-	          "Page Header",
-	          React.createElement(
-	            "small",
-	            null,
-	            "Optional description"
-	          )
-	        ),
-	        React.createElement(
-	          "ol",
-	          { className: "breadcrumb" },
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              React.createElement("i", { className: "fa fa-dashboard" }),
-	              " Level"
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            { className: "active" },
-	            "Here"
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! react */ 1)))
-
-/***/ },
+/* 14 */,
 /* 15 */
 /*!***************************************!*\
   !*** ./js/components/Footer.react.js ***!
@@ -24760,6 +24710,33 @@ webpackJsonp([1],[
 	      )
 	    );
 	  } });
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! react */ 1)))
+
+/***/ },
+/* 171 */
+/*!*************************************!*\
+  !*** ./js/components/Main.react.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(React) {"use strict";
+	
+	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
+	
+	var Header = _interopRequire(__webpack_require__(/*! components/Header.react */ 12));
+	
+	var Menu = _interopRequire(__webpack_require__(/*! components/Menu.react */ 13));
+	
+	var Footer = _interopRequire(__webpack_require__(/*! components/Footer.react */ 15));
+	
+	module.exports = React.createClass({
+	  displayName: "Main",
+	  render: function render() {
+	    console.log("Render Main");
+	    return React.createElement("div", { className: "main-content" });
+	  }
+	
+	});
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! react */ 1)))
 
 /***/ }
