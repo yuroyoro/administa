@@ -6,10 +6,8 @@ export default React.createClass({
       <footer className="main-footer">
         <!-- To the right -->
         <div className="pull-right hidden-xs">
-          Anything you want
+          Powered by <a href="https://github.com/yuroyoro/administa">yuroyoro/administa</a>
         </div>
-        <!-- Default to the left -->
-        <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
       </footer>
     );
   },

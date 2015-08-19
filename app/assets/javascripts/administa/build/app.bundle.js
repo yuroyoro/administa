@@ -980,25 +980,17 @@ webpackJsonp([1],[
 	        React.createElement(
 	          "div",
 	          { className: "pull-right hidden-xs" },
-	          "Anything you want"
-	        ),
-	        React.createElement(
-	          "strong",
-	          null,
-	          "Copyright © 2015 ",
+	          "Powered by ",
 	          React.createElement(
 	            "a",
-	            { href: "#" },
-	            "Company"
-	          ),
-	          "."
-	        ),
-	        " All rights reserved."
+	            { href: "https://github.com/yuroyoro/administa" },
+	            "yuroyoro/administa"
+	          )
+	        )
 	      )
 	    );
 	  } });
 	// To the right -->
-	// Default to the left -->
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! react */ 1)))
 
 /***/ },
