@@ -218,7 +218,7 @@ module Administa
             selectable = (not readonly?(foreign_key))
           when :through
             foreign_key = "#{assoc.name.to_s.singularize}_ids"
-            selectable = (not readonly?(foreign_key)) && nested.present?
+            selectable = (not readonly?(foreign_key))
         end
 
         assoc_model_name = assoc.class_name.to_s.underscore
