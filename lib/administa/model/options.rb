@@ -119,8 +119,9 @@ module Administa
 
       def default_colums(klass)
         columns = klass.column_names.map(&:to_sym)
-        create_columns = columns - %w(id created_at updated_at).map(&:to_sym)
-        edit_columns   = columns - %w(created_at updated_at).map(&:to_sym)
+        nesteds = klass.nested_attributes_options.keys
+        create_columns = columns - %w(id created_at updated_at).map(&:to_sym) + nesteds
+        edit_columns   = columns - %w(created_at updated_at).map(&:to_sym) + nesteds
 
         {
           index: {
