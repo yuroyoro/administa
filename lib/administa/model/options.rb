@@ -244,8 +244,8 @@ module Administa
       def accessor_meta(name)
         return @accessor_meta[name.to_sym] if @accessor_meta && @accessor_meta[name.to_sym]
 
-        reader = klass.instance_method(name)
-        writer = klass.instance_method("#{name}=")
+        reader = klass.instance_method(name) rescue nil
+        writer = klass.instance_method("#{name}=") rescue nil
 
         return nil unless reader
 
