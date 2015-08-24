@@ -52,6 +52,11 @@ module Administa
         @authenticate = block if block
         @authenticate || DEFAULT_AUTHENTICATION
       end
+
+      def redirect_path(path = nil)
+        @redirect_path = path if path
+        @redirect_path || "/"
+      end
     end
   end
 end

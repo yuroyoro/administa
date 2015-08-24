@@ -16,7 +16,11 @@ module Administa
     private
 
     def _authenticate!
-      instance_eval(&Administa.config.authenticate_with)
+      user = instance_eval(&Administa.config.authenticate_with)
+      unless user
+        path = Administa.config.redirect_path
+        redirect_to path
+      end
     end
 
     def _current_user
