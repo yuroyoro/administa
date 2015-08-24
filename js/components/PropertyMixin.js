@@ -36,9 +36,17 @@ export default {
          break;
       case "boolean" :
          if(!val) {
-           val = 'off';
+           if( wrap_tag ) {
+             val = <span><i className="fa fa-fw  fa-toggle-off"></i> off</span>;
+           } else {
+             val = 'on';
+           }
          } else {
-           val = 'on'
+           if( wrap_tag ) {
+             val = <span><i className="fa fa-fw  fa-toggle-on"></i> on</span>;
+           } else {
+             val = 'on';
+           }
          }
          break;
       case "datetime":
