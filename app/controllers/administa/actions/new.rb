@@ -15,6 +15,8 @@ module Administa
           format.html { render :index }
           format.json { render json: to_json(@result) }
         end
+      rescue => e
+        handle_exception(e)
       end
 
     end

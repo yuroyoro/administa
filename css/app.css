@@ -112,6 +112,10 @@
 }
 
 
+.box-header .box-tools .btn {
+  margin-left: 4px;
+
+}
 /* resoource-list */
 .resource-list .box-body {
   scroll: auto;

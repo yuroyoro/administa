@@ -9,6 +9,8 @@ module Administa
           format.html
           format.json { render json: to_json(@result) }
         end
+      rescue => e
+        handle_exception(e)
       end
 
       protected

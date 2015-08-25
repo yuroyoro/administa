@@ -20,15 +20,9 @@ export default React.createClass({
     return !!nextProps.resource;
   },
 
-
   editLink(resource){
     let name = this.props.name;
     let id   = resource.id;
-
-    console.log('editLink');
-    console.log(name);
-    console.log(resource);
-    console.log(id);
 
     var linkAttrs = {
       name:  name,
@@ -41,6 +35,25 @@ export default React.createClass({
     }
 
     return this.linkToEdit(linkAttrs);
+  },
+
+  deleteLink(resource){
+    let name = this.props.name;
+    let id   = resource.id;
+
+    var linkAttrs = {
+      name:  name,
+      id:    id,
+      label: 'delete',
+      page:  this.props.pagination.page,
+      limit: this.props.pagination.limit,
+      order: this.props.pagination.order,
+      q:     this.props.pagination.q,
+      csrfToken: this.props.csrfToken,
+      confirm: `Are you sure to delete ${this.props.label}(id:${this.props.id})`,
+    }
+
+    return this.linkToDestroy(linkAttrs);
   },
 
   properties() {
@@ -66,7 +79,10 @@ export default React.createClass({
         <div className="box box-primary">
           <div className="box-header with-border">
             <h3 className='box-title'> Detail : {this.props.label}(id:{this.props.id})</h3>
+          </div>
+          <div className="box-header">
             <div className="box-tools pull-right">
+              { this.deleteLink(resource) }
               { this.editLink(resource) }
             </div>
           </div>

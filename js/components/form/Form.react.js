@@ -253,6 +253,8 @@ export default React.createClass({
         <div className="box box-primary">
           <div className="box-header with-border">
             <h3 className='box-title'> { title }</h3>
+          </div>
+          <div className="box-header">
             <div className="box-tools pull-right">
               <button type="button" className="btn btn-flat btn-primary btn-xs" onClick={ this.handleSave }>save</button>
             </div>

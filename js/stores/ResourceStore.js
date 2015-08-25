@@ -183,6 +183,17 @@ AppDispatcher.register((action) => {
       ResourceStore.updateState(name, data);
       ResourceStore.emitEvent(name);
 
+    case Constants.RESOURCE_DELETED:
+      console.log('store RESOURCE_DELETED');
+
+      var data = action.data;
+      var name = action.name;
+
+      var state = ResourceStore.updateState(name, data);
+      state.currentId = null; // clear currentid
+      state.currentResource = null;
+      ResourceStore.emitEvent(name);
+
     default: // no op
   }
 });

@@ -10,6 +10,7 @@ module Administa
       include ::Administa::Actions::Create
       include ::Administa::Actions::Edit
       include ::Administa::Actions::Update
+      include ::Administa::Actions::Destroy
       include ::Administa::ErrorHandlers
 
       respond_to :html, :json

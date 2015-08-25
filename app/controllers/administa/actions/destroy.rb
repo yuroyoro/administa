@@ -1,14 +1,17 @@
 module Administa
   module Actions
-    module Edit
+    module Destroy
 
-      def edit
+      def destroy
 
-        @result = index_result
         resource = model.find(params[:id], action: :edit)
 
-        @result[:id]       =  resource.id
-        @result[:resource] =  model.as_json(resource, action: :edit)
+        unless resource.destroy
+          handle_validate_errors(resource.errors)
+        end
+
+        @result = index_result
+        @result["flash"] = I18n.t("administa.flash.deleted", name: model.label, id: resource.id )
 
         respond_to do |format|
           format.html { render :index }

@@ -71,6 +71,40 @@ export default {
     return link;
   },
 
+  linkToDestroy(options = {}) {
+    let name  = options.name;
+    let id    = options.id;
+    let label = options.label;
+
+    var params = { name: name, id: id };
+    var query = this.linkToListQuery(options);
+
+    var f = (event) => {
+      event.preventDefault();
+
+      if( options.confirm ){
+        if( !window.confirm(options.confirm)) {
+          return ;
+        }
+      }
+      ResourceActions.destroy(name, id, query, options).then((data) => {
+
+        var flash = data.flash;
+
+        if( flash ) {
+          $.notifyBar({ cssClass: "success", html: flash, });
+        }
+      });
+      return true;
+    };
+
+    var classes = options.classes || "btn btn-danger btn-xs btn-flat"
+    var href = this.makeHref('show', params, query);
+
+    var link = <a herf={ href } onClick={ f }  className={classes} >{ label }</a>;
+    return link;
+  },
+
   linkToShow(options = {}) {
     let name  = options.name;
     let id    = options.id;

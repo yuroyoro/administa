@@ -134,6 +134,46 @@ export default {
     }).promise();
   },
 
+  destroy(name, id, query, options = {}) {
+    let url = '/administa/' + name + "/" + id ;
+
+    console.log('delete:' + url);
+
+    var csrfToken = options.csrfToken;
+    var ajaxparams = {
+      url: url,
+      type: "DELETE",
+      dataType: 'json',
+      data: query,
+    };
+
+    if( csrfToken ) {
+      ajaxparams.headers = {
+        'X-CSRF-Token': csrfToken
+      }
+    }
+
+    return $.ajax(ajaxparams).done((data) => {
+      console.log(data);
+      AppDispatcher.dispatch({
+        type: Constants.RESOURCE_DELETED,
+        name: name,
+        data: data
+      });
+    })
+    .fail((xhr, status, err) => {
+      if( xhr.status == 422) {
+        var res = xhr.responseJSON;
+        AppDispatcher.dispatch({
+          type: Constants.RESOURCE_INVALID,
+          name: name,
+          data: res
+        });
+      }
+      console.error(url, status, err.toString());
+    }).promise();
+  },
+
   sendRequiest(method, url, data) {
     var csrfToken = data.csrfToken;
     delete data.csrfToken;
@@ -144,7 +184,6 @@ export default {
       type: method,
       dataType: 'json',
     };
-
 
     if( csrfToken ) {
       ajaxparams.headers = {
