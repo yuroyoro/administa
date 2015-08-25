@@ -188,9 +188,16 @@ export default React.createClass({
 
     ResourceActions.create(name, { resource: data, csrfToken: this.props.csrfToken }).then(() => {
       var state = ResourceStore.getState(name);
-      var id = state.currentId;
+      var id    = state.currentId;
+      var flash = state.flash;
+
       this.transitionToShow(name, id, pagination);
-    } );
+
+      if( flash ) {
+        $.notifyBar({ cssClass: "success", html: flash, });
+      }
+
+    });
   },
 
   update(resource, data, dirty) {
@@ -201,8 +208,15 @@ export default React.createClass({
     let pagination = this.props.pagination;
 
     ResourceActions.update(name, id, { resource: data, csrfToken: this.props.csrfToken }).then(() => {
+      var state = ResourceStore.getState(name);
+      var flash = state.flash;
+
       this.transitionToShow(name, id, pagination);
-    } );
+
+      if( flash ) {
+        $.notifyBar({ cssClass: "success", html: flash, });
+      }
+    });
   },
 
   render() {

@@ -28,7 +28,8 @@ module.exports = {
       'adminlte-skins-blue.css':  'admin-lte/dist/css/skins/skin-blue.min.css',
       'adminlte-skins-black.css': 'admin-lte/dist/css/skins/skin-black.min.css',
       'bootstrap.css':            'bootstrap/dist/css/bootstrap.css',
-      'jquery.datetimepicker.css': 'jquery-datetimepicker/jquery.datetimepicker.css'
+      'jquery.datetimepicker.css': 'jquery-datetimepicker/jquery.datetimepicker.css',
+      'jquery.notifyBar.css'     : 'jqnotifybar/css/jquery.notifyBar.css'
     }
   },
 

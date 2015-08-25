@@ -1,0 +1,6 @@
+en:
+  administa:
+    flash:
+      created: "%{name}(id: %{id}) was successfully created"
+      updated: "%{name}(id: %{id}) was successfully updated"
+      deleted: "%{name}(id: %{id}) was successfully deleted"

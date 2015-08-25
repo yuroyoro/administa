@@ -14,9 +14,11 @@ module Administa
         model.assign(resource, attrs)
         unless resource.save!
           handle_validate_errors(resource.errors)
+          return
         end
 
         @result = show_result(params[:id])
+        @result["flash"] = I18n.t("administa.flash.updated", name: model.label, id: resource.id )
 
         respond_to do |format|
           format.html { render :index }

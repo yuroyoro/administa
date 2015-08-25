@@ -15,6 +15,7 @@ class ResourceState {
     this.pagination      = data.pagination || {};
     this.errors          = data.errors     || {};
     this.csrfToken       = data.csrf_token || "";
+    this.flash           = data.flash      || "";
   }
 
   update(other) {
@@ -36,6 +37,7 @@ class ResourceState {
     setUnlessEmpty("pagination",      this);
     setUnlessEmpty("errors",          this);
     setUnlessEmpty("csrfToken",       this);
+    setUnlessEmpty("flash",           this);
     return this;
   }
 
@@ -47,6 +49,7 @@ class ResourceState {
       resources:  this.resources,
       pagination: this.pagination,
       csrfToken:  this.csrfToken,
+      flash:      this.flash,
     });
   }
 }

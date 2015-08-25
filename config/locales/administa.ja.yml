@@ -1,0 +1,6 @@
+ja:
+  administa:
+    flash:
+      created: "%{name}(id: %{id}) が登録されました"
+      updated: "%{name}(id: %{id}) が更新されました"
+      deleted: "%{name}(id: %{id}) が削除されました"

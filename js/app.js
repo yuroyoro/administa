@@ -23,6 +23,10 @@ require("app.css");
 require("jquery.datetimepicker.css");
 require("jquery-datetimepicker");
 
+// setup jquery notify bar
+require("jqnotifybar");
+require("jquery.notifyBar.css")
+
 Date.parseDate = function( input, format ){
   return moment(input,format).toDate();
 };
