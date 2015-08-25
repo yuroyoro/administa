@@ -48,7 +48,7 @@ class ResourceState {
       settings:   this.settings,
       resources:  this.resources,
       pagination: this.pagination,
-      csrfToken:  this.csrfToken,
+      csrf_token: this.csrfToken,
       flash:      this.flash,
     });
   }
