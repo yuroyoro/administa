@@ -31,11 +31,12 @@ export default React.createClass({
     switch(l.type){
       case "label":
         title = (
-            <a href="#">
+            <a href="#" onClick={ (e) => {console.log('onlick preventDefault');e.preventDefault() } }>
               <span>{ l.label }</span>
               <i className="fa fa-angle-left pull-right"></i><
               /a>
-        );;
+        );
+        break;
       case "menu":
         var f = (e) => {
           e.preventDefault();
@@ -53,6 +54,7 @@ export default React.createClass({
             <i className= "fa fa-angle-left pull-right"></i>
           </a>
         );
+        break;
     }
 
     var children = m.menus.map((c, i) => {
