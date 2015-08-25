@@ -6,8 +6,8 @@ module Administa
       layout 'administa/application'
 
       if Rails.version < "4.0"
-        before_filter :_ensure_administa_config_initialized
         before_filter :_authenticate!
+        before_filter :_ensure_administa_config_initialized
       else
         before_action :_authenticate!
         before_action :_ensure_administa_config_initialized
