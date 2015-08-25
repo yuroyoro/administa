@@ -120,8 +120,9 @@ module Administa
       def default_colums(klass)
         columns = klass.column_names.map(&:to_sym)
         nesteds = klass.nested_attributes_options.keys
-        create_columns = columns - %w(id created_at updated_at).map(&:to_sym) + nesteds
-        edit_columns   = columns - %w(created_at updated_at).map(&:to_sym) + nesteds
+
+        create_columns = (columns - %w(id created_at updated_at).map(&:to_sym) + nesteds).reject{|c| readonly?(c)}
+        edit_columns   = (columns - %w(created_at updated_at).map(&:to_sym) + nesteds).reject{|c| readonly?(c)}
 
         {
           index: {
@@ -289,7 +290,7 @@ module Administa
 
         if col[:readonly]
           unless association
-            Rails.logger.debug "#{name} isn't specified in 'attr_accessible' of #{klass}. You should add #{name} if you want to edit" unless name.to_sym == :id
+            Rails.logger.debug "[Administa] warning: #{name} isn't specified in 'attr_accessible' of #{klass}. You should add #{name} if you want to edit" unless name.to_sym.in? [:id, :created_at, :updated_at]
             return
           end
 
@@ -298,14 +299,15 @@ module Administa
           readonly = readonly?(attributes_name)
 
           if readonly
-            Rails.logger.debug "#{attributes_name} isn't specified in 'attr_accessible' of #{klass}. You should add #{attributes_name} if you want to edit #{name} association "
+            Rails.logger.debug "[Administa] warning: #{attributes_name} isn't specified in 'attr_accessible' of #{klass}. You should add #{attributes_name} if you want to edit #{name} association "
+            return
           end
 
           nested_options = klass.nested_attributes_options
           nested = nested_options[association_name]
 
           unless nested
-            Rails.logger.debug "#{association_name} isn't specified in 'accepts_nested_attributes_for' of #{klass}. You should add #{attributes_name} if you want to edit #{name} association "
+            Rails.logger.debug "[Administa] warning: #{association_name} isn't specified in 'accepts_nested_attributes_for' of #{klass}. You should add #{attributes_name} if you want to edit #{name} association "
           end
         end
       end
