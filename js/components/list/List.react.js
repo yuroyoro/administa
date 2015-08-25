@@ -38,6 +38,9 @@ export default React.createClass({
 
 
   newLink(){
+    if( this.props.settings.actions.indexOf("create") < 0 ) {
+      return null;
+    }
     let name = this.props.name;
 
     console.log('newLink');

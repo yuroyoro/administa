@@ -21,6 +21,10 @@ export default React.createClass({
   },
 
   editLink(resource){
+    if( this.props.settings.actions.indexOf("edit") < 0 ) {
+      return null;
+    }
+
     let name = this.props.name;
     let id   = resource.id;
 
@@ -38,6 +42,9 @@ export default React.createClass({
   },
 
   deleteLink(resource){
+    if( this.props.settings.actions.indexOf("destroy") < 0 ) {
+      return null;
+    }
     let name = this.props.name;
     let id   = resource.id;
 

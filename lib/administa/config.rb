@@ -46,6 +46,11 @@ module Administa
       @base_controller || "ApplicationController"
     end
 
+    def actions(*args)
+      @actions = args if args.present?
+      @actions || [:create, :edit, :destroy]
+    end
+
     def timezone(tz = nil)
       @timezone = tz if tz
       @timezone ||= "Etc/UTC"

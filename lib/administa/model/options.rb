@@ -8,6 +8,7 @@ module Administa
           locale:          I18n.locale,
           timezone:        Administa.config.timezone,
           timezone_offset: Administa.config.timezone_offset,
+          actions:         Administa.config.actions,
         )
       end
 
