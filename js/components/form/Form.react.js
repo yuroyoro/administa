@@ -60,6 +60,9 @@ export default React.createClass({
         var msg = errors[col.name];
         if(!msg && col.association){
           msg = errors[col.association.name];
+          if( msg instanceof Array ){
+            msg = msg[0];
+          }
         }
 
         if( msg ) {
