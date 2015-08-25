@@ -401,6 +401,46 @@ webpackJsonp([1],[
 	    }).promise();
 	  },
 	
+	  destroy: function destroy(name, id, query) {
+	    var options = arguments[3] === undefined ? {} : arguments[3];
+	
+	    var url = "/administa/" + name + "/" + id;
+	
+	    console.log("delete:" + url);
+	
+	    var csrfToken = options.csrfToken;
+	    var ajaxparams = {
+	      url: url,
+	      type: "DELETE",
+	      dataType: "json",
+	      data: query };
+	
+	    if (csrfToken) {
+	      ajaxparams.headers = {
+	        "X-CSRF-Token": csrfToken
+	      };
+	    }
+	
+	    return $.ajax(ajaxparams).done(function (data) {
+	      console.log(data);
+	      AppDispatcher.dispatch({
+	        type: Constants.RESOURCE_DELETED,
+	        name: name,
+	        data: data
+	      });
+	    }).fail(function (xhr, status, err) {
+	      if (xhr.status == 422) {
+	        var res = xhr.responseJSON;
+	        AppDispatcher.dispatch({
+	          type: Constants.RESOURCE_INVALID,
+	          name: name,
+	          data: res
+	        });
+	      }
+	      console.error(url, status, err.toString());
+	    }).promise();
+	  },
+	
 	  sendRequiest: function sendRequiest(method, url, data) {
 	    var csrfToken = data.csrfToken;
 	    delete data.csrfToken;
@@ -744,14 +784,17 @@ webpackJsonp([1],[
 	      case "label":
 	        title = React.createElement(
 	          "a",
-	          { href: "#" },
+	          { href: "#", onClick: function (e) {
+	              console.log("onlick preventDefault");e.preventDefault();
+	            } },
 	          React.createElement(
 	            "span",
 	            null,
 	            l.label
 	          ),
 	          React.createElement("i", { className: "fa fa-angle-left pull-right" })
-	        );;
+	        );
+	        break;
 	      case "menu":
 	        var f = function (e) {
 	          e.preventDefault();
@@ -773,6 +816,7 @@ webpackJsonp([1],[
 	          ),
 	          React.createElement("i", { className: "fa fa-angle-left pull-right" })
 	        );
+	        break;
 	    }
 	
 	    var children = m.menus.map(function (c, i) {
@@ -1109,13 +1153,12 @@ webpackJsonp([1],[
 	  },
 	
 	  editLink: function editLink(resource) {
+	    if (this.props.settings.actions.indexOf("edit") < 0) {
+	      return null;
+	    }
+	
 	    var name = this.props.name;
 	    var id = resource.id;
-	
-	    console.log("editLink");
-	    console.log(name);
-	    console.log(resource);
-	    console.log(id);
 	
 	    var linkAttrs = {
 	      name: name,
@@ -1128,6 +1171,27 @@ webpackJsonp([1],[
 	    };
 	
 	    return this.linkToEdit(linkAttrs);
+	  },
+	
+	  deleteLink: function deleteLink(resource) {
+	    if (this.props.settings.actions.indexOf("destroy") < 0) {
+	      return null;
+	    }
+	    var name = this.props.name;
+	    var id = resource.id;
+	
+	    var linkAttrs = {
+	      name: name,
+	      id: id,
+	      label: "delete",
+	      page: this.props.pagination.page,
+	      limit: this.props.pagination.limit,
+	      order: this.props.pagination.order,
+	      q: this.props.pagination.q,
+	      csrfToken: this.props.csrfToken,
+	      confirm: "Are you sure to delete " + this.props.label + "(id:" + this.props.id + ")" };
+	
+	    return this.linkToDestroy(linkAttrs);
 	  },
 	
 	  properties: function properties() {
@@ -1167,10 +1231,15 @@ webpackJsonp([1],[
 	            "(id:",
 	            this.props.id,
 	            ")"
-	          ),
+	          )
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "box-header" },
 	          React.createElement(
 	            "div",
 	            { className: "box-tools pull-right" },
+	            this.deleteLink(resource),
 	            this.editLink(resource)
 	          )
 	        ),
@@ -1268,6 +1337,9 @@ webpackJsonp([1],[
 	        var msg = errors[col.name];
 	        if (!msg && col.association) {
 	          msg = errors[col.association.name];
+	          if (msg instanceof Array) {
+	            msg = msg[0];
+	          }
 	        }
 	
 	        if (msg) {
@@ -1472,7 +1544,11 @@ webpackJsonp([1],[
 	            { className: "box-title" },
 	            " ",
 	            title
-	          ),
+	          )
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "box-header" },
 	          React.createElement(
 	            "div",
 	            { className: "box-tools pull-right" },
@@ -1622,7 +1698,7 @@ webpackJsonp([1],[
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(/*! ./~/css-loader/cssToString.js */ 71)();
-	exports.push([module.id, ".main {\n  height: 100vh;\n  max-height: 100vh;\n  overflow-y: auto;\n}\n\n.content-wrapper{\n}\n\n/* header */\n.skin-black .main-header>.logo {\n  background-color: #0C0C0C;\n  color: #C7C7C7;\n  border-right: 1px solid #303030;\n}\n\n.skin-black .main-header>.navbar {\n  background-color: #0C0C0C;\n  border: 1px solid transparent;\n}\n\n\n.skin-black .main-header>.navbar>.sidebar-toggle {\n  color: #C7C7C7;\n  border-right: none;\n}\n\n\n.skin-black .main-header>.navbar .navbar-custom-menu .navbar-nav>li>a, .skin-black .main-header>.navbar .navbar-right>li>a {\n  border-left: none;\n  border-right-width: 0;\n}\n\n.skin-black .main-header>.navbar .nav>li>a {\n  color: #C7C7C7;\n}\n\n/* sidebar */\n.skin-black .wrapper, .skin-black .main-sidebar, .skin-black .left-side {\n  background-color: #303030;\n}\n\n.skin-black .sidebar-menu>li.header {\n  color: #CDCDCD;\n  background: #454545;\n}\n\n.skin-black .main-header>.logo:hover {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .main-header>.navbar .nav>li>a:hover, .skin-black .main-header>.navbar .nav>li>a:active, .skin-black .main-header>.navbar .nav>li>a:focus, .skin-black .main-header>.navbar .nav .open>a, .skin-black .main-header>.navbar .nav .open>a:hover, .skin-black .main-header>.navbar .nav .open>a:focus {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .sidebar-menu>li:hover>a, .skin-black .sidebar-menu>li.active>a {\n  color: #fff;\n  background: #1E2022;\n  border-left-color: #fff;\n}\n\n.skin-black .sidebar-menu>li>.treeview-menu {\n  margin: 0 0px;\n  padding-left: 10px;\n  background: #373B3D;\n}\n\n.skin-black .treeview-menu>li>a {\n  color: #A5ADB0;\n}\n\n\n\n\n.skin-black .sidebar-form input[type=\"text\"], .skin-black .sidebar-form .btn {\n  background-color: #373B3D;\n}\n\n.skin-black .sidebar-form {\n  border: 1px solid #474C4F;\n}\n\n\n/* form */\n.form-group .modified {\n  border-color: royalblue;\n  color: royalblue;\n}\n.form-group .invalid{\n  border-color: tomato;\n  color: tomato;\n}\n\n.form-group blockquote {\n  font-size: 14px;\n  padding: 0px 20px;\n}\n\n.form-group .input-group {\n  margin-bottom: 4px;\n}\n\n.form-control[disabled]{\n  background-color: #FAFAFA;\n}\n\n.input-group-btn .btn-default {\n  background-color: #EEEEEE;\n   border-color: #d2d6de;\n}\n\n\n/* resoource-list */\n.resource-list .box-body {\n  scroll: auto;\n}\n.resource-list .box-tools a,\n.resource-list .box-tools button{\n  margin-right : .75em;\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n\n.resource-list table tr{\n  cursor: pointer ;\n}\n\n.resource-list table th, td{\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  max-width: 150px;\n }\n\n.resource-list table td img{\n  max-width: 150px;\n}\n\n/* pagination */\n.pagination li {\n  cursor: pointer;\n}\n\n/* dialog */\n\n.dialog-base {\n  width    : 100%;\n  height   : 100%;\n  position : fixed;\n  z-index  : 10000000;\n  top      : 0;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n}\n\n.dialog-base .dialog-bg {\n  background : #000000;\n  opacity    : 0.7;\n  width      : 100%;\n  height     : 100%;\n  position   : absolute;\n  top        : 0;\n}\n\n.dialog-base .dialog-body {\n  position : fixed;\n  top      : 30px;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n  z-index  : 10;\n  min-width: 400px;\n  max-width: 600px;\n  overflow-y: auto;\n}\n\n/* loader */\n.loader,\n.loader:before,\n.loader:after {\n  background: #FFF;\n  -webkit-animation: load1 1s infinite ease-in-out;\n  animation: load1 1s infinite ease-in-out;\n  width: 1em;\n  height: 4em;\n}\n.loader:before,\n.loader:after {\n  position: absolute;\n  top: 0;\n  content: '';\n}\n.loader:before {\n  left: -1.5em;\n  -webkit-animation-delay: -0.32s;\n  animation-delay: -0.32s;\n}\n.loader {\n  text-indent: -9999em;\n  margin: 8em auto;\n  position: relative;\n  font-size: 11px;\n  -webkit-transform: translateZ(0);\n  -ms-transform: translateZ(0);\n  transform: translateZ(0);\n  -webkit-animation-delay: -0.16s;\n  animation-delay: -0.16s;\n}\n.loader:after {\n  left: 1.5em;\n}\n@-webkit-keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n@keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n\n", "", {"version":3,"sources":["/home/ozaki/dev/administa/css/app.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","file":"/home/ozaki/dev/administa/node_modules/css-loader/index.js?sourceMap!/home/ozaki/dev/administa/css/app.css","sourcesContent":[".main {\n  height: 100vh;\n  max-height: 100vh;\n  overflow-y: auto;\n}\n\n.content-wrapper{\n}\n\n/* header */\n.skin-black .main-header>.logo {\n  background-color: #0C0C0C;\n  color: #C7C7C7;\n  border-right: 1px solid #303030;\n}\n\n.skin-black .main-header>.navbar {\n  background-color: #0C0C0C;\n  border: 1px solid transparent;\n}\n\n\n.skin-black .main-header>.navbar>.sidebar-toggle {\n  color: #C7C7C7;\n  border-right: none;\n}\n\n\n.skin-black .main-header>.navbar .navbar-custom-menu .navbar-nav>li>a, .skin-black .main-header>.navbar .navbar-right>li>a {\n  border-left: none;\n  border-right-width: 0;\n}\n\n.skin-black .main-header>.navbar .nav>li>a {\n  color: #C7C7C7;\n}\n\n/* sidebar */\n.skin-black .wrapper, .skin-black .main-sidebar, .skin-black .left-side {\n  background-color: #303030;\n}\n\n.skin-black .sidebar-menu>li.header {\n  color: #CDCDCD;\n  background: #454545;\n}\n\n.skin-black .main-header>.logo:hover {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .main-header>.navbar .nav>li>a:hover, .skin-black .main-header>.navbar .nav>li>a:active, .skin-black .main-header>.navbar .nav>li>a:focus, .skin-black .main-header>.navbar .nav .open>a, .skin-black .main-header>.navbar .nav .open>a:hover, .skin-black .main-header>.navbar .nav .open>a:focus {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .sidebar-menu>li:hover>a, .skin-black .sidebar-menu>li.active>a {\n  color: #fff;\n  background: #1E2022;\n  border-left-color: #fff;\n}\n\n.skin-black .sidebar-menu>li>.treeview-menu {\n  margin: 0 0px;\n  padding-left: 10px;\n  background: #373B3D;\n}\n\n.skin-black .treeview-menu>li>a {\n  color: #A5ADB0;\n}\n\n\n\n\n.skin-black .sidebar-form input[type=\"text\"], .skin-black .sidebar-form .btn {\n  background-color: #373B3D;\n}\n\n.skin-black .sidebar-form {\n  border: 1px solid #474C4F;\n}\n\n\n/* form */\n.form-group .modified {\n  border-color: royalblue;\n  color: royalblue;\n}\n.form-group .invalid{\n  border-color: tomato;\n  color: tomato;\n}\n\n.form-group blockquote {\n  font-size: 14px;\n  padding: 0px 20px;\n}\n\n.form-group .input-group {\n  margin-bottom: 4px;\n}\n\n.form-control[disabled]{\n  background-color: #FAFAFA;\n}\n\n.input-group-btn .btn-default {\n  background-color: #EEEEEE;\n   border-color: #d2d6de;\n}\n\n\n/* resoource-list */\n.resource-list .box-body {\n  scroll: auto;\n}\n.resource-list .box-tools a,\n.resource-list .box-tools button{\n  margin-right : .75em;\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n\n.resource-list table tr{\n  cursor: pointer ;\n}\n\n.resource-list table th, td{\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  max-width: 150px;\n }\n\n.resource-list table td img{\n  max-width: 150px;\n}\n\n/* pagination */\n.pagination li {\n  cursor: pointer;\n}\n\n/* dialog */\n\n.dialog-base {\n  width    : 100%;\n  height   : 100%;\n  position : fixed;\n  z-index  : 10000000;\n  top      : 0;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n}\n\n.dialog-base .dialog-bg {\n  background : #000000;\n  opacity    : 0.7;\n  width      : 100%;\n  height     : 100%;\n  position   : absolute;\n  top        : 0;\n}\n\n.dialog-base .dialog-body {\n  position : fixed;\n  top      : 30px;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n  z-index  : 10;\n  min-width: 400px;\n  max-width: 600px;\n  overflow-y: auto;\n}\n\n/* loader */\n.loader,\n.loader:before,\n.loader:after {\n  background: #FFF;\n  -webkit-animation: load1 1s infinite ease-in-out;\n  animation: load1 1s infinite ease-in-out;\n  width: 1em;\n  height: 4em;\n}\n.loader:before,\n.loader:after {\n  position: absolute;\n  top: 0;\n  content: '';\n}\n.loader:before {\n  left: -1.5em;\n  -webkit-animation-delay: -0.32s;\n  animation-delay: -0.32s;\n}\n.loader {\n  text-indent: -9999em;\n  margin: 8em auto;\n  position: relative;\n  font-size: 11px;\n  -webkit-transform: translateZ(0);\n  -ms-transform: translateZ(0);\n  transform: translateZ(0);\n  -webkit-animation-delay: -0.16s;\n  animation-delay: -0.16s;\n}\n.loader:after {\n  left: 1.5em;\n}\n@-webkit-keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n@keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n\n"]}]);
+	exports.push([module.id, ".main {\n  height: 100vh;\n  max-height: 100vh;\n  overflow-y: auto;\n}\n\n.content-wrapper{\n}\n\n/* header */\n.skin-black .main-header>.logo {\n  background-color: #0C0C0C;\n  color: #C7C7C7;\n  border-right: 1px solid #303030;\n}\n\n.skin-black .main-header>.navbar {\n  background-color: #0C0C0C;\n  border: 1px solid transparent;\n}\n\n\n.skin-black .main-header>.navbar>.sidebar-toggle {\n  color: #C7C7C7;\n  border-right: none;\n}\n\n\n.skin-black .main-header>.navbar .navbar-custom-menu .navbar-nav>li>a, .skin-black .main-header>.navbar .navbar-right>li>a {\n  border-left: none;\n  border-right-width: 0;\n}\n\n.skin-black .main-header>.navbar .nav>li>a {\n  color: #C7C7C7;\n}\n\n/* sidebar */\n.skin-black .wrapper, .skin-black .main-sidebar, .skin-black .left-side {\n  background-color: #303030;\n}\n\n.skin-black .sidebar-menu>li.header {\n  color: #CDCDCD;\n  background: #454545;\n}\n\n.skin-black .main-header>.logo:hover {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .main-header>.navbar .nav>li>a:hover, .skin-black .main-header>.navbar .nav>li>a:active, .skin-black .main-header>.navbar .nav>li>a:focus, .skin-black .main-header>.navbar .nav .open>a, .skin-black .main-header>.navbar .nav .open>a:hover, .skin-black .main-header>.navbar .nav .open>a:focus {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .sidebar-menu>li:hover>a, .skin-black .sidebar-menu>li.active>a {\n  color: #fff;\n  background: #1E2022;\n  border-left-color: #fff;\n}\n\n.skin-black .sidebar-menu>li>.treeview-menu {\n  margin: 0 0px;\n  padding-left: 10px;\n  background: #373B3D;\n}\n\n.skin-black .treeview-menu>li>a {\n  color: #A5ADB0;\n}\n\n\n\n\n.skin-black .sidebar-form input[type=\"text\"], .skin-black .sidebar-form .btn {\n  background-color: #373B3D;\n}\n\n.skin-black .sidebar-form {\n  border: 1px solid #474C4F;\n}\n\n\n/* form */\n.form-group .modified {\n  border-color: royalblue;\n  color: royalblue;\n}\n.form-group .invalid{\n  border-color: tomato;\n  color: tomato;\n}\n\n.form-group blockquote {\n  font-size: 14px;\n  padding: 0px 20px;\n}\n\n.form-group .input-group {\n  margin-bottom: 4px;\n}\n\n.form-control[disabled]{\n  background-color: #FAFAFA;\n}\n\n.input-group-btn .btn-default {\n  background-color: #EEEEEE;\n   border-color: #d2d6de;\n}\n\n\n.box-header .box-tools .btn {\n  margin-left: 4px;\n\n}\n/* resoource-list */\n.resource-list .box-body {\n  scroll: auto;\n}\n.resource-list .box-tools a,\n.resource-list .box-tools button{\n  margin-right : .75em;\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n\n.resource-list table tr{\n  cursor: pointer ;\n}\n\n.resource-list table th, td{\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  max-width: 150px;\n }\n\n.resource-list table td img{\n  max-width: 150px;\n}\n\n/* pagination */\n.pagination li {\n  cursor: pointer;\n}\n\n/* dialog */\n\n.dialog-base {\n  width    : 100%;\n  height   : 100%;\n  position : fixed;\n  z-index  : 10000000;\n  top      : 0;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n}\n\n.dialog-base .dialog-bg {\n  background : #000000;\n  opacity    : 0.7;\n  width      : 100%;\n  height     : 100%;\n  position   : absolute;\n  top        : 0;\n}\n\n.dialog-base .dialog-body {\n  position : fixed;\n  top      : 30px;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n  z-index  : 10;\n  min-width: 400px;\n  max-width: 600px;\n  overflow-y: auto;\n}\n\n/* loader */\n.loader,\n.loader:before,\n.loader:after {\n  background: #FFF;\n  -webkit-animation: load1 1s infinite ease-in-out;\n  animation: load1 1s infinite ease-in-out;\n  width: 1em;\n  height: 4em;\n}\n.loader:before,\n.loader:after {\n  position: absolute;\n  top: 0;\n  content: '';\n}\n.loader:before {\n  left: -1.5em;\n  -webkit-animation-delay: -0.32s;\n  animation-delay: -0.32s;\n}\n.loader {\n  text-indent: -9999em;\n  margin: 8em auto;\n  position: relative;\n  font-size: 11px;\n  -webkit-transform: translateZ(0);\n  -ms-transform: translateZ(0);\n  transform: translateZ(0);\n  -webkit-animation-delay: -0.16s;\n  animation-delay: -0.16s;\n}\n.loader:after {\n  left: 1.5em;\n}\n@-webkit-keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n@keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n\n", "", {"version":3,"sources":["/home/ozaki/dev/administa/css/app.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","file":"/home/ozaki/dev/administa/node_modules/css-loader/index.js?sourceMap!/home/ozaki/dev/administa/css/app.css","sourcesContent":[".main {\n  height: 100vh;\n  max-height: 100vh;\n  overflow-y: auto;\n}\n\n.content-wrapper{\n}\n\n/* header */\n.skin-black .main-header>.logo {\n  background-color: #0C0C0C;\n  color: #C7C7C7;\n  border-right: 1px solid #303030;\n}\n\n.skin-black .main-header>.navbar {\n  background-color: #0C0C0C;\n  border: 1px solid transparent;\n}\n\n\n.skin-black .main-header>.navbar>.sidebar-toggle {\n  color: #C7C7C7;\n  border-right: none;\n}\n\n\n.skin-black .main-header>.navbar .navbar-custom-menu .navbar-nav>li>a, .skin-black .main-header>.navbar .navbar-right>li>a {\n  border-left: none;\n  border-right-width: 0;\n}\n\n.skin-black .main-header>.navbar .nav>li>a {\n  color: #C7C7C7;\n}\n\n/* sidebar */\n.skin-black .wrapper, .skin-black .main-sidebar, .skin-black .left-side {\n  background-color: #303030;\n}\n\n.skin-black .sidebar-menu>li.header {\n  color: #CDCDCD;\n  background: #454545;\n}\n\n.skin-black .main-header>.logo:hover {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .main-header>.navbar .nav>li>a:hover, .skin-black .main-header>.navbar .nav>li>a:active, .skin-black .main-header>.navbar .nav>li>a:focus, .skin-black .main-header>.navbar .nav .open>a, .skin-black .main-header>.navbar .nav .open>a:hover, .skin-black .main-header>.navbar .nav .open>a:focus {\n  background: #454545;\n  color: #C7C7C7;\n}\n\n.skin-black .sidebar-menu>li:hover>a, .skin-black .sidebar-menu>li.active>a {\n  color: #fff;\n  background: #1E2022;\n  border-left-color: #fff;\n}\n\n.skin-black .sidebar-menu>li>.treeview-menu {\n  margin: 0 0px;\n  padding-left: 10px;\n  background: #373B3D;\n}\n\n.skin-black .treeview-menu>li>a {\n  color: #A5ADB0;\n}\n\n\n\n\n.skin-black .sidebar-form input[type=\"text\"], .skin-black .sidebar-form .btn {\n  background-color: #373B3D;\n}\n\n.skin-black .sidebar-form {\n  border: 1px solid #474C4F;\n}\n\n\n/* form */\n.form-group .modified {\n  border-color: royalblue;\n  color: royalblue;\n}\n.form-group .invalid{\n  border-color: tomato;\n  color: tomato;\n}\n\n.form-group blockquote {\n  font-size: 14px;\n  padding: 0px 20px;\n}\n\n.form-group .input-group {\n  margin-bottom: 4px;\n}\n\n.form-control[disabled]{\n  background-color: #FAFAFA;\n}\n\n.input-group-btn .btn-default {\n  background-color: #EEEEEE;\n   border-color: #d2d6de;\n}\n\n\n.box-header .box-tools .btn {\n  margin-left: 4px;\n\n}\n/* resoource-list */\n.resource-list .box-body {\n  scroll: auto;\n}\n.resource-list .box-tools a,\n.resource-list .box-tools button{\n  margin-right : .75em;\n  height: 30px;\n  padding: 5px 10px;\n  font-size: 12px;\n  line-height: 1.5;\n}\n\n.resource-list table tr{\n  cursor: pointer ;\n}\n\n.resource-list table th, td{\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  max-width: 150px;\n }\n\n.resource-list table td img{\n  max-width: 150px;\n}\n\n/* pagination */\n.pagination li {\n  cursor: pointer;\n}\n\n/* dialog */\n\n.dialog-base {\n  width    : 100%;\n  height   : 100%;\n  position : fixed;\n  z-index  : 10000000;\n  top      : 0;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n}\n\n.dialog-base .dialog-bg {\n  background : #000000;\n  opacity    : 0.7;\n  width      : 100%;\n  height     : 100%;\n  position   : absolute;\n  top        : 0;\n}\n\n.dialog-base .dialog-body {\n  position : fixed;\n  top      : 30px;\n  left     : 0;\n  right    : 0;\n  bottom   : 0;\n  margin   : auto;\n  z-index  : 10;\n  min-width: 400px;\n  max-width: 600px;\n  overflow-y: auto;\n}\n\n/* loader */\n.loader,\n.loader:before,\n.loader:after {\n  background: #FFF;\n  -webkit-animation: load1 1s infinite ease-in-out;\n  animation: load1 1s infinite ease-in-out;\n  width: 1em;\n  height: 4em;\n}\n.loader:before,\n.loader:after {\n  position: absolute;\n  top: 0;\n  content: '';\n}\n.loader:before {\n  left: -1.5em;\n  -webkit-animation-delay: -0.32s;\n  animation-delay: -0.32s;\n}\n.loader {\n  text-indent: -9999em;\n  margin: 8em auto;\n  position: relative;\n  font-size: 11px;\n  -webkit-transform: translateZ(0);\n  -ms-transform: translateZ(0);\n  transform: translateZ(0);\n  -webkit-animation-delay: -0.16s;\n  animation-delay: -0.16s;\n}\n.loader:after {\n  left: 1.5em;\n}\n@-webkit-keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n@keyframes load1 {\n  0%,\n  80%,\n  100% {\n    box-shadow: 0 0 #FFF;\n    height: 4em;\n  }\n  40% {\n    box-shadow: 0 -2em #ffffff;\n    height: 5em;\n  }\n}\n\n"]}]);
 
 /***/ },
 /* 24 */
@@ -11163,6 +11239,7 @@ webpackJsonp([1],[
 	  RESOURCE_LIST: null,
 	  RESOURCE_UPDATED: null,
 	  RESOURCE_INVALID: null,
+	  RESOURCE_DELETED: null,
 	  DIALOG_OPENED: null,
 	  DIALOG_CLOSED: null,
 	  MENU_INITIALIZED: null,
@@ -11247,6 +11324,9 @@ webpackJsonp([1],[
 	  },
 	
 	  newLink: function newLink() {
+	    if (this.props.settings.actions.indexOf("create") < 0) {
+	      return null;
+	    }
 	    var name = this.props.name;
 	
 	    console.log("newLink");
@@ -11813,7 +11893,7 @@ webpackJsonp([1],[
   \************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(React) {"use strict";
+	/* WEBPACK VAR INJECTION */(function(React, $) {"use strict";
 	
 	var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
 	
@@ -11898,6 +11978,46 @@ webpackJsonp([1],[
 	
 	    var classes = options.classes || "btn btn-primary btn-xs btn-flat";
 	    var href = this.makeHref("edit", params, query);
+	
+	    var link = React.createElement(
+	      "a",
+	      { herf: href, onClick: f, className: classes },
+	      label
+	    );
+	    return link;
+	  },
+	
+	  linkToDestroy: function linkToDestroy() {
+	    var options = arguments[0] === undefined ? {} : arguments[0];
+	
+	    var name = options.name;
+	    var id = options.id;
+	    var label = options.label;
+	
+	    var params = { name: name, id: id };
+	    var query = this.linkToListQuery(options);
+	
+	    var f = function (event) {
+	      event.preventDefault();
+	
+	      if (options.confirm) {
+	        if (!window.confirm(options.confirm)) {
+	          return;
+	        }
+	      }
+	      ResourceActions.destroy(name, id, query, options).then(function (data) {
+	
+	        var flash = data.flash;
+	
+	        if (flash) {
+	          $.notifyBar({ cssClass: "success", html: flash });
+	        }
+	      });
+	      return true;
+	    };
+	
+	    var classes = options.classes || "btn btn-danger btn-xs btn-flat";
+	    var href = this.makeHref("show", params, query);
 	
 	    var link = React.createElement(
 	      "a",
@@ -11999,7 +12119,7 @@ webpackJsonp([1],[
 	      q: options.q
 	    };
 	  } };
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! react */ 1)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! react */ 1), __webpack_require__(/*! jquery */ 4)))
 
 /***/ },
 /* 53 */
@@ -12248,7 +12368,7 @@ webpackJsonp([1],[
 	          settings: this.settings,
 	          resources: this.resources,
 	          pagination: this.pagination,
-	          csrfToken: this.csrfToken,
+	          csrf_token: this.csrfToken,
 	          flash: this.flash });
 	      }
 	    }
@@ -12382,6 +12502,17 @@ webpackJsonp([1],[
 	      var name = action.name;
 	
 	      ResourceStore.updateState(name, data);
+	      ResourceStore.emitEvent(name);
+	
+	    case Constants.RESOURCE_DELETED:
+	      console.log("store RESOURCE_DELETED");
+	
+	      var data = action.data;
+	      var name = action.name;
+	
+	      var state = ResourceStore.updateState(name, data);
+	      state.currentId = null; // clear currentid
+	      state.currentResource = null;
 	      ResourceStore.emitEvent(name);
 	
 	    default: // no op
