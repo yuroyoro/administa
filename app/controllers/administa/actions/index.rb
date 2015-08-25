@@ -12,6 +12,15 @@ module Administa
       end
 
       protected
+        def default_result
+          {
+            name:       model.name.pluralize,
+            settings:   model.settings,
+            csrf_token: form_authenticity_token,
+          }
+
+        end
+
         def index_result
           page  = params[:page].try(&:to_i)
           limit = params[:limit].try(&:to_i)
@@ -24,13 +33,9 @@ module Administa
             order(order).
             paginate(page: page, limit:limit)
 
-          result = {
-            name:       model.name.pluralize,
-            settings:   model.settings,
-            resources:  model.as_json(resources.to_a, action: :index),
-            pagination: resources.pagination_metadata.merge(:q => q),
-            csrf_token: form_authenticity_token,
-          }
+          result = default_result
+          result[:resources]  = model.as_json(resources.to_a, action: :index)
+          result[:pagination] = resources.pagination_metadata.merge(:q => q)
 
           result
         end

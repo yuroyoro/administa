@@ -14,7 +14,7 @@ module Administa
 
       protected
         def show_result(id)
-          result = index_result
+          result = request.xhr? ? default_result :  index_result
 
           resource = model.find(id, action: :show)
 
