@@ -39,9 +39,8 @@ module Administa
 
       def add_dynamic_controller_routes
         ns = self.namespace.to_sym
-        return unless self.controllers.present?
 
-        dcs = self.controllers.map(&:model).map(&:name).map(&:pluralize).map(&:to_sym)
+        dcs = self.controllers.to_a.map(&:model).map(&:name).map(&:pluralize).map(&:to_sym)
 
         Rails.application.routes.draw do
           namespace ns do

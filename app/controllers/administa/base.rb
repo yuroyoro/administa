@@ -6,14 +6,25 @@ module Administa
       layout 'administa/application'
 
       if Rails.version < "4.0"
+        before_filter :_ensure_administa_config_initialized
         before_filter :_authenticate!
       else
         before_action :_authenticate!
+        before_action :_ensure_administa_config_initialized
       end
       helper_method :user_info, :to_json
     end
 
     private
+
+    def _ensure_administa_config_initialized
+      unless Administa.config.initialized?
+        Administa.config.initialize!
+        Administa.config.add_dynamic_controller_routes
+
+        redirect_to "#{request.path}?#{request.query_string}"
+      end
+    end
 
     def _authenticate!
       user = instance_eval(&Administa.config.authenticate_with)

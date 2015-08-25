@@ -10,9 +10,19 @@ module Administa
 
     attr_reader :models, :controllers, :timezone_obj
 
+    def initialized?
+      !!@initialized
+    end
+
+    # Initialization of Administa.config is delayed until
+    # the first request incomming.
+    #
+    # see Administa::Base#_ensure_administa_config_initialized
+    #
     def initialize!
       run_menu_def
       initialize_models!
+      @initialized = true
     end
 
     def initialize_models!
