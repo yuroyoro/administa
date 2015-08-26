@@ -20,7 +20,9 @@ module Administa
     def _ensure_administa_config_initialized
       unless Administa.config.initialized?
         Administa.config.initialize!
-        Administa.config.add_dynamic_controller_routes
+
+        # reload routes for install dynamic controller's routes
+        Rails.application.routes_reloader.reload!
 
         redirect_to "#{request.path}?#{request.query_string}"
       end

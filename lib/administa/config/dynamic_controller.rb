@@ -69,9 +69,9 @@ end
 class Rails::Application::RoutesReloader
 
   def load_paths_with_dynamic_routes
-    load_paths_without_dynamic_routes
-
     Administa.config.add_dynamic_controller_routes
+
+    load_paths_without_dynamic_routes
   end
   alias_method_chain :load_paths, :dynamic_routes
 
