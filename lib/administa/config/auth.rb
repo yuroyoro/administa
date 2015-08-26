@@ -14,7 +14,7 @@ module Administa
       DEFAULT_USER_ICON_PROC = Proc.new {|user|
         Administa.config.user_email_proc.call(user).try{|email|
           hash = Digest::MD5.hexdigest(email)
-          "http://www.gravatar.com/avatar/#{hash}.png"
+          "https://www.gravatar.com/avatar/#{hash}.png"
         }
       }
       DEFAULT_USER_NAME_PROC = Proc.new{|user|
