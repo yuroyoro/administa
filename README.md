@@ -10,7 +10,7 @@ Administa is under heavy development, no tests, no documents ( ꒪⌓꒪)
 [Demo Application](https://administa-demo.herokuapp.com/)
 [Demo Application Source Code](https://github.com/yuroyoro/administa_demo)
 
-![](https://raw.githubusercontent.com/yuroyoro/goast-viewer/master/administa-demo.png)
+![](https://raw.githubusercontent.com/yuroyoro/administa/master/administa-demo.png)
 
 ## Installation
 
