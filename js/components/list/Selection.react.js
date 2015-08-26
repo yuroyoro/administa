@@ -18,31 +18,24 @@ export default React.createClass({
   },
 
   getInitialState() {
-    console.log("Selection: getInitialState");
     return ResourceStore.getState(this.props.name);
   },
 
   componentDidMount() {
-    console.log("Selection: componentDidMount");
     ResourceStore.addEventListener(this.props.name, this._onChange);
   },
 
   componentWillUnmount() {
-    console.log("Selection: componentWillUnmount");
     ResourceStore.removeEventListener(this.props.name, this._onChange);
   },
 
   _onChange() {
     var st = ResourceStore.getState(this.props.name);
-    console.log("Selection: _onChange");
-    console.log(st);
 
     this.setState(st);
   },
 
   render() {
-    console.log('resource selection render');
-
     let Item = ResourceItem;
 
     var classes = "dialog-body resource-list" ;
@@ -53,7 +46,6 @@ export default React.createClass({
 
     var columns = [];
     var searchcols = settings.search_columns;
-    console.log(searchcols);
     var cols = index_settings.columns;
     for(var i = 0; i < cols.length; i++) {
       var col = cols[i];
@@ -74,7 +66,6 @@ export default React.createClass({
       }
     }
 
-    console.log(columns);
     var headers = columns.map((col) => {
       var name = this.toProperyName(col);
       return (<th key={ name } >{ name }</th>);

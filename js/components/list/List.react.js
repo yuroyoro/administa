@@ -43,9 +43,6 @@ export default React.createClass({
     }
     let name = this.props.name;
 
-    console.log('newLink');
-    console.log(name);
-
     var linkAttrs = {
       name:  name,
       label: 'create',
@@ -59,8 +56,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log('resource list render');
-
     let Item = ResourceItem;
 
     var classes = "resource-list" ;

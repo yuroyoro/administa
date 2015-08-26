@@ -24,8 +24,6 @@ export default React.createClass({
       var InnerComponent = this.props.component;
 
       var index = this.props.index;
-      console.log('Dialog:render: ' + this.props.name);
-      console.log(InnerComponent);
       var zindex = 10000000 + ((index  + 1) * 10);
       var style = {
         top:    (index * 20) + "px",

@@ -17,11 +17,6 @@ export default {
     var params = { name: name, id: id };
     var query = this.linkToListQuery(options);
 
-    console.log("--transitionToShow");
-    console.log(params);
-    console.log(query);
-    console.log("---");
-
     this.transitionTo('show', params, query);
   },
 

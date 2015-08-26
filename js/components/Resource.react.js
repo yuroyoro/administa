@@ -23,8 +23,6 @@ export default React.createClass({
 
   _onChange() {
     var st = ResourceStore.getState(this.props.params.name);
-    console.log("Resoruce: _onChange");
-    console.log(st);
 
     this.setState(st);
     // this.setState(ResourceStore.getState(this.props.params.name));
@@ -35,8 +33,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log("resource render");
-    console.log(this.props);
 
     var leftcol = 12;
     var rightcol= 12;
@@ -48,9 +44,6 @@ export default React.createClass({
     var pagination = this.state.pagination      || {};
     var errors     = this.state.errors          || {};
     var csrfToken  = this.state.csrfToken       || "";
-
-    console.log('resource = ');
-    console.log(resource);
 
     if(resource && Object.keys(resource).length != 0) {
       leftcol = 8;

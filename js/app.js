@@ -109,8 +109,6 @@ export default {
 
   render(data) {
 
-    console.log('render');
-    console.log(data);
     ResourceActions.initialize(data);
     UserActions.initialize(this.user());
     MenuActions.initialize(this.menus());

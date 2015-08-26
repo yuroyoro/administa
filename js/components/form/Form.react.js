@@ -162,7 +162,7 @@ export default React.createClass({
   handleSave() {
     var dirty = this.isDirty();
 
-    if( !dirty ) console.log("formdata isn't modified");
+    if( !dirty ) console.log("formdata isn't modified"); // TODO show message
 
     var data     = this.getFormData();
     var resource = this.getResourceData();
@@ -175,10 +175,6 @@ export default React.createClass({
         f = this.create;
       }
     }
-
-    console.log("FormData --");
-    console.log(data);
-    console.log("---");
 
     f(resource, data, dirty);
   },
@@ -223,7 +219,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log("resource form render");
     var resource = this.props.resource;
     var classes = ["resource-form"] ;
     if(this.props.col) {
@@ -237,8 +232,6 @@ export default React.createClass({
     if (!resource) {
       return <div className={ classes } />
     }
-
-    console.log(resource);
 
     var title = `New: ${this.props.label}`;
     if (this.props.id) {

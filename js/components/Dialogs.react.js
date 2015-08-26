@@ -18,8 +18,6 @@ export default React.createClass({
 
   _onChange(e) {
     var st = DialogStore.getAllState();
-    console.log("Dialog: _onChange");
-    console.log(st);
 
     this.setState(st);
     // this.setState(ResourceStore.getState(this.props.params.name));

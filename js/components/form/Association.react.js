@@ -171,10 +171,6 @@ export default React.createClass({
 
   onSubmit(resource, data, dirty) {
 
-    console.log('onSubmit');
-    console.log(resource);
-    console.log(data);
-
     if( dirty ) {
       var reason = "created";
       if( resource.id ) {

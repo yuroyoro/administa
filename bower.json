@@ -20,6 +20,7 @@
     "bootstrap": "~3.3.4",
     "react-router": "~0.13.2",
     "flux": "~2.0.2",
-    "object-assign": "~2.0.0"
+    "object-assign": "~2.0.0",
+    "jqnotifybar": "~1.5.3"
   }
 }

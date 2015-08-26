@@ -48,10 +48,6 @@ var DialogStore = assign({}, Events.EventEmitter.prototype,  {
 
   setState(name, dialog) {
     dialogs[name] = dialog;
-    console.log('DialogStore: setState: ' + name);
-    console.log(dialog);
-    console.log(dialogs);
-
   },
 
   getState(name) {
@@ -73,8 +69,6 @@ AppDispatcher.register((action) => {
 
       dialog.open();
       DialogStore.setState(name, dialog);
-      console.log('DialogStore: OPENED');
-      console.log(dialog);
 
       DialogStore.emitEvent(name);
       break;
@@ -83,7 +77,6 @@ AppDispatcher.register((action) => {
       var data = action.data;
       var name = data.name;
 
-      console.log('DialogStore: CLOSED');
       var dialog = DialogStore.getState(name);
       if( dialog ) {
         dialog.close();

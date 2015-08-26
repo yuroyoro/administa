@@ -70,7 +70,6 @@ export default React.createClass({
   },
 
   render() {
-    console.log("resource detail render");
     var resource = this.props.resource;
     var classes = "resource-detail" ;
     classes += " col-md-" + this.props.col;

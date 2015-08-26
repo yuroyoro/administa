@@ -14,15 +14,12 @@ export default {
   fetch(name, id, query = {}){
     let url = '/administa/' + name + '/' + id;
 
-    console.log('fetch :' + url);
     return $.ajax({
       url: url,
       dataType: 'json',
       data: query
     })
     .done((data) => {
-      console.log('fetch done:' + url);
-      console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_FETCH,
         name: name,
@@ -38,15 +35,12 @@ export default {
   list(name, query = {}) {
     let url = '/administa/' + name;
 
-    console.log('list:' + url);
-
     return $.ajax({
       url: url,
       dataType: 'json',
       data: query
     })
     .done((data) => {
-      console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_LIST,
         name: name,
@@ -61,15 +55,12 @@ export default {
   build(name, data = {}){
     let url = '/administa/' + name + "/new";
 
-    console.log('build:' + url);
-
     return $.ajax({
       url: url,
       dataType: 'json',
       data: data
     })
     .done((data) => {
-      console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_BUILD,
         name: name,
@@ -84,10 +75,7 @@ export default {
   create(name,  data = {}) {
     let url = '/administa/' + name ;
 
-    console.log('create:' + url);
-
     return this.sendRequiest("POST", url, data).done((data) => {
-      console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_CREATED,
         name: name,
@@ -111,10 +99,7 @@ export default {
   update(name, id, data = {}) {
     let url = '/administa/' + name + "/" + id ;
 
-    console.log('update:' + url);
-
     return this.sendRequiest("PUT", url, data).done((data) => {
-      console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_UPDATED,
         name: name,
@@ -137,8 +122,6 @@ export default {
   destroy(name, id, query, options = {}) {
     let url = '/administa/' + name + "/" + id ;
 
-    console.log('delete:' + url);
-
     var csrfToken = options.csrfToken;
     var ajaxparams = {
       url: url,
@@ -154,7 +137,6 @@ export default {
     }
 
     return $.ajax(ajaxparams).done((data) => {
-      console.log(data);
       AppDispatcher.dispatch({
         type: Constants.RESOURCE_DELETED,
         name: name,
