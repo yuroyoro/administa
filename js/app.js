@@ -15,7 +15,7 @@ var RouteHandler  = Router.RouteHandler;
 // require stylesheets
 require("bootstrap.css");
 require("adminlte.css");
-require("adminlte-skins-blue.css");
+// require("adminlte-skins-blue.css");
 require("adminlte-skins-black.css");
 require("app.css");
 
@@ -67,7 +67,7 @@ var App = React.createClass({
 
           <RouteHandler {...this.props}/>
 
-          </section><!-- /.content -->
+          </section>
         </div>
 
         <Footer/>

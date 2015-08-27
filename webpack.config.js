@@ -44,7 +44,7 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
 
 
-    //
+    // export to global
     new webpack.ProvidePlugin({
       $:      'jquery',
       jQuery: "jquery",
@@ -52,8 +52,7 @@ module.exports = {
       React:  'react',
       Flux:   'flux',
       moment: 'moment'
-    })
-
+    }),
   ],
 
   // Turns on source maps
