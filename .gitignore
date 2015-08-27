@@ -12,3 +12,5 @@ Gemfile.lock
 vendor/
 .ruby-version
 test/lib/
+
+app/assets/javascripts/administa/build/*.js.map
