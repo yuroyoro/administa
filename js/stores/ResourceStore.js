@@ -2,6 +2,7 @@ import Events        from 'events'
 import Constants     from '../Constants';
 import AppDispatcher from '../AppDispatcher';
 import assign        from 'object-assign';
+import Utils         from 'Utils';
 
 var states = {};
 
@@ -21,9 +22,13 @@ class ResourceState {
   update(other) {
     var setUnlessEmpty = function(attr, self) {
       if( other.hasOwnProperty(attr) == false ) {
-        return
+        return;
       }
       var v = other[attr];
+      if(v && Utils.isPrimitive(v)) {
+        self[attr] = v;
+        return;
+      }
       if(v && Object.keys(v).length > 0) {
         self[attr] = v;
       }
