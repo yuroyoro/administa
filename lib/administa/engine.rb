@@ -5,7 +5,7 @@ module Administa
     isolate_namespace Administa
 
     config.after_initialize do
-      if Rails.env.production?
+      if Rails.env.production? && (not Rails.groups.include?("assets"))
         Administa.config.initialize!
       end
     end
