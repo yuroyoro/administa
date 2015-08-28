@@ -1,10 +1,20 @@
 export default {
-  getInitialState() {
-    var targets = this.props.resource[this.props.column.association.name];
+
+  getState(resource) {
+    var targets = resource[this.props.column.association.name];
     return {
       targets: targets,
       dirty: false,
     };
+  },
+  getInitialState() {
+    return this.getState(this.props.resource);
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.resource && nextProps.resource.id != this.props.resource.id) {
+      this.setState(this.getState(nextProps.resource));
+    }
   },
 
   getResourceValue() {

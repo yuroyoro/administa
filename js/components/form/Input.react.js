@@ -7,11 +7,15 @@ export default React.createClass({
 
   mixins: [PropertyMixin, InputMixin],
 
-  getInitialState() {
+  getState(resource) {
     return {
-      value: this.props.resource[this.props.column.name],
+      value: resource[this.props.column.name],
       dirty: false,
     };
+  },
+
+  getInitialState() {
+    return this.getState(this.props.resource);
   },
 
   componentDidMount() {
@@ -27,6 +31,12 @@ export default React.createClass({
       };
       // in moment.js, default timezone offset is detected by Date.prototype.getTimezoneOffset
       jQuery("input[name='" + this.props.column.name + "'].datetimepicker").datetimepicker(options);
+    }
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.resource && nextProps.resource.id != this.props.resource.id) {
+      this.setState(this.getState(nextProps.resource));
     }
   },
 

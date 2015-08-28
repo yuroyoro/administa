@@ -22,10 +22,20 @@ export default React.createClass({
     invalid:  React.PropTypes.bool,
   },
 
-  getInitialState() {
+  getState(target) {
     return {
-      target: this.props.target,
+      target: target,
       dirty: false,
+    }
+  },
+
+  getInitialState() {
+    return this.getState(this.props.target);
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.target != this.props.target) {
+      this.setState(this.getState(nextProps.target));
     }
   },
 
