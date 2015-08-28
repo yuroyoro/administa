@@ -111,7 +111,6 @@
    border-color: #d2d6de;
 }
 
-
 .box-header .box-tools .btn {
   margin-left: 4px;
 
@@ -142,6 +141,10 @@
 
 .resource-list table td img{
   max-width: 150px;
+}
+
+input.search-box-text {
+  min-width: 80px;
 }
 
 /* pagination */

@@ -56,7 +56,7 @@ export default React.createClass({
     var value = this.state.value;
     return(
       <div className="has-feedback input-group input-group-sm col-md-3 pull-right">
-        <input type="text" className="form-control input-sm" placeholder="Search..." value={value} onChange={this.handleChange}/>
+        <input type="text" className="form-control input-sm search-box-text" placeholder="Search..." value={value} onChange={this.handleChange}/>
         <span className="input-group-btn">
           <button type='submit' name='search' id='search-btn' className="btn btn-flat btn-primary" onClick={ this.search }><i className="fa fa-search"></i></button>
         </span>
