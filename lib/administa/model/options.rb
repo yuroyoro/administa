@@ -8,13 +8,12 @@ module Administa
           locale:          I18n.locale,
           timezone:        Administa.config.timezone,
           timezone_offset: Administa.config.timezone_offset,
-          actions:         Administa.config.actions,
         )
       end
 
       def setup_options!(klass = self.klass, options = self.given_options)
 
-        options        = default_settings(klass).deep_merge(options)
+        options = default_settings(klass).deep_merge(options)
         self.options = options
 
         default_cols   = default_colums(klass)
@@ -111,10 +110,11 @@ module Administa
 
       def default_settings(klass)
         {
-          limit:          20,
-          order:          :id,
-          search_columns: [:name, :title],
+          limit:                20,
+          order:                :id,
+          search_columns:       [:name, :title],
           attr_accessible_role: :default,
+          actions:              Administa.config.actions,
         }
       end
 
