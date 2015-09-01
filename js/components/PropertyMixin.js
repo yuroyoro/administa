@@ -67,6 +67,7 @@ export default {
         var to = nested.length;
         if (ellipsis && to > 3) to = 3;
         for(var i = 0; i < to; i++) {
+          if( !nested[i] ) continue;
           var s = this.extractLabel(col.association.label, nested[i], search_columns);
           if( !wrap_tag ) {
             val.push(s);
