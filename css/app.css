@@ -248,3 +248,18 @@ input.search-box-text {
   }
 }
 
+
+
+div.wild-error-notification {
+    position: absolute;
+    background-color: rgba(51, 51, 51, 0.72);
+    width: 100%;
+    z-index: 9999;
+    color: #EEE;
+    padding: 20px;
+}
+div.wild-error-notification h3 {
+  color: orange;
+}
+
+

@@ -53,6 +53,22 @@ import Dialogs        from 'components/Dialogs.react';
 // expose React to global (workarround)
 global.React = React;
 
+
+// Display js error
+window.addEventListener('error', function(e){
+  // e instanceof ErrorEvent
+  jQuery("#resultLoading").hide();
+
+  var html = `<div class='wild-error-notification'><h3>javascript error : ${e.message}</h3>`;
+  var stack = e.stack || (e.error && e.error.stack);
+  if( stack ) {
+    html += `<pre>${stack}</pre>`
+  }
+  html += "</div>"
+
+  jQuery("body").prepend(html);
+});
+
 var App = React.createClass({
   displayName: 'App',
 
