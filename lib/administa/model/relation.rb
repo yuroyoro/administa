@@ -47,7 +47,7 @@ module Administa
         page  ||= 1
         limit ||= klass.options[:limit]
 
-        offset = (page == 1 ? 0 : limit * (page - 1))
+        offset = (page <= 1 ? 0 : limit * (page - 1))
 
         count = relation.count
         rel = relation.limit(limit).offset(offset)
