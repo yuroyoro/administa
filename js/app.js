@@ -49,6 +49,7 @@ import ResourceDetail from 'components/detail/Detail.react';
 import ResourceForm   from 'components/form/Form.react';
 
 import Dialogs        from 'components/Dialogs.react';
+import Utils          from 'Utils';
 
 // expose React to global (workarround)
 global.React = React;
@@ -56,17 +57,9 @@ global.React = React;
 
 // Display js error
 window.addEventListener('error', function(e){
-  // e instanceof ErrorEvent
-  jQuery("#resultLoading").hide();
 
-  var html = `<div class='wild-error-notification'><h3>javascript error : ${e.message}</h3>`;
   var stack = e.stack || (e.error && e.error.stack);
-  if( stack ) {
-    html += `<pre>${stack}</pre>`
-  }
-  html += "</div>"
-
-  jQuery("body").prepend(html);
+  Utils.reportError(e.message, e.error, stack);
 });
 
 var App = React.createClass({

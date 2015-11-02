@@ -26,8 +26,11 @@ export default {
         data: data
       });
     })
-    .fail((xhr, status, err) => {
+    .fail(function(xhr, status, err) {
       console.error(url, status, err.toString());
+      var message = `${this.type} ${this.url} ${err}`;
+      var error   = new Error(message);
+      Utils.reportError(message, error, error.stack);
     }).promise();
 
   },
@@ -47,8 +50,11 @@ export default {
         data: data
       });
     })
-    .fail((xhr, status, err) => {
+    .fail(function(xhr, status, err) {
       console.error(url, status, err.toString());
+      var message = `${this.type} ${this.url} ${err}`;
+      var error   = new Error(message);
+      Utils.reportError(message, error, error.stack);
     }).promise();
   },
 
@@ -67,8 +73,11 @@ export default {
         data: data
       });
     })
-    .fail((xhr, status, err) => {
+    .fail(function(xhr, status, err) {
       console.error(url, status, err.toString());
+      var message = `${this.type} ${this.url} ${err}`;
+      var error   = new Error(message);
+      Utils.reportError(message, error, error.stack);
     }).promise();
   },
 
@@ -82,7 +91,7 @@ export default {
         data: data
       });
     })
-    .fail((xhr, status, err) => {
+    .fail(function(xhr, status, err) {
       if( xhr.status == 422) {
         var res = xhr.responseJSON;
         AppDispatcher.dispatch({
@@ -93,6 +102,9 @@ export default {
       }
 
       console.error(url, status, err.toString());
+      var message = `${this.type} ${this.url} ${err}`;
+      var error   = new Error(message);
+      Utils.reportError(message, error, error.stack);
     }).promise();
   },
 
@@ -106,7 +118,7 @@ export default {
         data: data
       });
     })
-    .fail((xhr, status, err) => {
+    .fail(function(xhr, status, err) {
       if( xhr.status == 422) {
         var res = xhr.responseJSON;
         AppDispatcher.dispatch({
@@ -116,6 +128,9 @@ export default {
         });
       }
       console.error(url, status, err.toString());
+      var message = `${this.type} ${this.url} ${err}`;
+      var error   = new Error(message);
+      Utils.reportError(message, error, error.stack);
     }).promise();
   },
 
@@ -143,7 +158,7 @@ export default {
         data: data
       });
     })
-    .fail((xhr, status, err) => {
+    .fail(function(xhr, status, err) {
       if( xhr.status == 422) {
         var res = xhr.responseJSON;
         AppDispatcher.dispatch({
@@ -153,6 +168,9 @@ export default {
         });
       }
       console.error(url, status, err.toString());
+      var message = `${this.type} ${this.url} ${err}`;
+      var error   = new Error(message);
+      Utils.reportError(message, error, error.stack);
     }).promise();
   },
 
