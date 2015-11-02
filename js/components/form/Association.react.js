@@ -145,7 +145,7 @@ export default React.createClass({
   },
 
   openDialog(action, fetchmethod) {
-    var name = this.associationName();
+    var name  = this.props.column.association.path;
     var Form = require('./Form.react');
 
     if(this.state.dirty && this.state.formsettings) {
@@ -162,7 +162,7 @@ export default React.createClass({
   },
 
   openEdit() {
-    var name = this.associationName();
+    var name  = this.props.column.association.path;
     var id   = this.state.target.id;
     if(!id) {
       return false;
@@ -173,7 +173,7 @@ export default React.createClass({
   },
 
   openCreate() {
-    var name = this.associationName();
+    var name  = this.props.column.association.path;
     this.openDialog("create", () => {
       return ResourceActions.build(name);
     });
