@@ -153,13 +153,20 @@ module Administa
 
         type = col.type
         type = :file if uploaders[col.name.to_sym]  # carrierwave?
-        type = :enum if enums
+
+        default = col.default
+        if enums
+          type = :enum
+          default = enums.first  if default.nil? && !col.null
+        end
 
         meta = {
           name:     col.name.to_sym,
           type:     type,
           readonly: readonly?(col.name),
           accessor: :column,
+          nullable: col.null,
+          default:  default,
         }
         meta[:enums] = enums if enums
 

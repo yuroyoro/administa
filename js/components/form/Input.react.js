@@ -18,11 +18,14 @@ export default React.createClass({
     var value = this.props.resource[this.props.column.name];
     var dirty = false;
 
-    if ( this.props.column.type == 'enum') {
+    if ( this.props.column.default && !value) {
+      value = this.props.column.default;
       dirty = true;
-      if( !value ) {
-        value = this.props.column.enums[0];
-      }
+    }
+
+    if ( this.props.column.type == 'enum' && !this.props.resource.id && value ) {
+      // this column is considered as 'edited' if enum type has default value on creation
+      dirty = true;
     }
 
     return {
@@ -113,6 +116,10 @@ export default React.createClass({
         var options = this.props.column.enums.map((e) => {
           return <option value={e} >{ e }</option>;
         });
+
+        if ( this.props.column.nullable ) {
+          options.unshift(<option> </option>);
+        }
 
         return <select className={ "form-control "  + this.inputStatusClasses() }name={ name } disabled={this.props.disabled} onChange={ this.handleChange } value={ value }>
           { options }
