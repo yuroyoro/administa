@@ -15,7 +15,20 @@ export default React.createClass({
   },
 
   getInitialState() {
-    return this.getState(this.props.resource);
+    var value = this.props.resource[this.props.column.name];
+    var dirty = false;
+
+    if ( this.props.column.type == 'enum') {
+      dirty = true;
+      if( !value ) {
+        value = this.props.column.enums[0];
+      }
+    }
+
+    return {
+      value: value,
+      dirty: dirty,
+    };
   },
 
   componentDidMount() {
