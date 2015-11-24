@@ -22,7 +22,7 @@ export default {
 
   inputClasses() {
     var classes = "form-control input-sm";
-    classes += "" +  this.inputStatusClasses();
+    classes += " " +  this.inputStatusClasses();
     return classes;
   },
 

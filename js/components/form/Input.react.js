@@ -101,7 +101,7 @@ export default React.createClass({
           return <option value={e} >{ e }</option>;
         });
 
-        return <select className="form-control" name={ name } disabled={this.props.disabled} onChange={ this.handleChange } value={ value }>
+        return <select className={ "form-control "  + this.inputStatusClasses() }name={ name } disabled={this.props.disabled} onChange={ this.handleChange } value={ value }>
           { options }
         </select>
           break;
