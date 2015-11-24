@@ -6,7 +6,7 @@ module Administa
         action = options[:action]
         raise ArgumentError, ":action is required" unless action
 
-        inc = options[:includes].try{|xs| convert_for_json_include(xs) } || self.includes(action)
+        inc = (options[:includes] || self.includes(action)).try{|xs| convert_for_json_include(xs) } || {}
         methods = options[:method] || self.options[action][:columns].select{|c| c[:accessor] == :method }.map{|c| c[:name]}
 
         opt = (inc.is_a? Hash) ? inc.merge(methods: methods) : { include: inc, methods: methods }

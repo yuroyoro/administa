@@ -269,10 +269,14 @@ module Administa
       end
 
       def includes(action)
-        options[action].
+        from_options = (options[:includes] || options[action].try(:[], :includes)).to_a
+
+        tables = options[action].
           try(:[], :columns).
-          map{|meta| meta[:association].try(:[], :name) }.
-          compact
+          to_a.
+          map{|meta| meta[:association].try(:[], :name) }
+
+       (tables + from_options).compact
       end
 
       def associations
