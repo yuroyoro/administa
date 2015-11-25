@@ -18,14 +18,16 @@ export default React.createClass({
     var value = this.props.resource[this.props.column.name];
     var dirty = false;
 
-    if ( this.props.column.default && !value) {
-      value = this.props.column.default;
-      dirty = true;
-    }
+    if( !this.props.resource.id ) { // cordinate itinial values for creation
+      if ( this.props.column.default && !value) {
+        value = this.props.column.default;
+        dirty = true;
+      }
 
-    if ( this.props.column.type == 'enum' && !this.props.resource.id && value ) {
-      // this column is considered as 'edited' if enum type has default value on creation
-      dirty = true;
+      if ( this.props.column.type == 'enum' && value ) {
+        // this filed is considered as 'edited' if enum type has default value on creation
+        dirty = true;
+      }
     }
 
     return {
@@ -58,7 +60,8 @@ export default React.createClass({
 
   handleChange(event, value) {
     var initial = this.props.resource[this.props.column.name];
-    var value  = event.target.value || value;
+    // set null value that represents "blank"
+    var value  = event.target.value || value || null;
     if ( this.props.column.type == 'file') {
       value  = jQuery(event.target).prop('files')[0];
     }
@@ -114,11 +117,11 @@ export default React.createClass({
         return <div className="checkbox"><label><input type="checkbox"  className={ this.inputStatusClasses() } name={ name } checked={ !!value } disabled={this.props.disabled} onChange={ this.handleChange } />{ text }</label></div>
       case "enum":
         var options = this.props.column.enums.map((e) => {
-          return <option value={e} >{ e }</option>;
+          return <option value={e} key={ e }>{ e }</option>;
         });
 
         if ( this.props.column.nullable ) {
-          options.unshift(<option> </option>);
+          options.unshift(<option key="blank"></option>);
         }
 
         return <select className={ "form-control "  + this.inputStatusClasses() }name={ name } disabled={this.props.disabled} onChange={ this.handleChange } value={ value }>

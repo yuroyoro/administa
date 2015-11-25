@@ -46,7 +46,7 @@ export default React.createClass({
     ResourceActions.list(name, query).then(() => {
       var transition = !(this.props.transition == false);
       if( transition ) {
-        this.transitionTo(route, params, query);
+        this.promiseTransition(route, params, query);
       }
     });
   },

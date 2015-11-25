@@ -1,9 +1,21 @@
+import AppDispatcher from '../AppDispatcher';
+import Constants     from '../Constants';
 import Router          from 'react-router';
 import ResourceActions from 'actions/ResourceActions';
 
 var Link = Router.Link;
 
 export default {
+
+  promiseTransition(route, params, query) {
+    AppDispatcher.dispatch({
+      type: Constants.APP_TRANSITION,
+      route:  route,
+      params: params,
+      query:  query,
+    });
+  },
+
   transitionToShow(name, id, pagination) {
     var options = {
       name:  name,
@@ -17,7 +29,8 @@ export default {
     var params = { name: name, id: id };
     var query = this.linkToListQuery(options);
 
-    this.transitionTo('show', params, query);
+    this.promiseTransition('show', params, query);
+
   },
 
   linkToNew(options = {}) {
@@ -31,9 +44,8 @@ export default {
       event.preventDefault();
 
       ResourceActions.build(name, query).then(() => {
-        this.transitionTo('new', params, query);
+        this.promiseTransition('new', params, query);
       });
-      return true;
     };
 
     var classes = options.classes || "btn btn-primary btn-xs btn-flat"
@@ -54,9 +66,8 @@ export default {
     var f = (event) => {
       event.preventDefault();
       ResourceActions.fetch(name, id, query).then(() => {
-        this.transitionTo('edit', params, query);
+        this.promiseTransition('edit', params, query);
       });
-      return true;
     };
 
     var classes = options.classes || "btn btn-primary btn-xs btn-flat"
@@ -112,9 +123,8 @@ export default {
       event.preventDefault();
 
       ResourceActions.fetch(name, id, query).then(() => {
-        this.transitionTo('show', params, query);
+        this.promiseTransition('show', params, query);
       });
-      return true;
     };
 
     var classes = options.classes || "btn btn-primary btn-xs btn-flat"
@@ -143,7 +153,7 @@ export default {
 
       ResourceActions.list(options.name, query).then(() => {
         if(transition) {
-          this.transitionTo(route, params, query);
+          this.promiseTransition(route, params, query);
         }
       });
     };

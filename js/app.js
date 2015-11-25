@@ -34,6 +34,7 @@ Date.prototype.dateFormat = function( format ){
   return moment(this).format(format);
 };
 
+import AppStore        from 'stores/AppStore';
 import ResourceActions from 'actions/ResourceActions';
 import MenuActions     from 'actions/MenuActions';
 import UserActions     from 'actions/UserActions';
@@ -64,6 +65,36 @@ window.addEventListener('error', function(e){
 
 var App = React.createClass({
   displayName: 'App',
+
+  mixins: [Router.Navigation],
+
+  getInitialState() {
+    return AppStore.getState();
+  },
+
+  componentDidMount() {
+    AppStore.addEventListener(this._onChange);
+  },
+
+  componentWillUnmount() {
+    AppStore.removeEventListener(this._onChange);
+  },
+
+  componentWillUpdate(nextProps, nextState) {
+
+    if (nextState.transitionTo ) {
+      var route  = nextState.transitionTo.route;
+      var params = nextState.transitionTo.params;
+      var query  = nextState.transitionTo.query;
+
+      this.transitionTo(route, params, query);
+    }
+  },
+
+  _onChange() {
+    var st = AppStore.getState();
+    this.setState(st);
+  },
 
   render() {
     return (
@@ -103,17 +134,24 @@ var routes = (
 Loader.setup();
 
 export default {
+  dataElement() {
+    return document.getElementById('initial-data');
+  },
+
+  extractFromDataElement(name) {
+    return JSON.parse(this.dataElement().getAttribute(name));
+  },
+
   initialData() {
-    var data = JSON.parse(document.getElementById('initial-data').getAttribute('data-json'));
-    return data;
+    return this.extractFromDataElement('data-json');
   },
 
   user() {
-    return JSON.parse(document.getElementById('initial-data').getAttribute('user-json'));
+    return this.extractFromDataElement('user-json');
   },
 
   menus() {
-    return JSON.parse(document.getElementById('initial-data').getAttribute('menu-json'));
+    return this.extractFromDataElement('menu-json');
   },
 
   render(data) {
