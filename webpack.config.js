@@ -1,12 +1,6 @@
 var webpack = require('webpack');
-var bower_dir = __dirname + '/bower_components';
 
 module.exports = {
-
-  addVendor: function (name,  path) {
-    this.resolve.alias[name] = path;
-    this.module.noParse.push(new RegExp(path));
-  },
 
   entry: {
     app:[ './js/app'],           // application js file
@@ -21,7 +15,7 @@ module.exports = {
   },
 
   resolve: {
-    modulesDirectories: ['node_modules', 'bower_components', 'css', 'js'],
+    modulesDirectories: ['node_modules', 'css', 'js'],
     alias: {
       adminlte:                   'admin-lte/dist/js/app.js',
       'adminlte.css':             'admin-lte/dist/css/AdminLTE.css',
@@ -34,15 +28,8 @@ module.exports = {
   },
 
   plugins: [
-    // resolve from bower_module
-    new webpack.ResolverPlugin([
-       new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json',  ['main'])
-    ]),
-
-
     // take the vendors chunk and create a vendors.js from the "vendors" in entry section.
     new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js'),
-
 
     // export to global
     new webpack.ProvidePlugin({
@@ -62,10 +49,10 @@ module.exports = {
     loaders: [
       // exports Administa object to global
       { test: require.resolve('./js/app'), loader: 'expose?Administa' },
-      { test: require.resolve('./bower_components/jquery/dist/jquery'), loader: "expose?jQuery"},
+      { test: require.resolve('./node_modules/jquery/dist/jquery'), loader: "expose?jQuery"},
 
       // babel-loader : the transpiler es6 to es5
-      { test: /\.js$/, loader: 'babel-loader', exclude:  [/node_modules/, /bower_components/],  },
+      { test: /\.js$/, loader: 'babel-loader', exclude:  [/node_modules/],  },
 
       // css-loader
       { test: /\.css$/, loaders: ['style-loader', 'css-loader?sourceMap!'] },
@@ -79,6 +66,6 @@ module.exports = {
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: "file" },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: "url?limit=10000&minetype=image/svg+xml" }
     ],
-    noParse: [/\.min\.js/, /react\/react.js$/, /Flux.js$/]
+    noParse: [/\.min\.js/]
   }
 };

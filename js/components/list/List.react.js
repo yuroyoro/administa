@@ -68,7 +68,6 @@ export default React.createClass({
     });
 
     var items = this.props.resources.map((resource) => {
-      let resource = resource;
       var selected = resource.id == this.props.id;
       var attrs = {
         name:           this.props.name,
