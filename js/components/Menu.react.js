@@ -31,7 +31,7 @@ export default React.createClass({
     switch(l.type){
       case "label":
         title = (
-            <a href="#" onClick={ (e) => {console.log('onlick preventDefault');e.preventDefault() } }>
+            <a href="#" >
               <span>{ l.label }</span>
               <i className="fa fa-angle-left pull-right"></i><
               /a>

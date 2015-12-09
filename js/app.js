@@ -154,6 +154,13 @@ export default {
     return this.extractFromDataElement('menu-json');
   },
 
+  initializeAdminLTE() {
+    //Activate the layout maker
+    $.AdminLTE.layout.fix()
+    //Enable sidebar tree view controls
+    $.AdminLTE.tree('.sidebar');
+  },
+
   render(data) {
 
     ResourceActions.initialize(data);
@@ -165,7 +172,7 @@ export default {
       React.render(<Handler params={params}/>, document.body);
     });
 
-    $.AdminLTE.layout.fix()
+    this.initializeAdminLTE();
   }
 
 }
