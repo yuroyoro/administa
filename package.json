@@ -37,6 +37,7 @@
     "react-router": "~0.13.2",
     "flux": "~2.0.2",
     "object-assign": "~2.0.0",
-    "jqnotifybar": "https://github.com/yuroyoro/jQuery-Notify-bar"
+    "jqnotifybar": "https://github.com/yuroyoro/jQuery-Notify-bar",
+    "left-pad": "https://github.com/azer/left-pad.git"
   }
 }
