@@ -23,6 +23,12 @@ export default React.createClass({
     this.setState({value: event.target.value});
   },
 
+  handleKeyPress: function(event) {
+    if(event.charCode == 13){ // enter key
+      this.search();
+    }
+  },
+
   search() {
     let name  = this.props.name;
     let id    = this.props.id;
@@ -56,7 +62,7 @@ export default React.createClass({
     var value = this.state.value;
     return(
       <div className="has-feedback input-group input-group-sm col-md-3 pull-right">
-        <input type="text" className="form-control input-sm search-box-text" placeholder="Search..." value={value} onChange={this.handleChange}/>
+        <input type="text" className="form-control input-sm search-box-text" placeholder="Search..." value={value} onChange={this.handleChange} onKeyPress={this.handleKeyPress}/>
         <span className="input-group-btn">
           <button type='submit' name='search' id='search-btn' className="btn btn-flat btn-primary" onClick={ this.search }><i className="fa fa-search"></i></button>
         </span>
