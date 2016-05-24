@@ -27,7 +27,7 @@ export default {
       case "file" :
         var imgtag = null;
         if( val.url ) {
-          if ( wrap_tag ) {
+          if ( wrap_tag && val.is_image) {
             val = <span><img src={ val.url } />{ val.url }</span>;
           } else {
             val = val.url
