@@ -21,7 +21,7 @@ require("app.css");
 
 //setup datetimepicker with moment.js
 require("jquery.datetimepicker.css");
-require("jquery-datetimepicker.full.min.js");
+require("jquery-datetimepicker.js");
 
 // setup jquery notify bar
 require("jqnotifybar");
