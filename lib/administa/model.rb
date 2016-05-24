@@ -21,6 +21,6 @@ module Administa
       Administa.config.add_model(self)
     end
 
-    delegate :column_names, :arel_table, :to => :klass
+    delegate :table_name, :column_names, :arel_table, :to => :klass
   end
 end

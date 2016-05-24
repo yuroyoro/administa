@@ -40,6 +40,10 @@ module Administa
       def order(*args)
         o = args.compact.presence || klass.options[:order]
 
+        unless o.to_s.include?(".")
+          o = "%s.%s" % [ klass.table_name, o]
+        end
+
         self.class.new(klass, relation.order(o))
       end
 
