@@ -27,9 +27,11 @@ module Administa
         columns = klass.column_names & klass.options[:search_columns].map(&:to_s)
 
         arel = klass.arel_table
-        query = columns.map{|col|
-          arel[col].matches_all(words)
-        }.inject{|q1, q2| q1.or(q2) }
+        query = columns.
+          select{|col| klass.column_names.include?(col.to_s) }.
+          map{|col|
+            arel[col].matches_all(words)
+          }.inject{|q1, q2| q1.or(q2) }
 
         query = query.or(arel[:id].eq(keyword.to_i)) if keyword =~ /^\d+$/
 

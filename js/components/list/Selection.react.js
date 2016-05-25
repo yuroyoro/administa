@@ -39,20 +39,35 @@ export default React.createClass({
     let Item = ResourceItem;
 
     var classes = "dialog-body resource-list" ;
-    classes += " col-md-2";
 
     var settings = this.state.settings;
     var index_settings = this.state.settings.index;
 
     var columns = [];
+    var push_column = (col) => {
+      var found = false;
+      for(var i = 0; i < columns.length; i++) {
+        found =  columns[i].name == col.name ||
+             (columns[i].association && col.association &&
+              columns[i].association.name == col.association.name);
+        if(found) break;
+      }
+      if(!found){
+        columns.push(col);
+      }
+    }
+
     var searchcols = settings.search_columns;
     var cols = index_settings.columns;
+
     for(var i = 0; i < cols.length; i++) {
       var col = cols[i];
       for(var j = 0; j < searchcols.length; j++) {
         if( col.name == 'id' || col.name == searchcols[j]) {
-          columns.push(col);
-          break;
+          push_column(col);
+        }
+        if( col.association && col.association.name == searchcols[j] ) {
+          push_column(col);
         }
       }
     }
@@ -60,11 +75,13 @@ export default React.createClass({
       for(var i = 0; i < cols.length; i++) {
         var col = cols[i];
         if( col.name != 'id' && col.name != 'created_at' && col.name != 'updated_at') {
-          columns.push(col);
-          break;
+          push_column(col);
         }
       }
     }
+
+    var col_span = columns.length * 2;
+    classes += " col-md-" + col_span ;
 
     var headers = columns.map((col) => {
       var name = this.toProperyName(col);
