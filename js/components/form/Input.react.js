@@ -117,7 +117,13 @@ export default React.createClass({
         return <div className="checkbox"><label><input type="checkbox"  className={ this.inputStatusClasses() } name={ name } checked={ !!value } disabled={this.props.disabled} onChange={ this.handleChange } />{ text }</label></div>
       case "enum":
         var options = this.props.column.enums.map((e) => {
-          return <option value={e} key={ e }>{ e }</option>;
+          var val = e;
+          var label = e;
+          if(Array.isArray(e)){
+            label = e[0];
+            val   = e[1];
+          }
+          return <option value={ val } key={ val }>{ label }</option>;
         });
 
         if ( this.props.column.nullable ) {
