@@ -40,9 +40,8 @@ export default React.createClass({
     if ( this.props.column.type == "datetime") {
       var options = {
         lang:       this.props.settings.locale,
-        format:     'YYYY/MM/DD HH:mm:ss Z',
-        formatTime: 'HH:mm',
-        formatDate: 'YYYY/MM//DD',
+        format:     'Y/m/d',
+        defaultDate:new Date(),
         onClose: (current_time, input, event) => {
           this.handleChange(event, jQuery(input).val());
         }
