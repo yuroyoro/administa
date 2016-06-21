@@ -3,6 +3,7 @@ module Administa
     module Attributes
 
       def assign(record, attrs)
+        debugger
         attrs = transform_attributes(attrs, klass)
         record.assign_attributes(attrs.except(:id, :updated_at, :created_at))
       end
@@ -14,6 +15,13 @@ module Administa
         white_list.unshift(:id)
 
         res = attr.slice(*white_list)
+
+        nested_attribute_keys = klass.nested_attributes_options.keys
+
+        # reject association that is not specified by accepts_nested_attributes_for
+        unallowed_associations = (association_names(klass) - nested_attribute_keys)
+        res.except!(*unallowed_associations)
+
         remains = attr.except(*white_list)
 
         # accept if parameter name is "<association_name>_attributes"
@@ -26,7 +34,6 @@ module Administa
 
         # if parameter name is "<association_name>",
         # cordinate paramters by nested association recursively
-        nested_attribute_keys = nested_attribute_names
         remains.slice(*nested_attribute_keys).each do |name, nested_attr|
           next unless nested_attr.present?
           nested_klass = klass_of(name) || klass_of(attr[name + '_type'])
