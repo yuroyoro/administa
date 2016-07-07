@@ -3,7 +3,6 @@ module Administa
     module Attributes
 
       def assign(record, attrs)
-        debugger
         attrs = transform_attributes(attrs, klass)
         record.assign_attributes(attrs.except(:id, :updated_at, :created_at))
       end
