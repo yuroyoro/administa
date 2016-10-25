@@ -35,7 +35,13 @@ module Administa
           .select{ |_| _.present? } \
           .inject{ |q1, q2| q1.or(q2) }
 
-        query = query.or(klass.arel_table[:id].eq(keyword.to_i)) if keyword =~ /^\d+$/
+        if keyword =~ /^\d+$/
+          if query.nil?
+            query = klass.arel_table[:id].eq(keyword.to_i)
+          else
+            query = query.or(klass.arel_table[:id].eq(keyword.to_i))
+          end
+        end
 
         rel = relation.where(query)
 
