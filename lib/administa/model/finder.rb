@@ -17,7 +17,7 @@ module Administa
         klass.includes(options[:includes]).find(id)
       end
 
-      private
+     protected
         def extract_options_for_query(options = {})
           options = options.dup
           action = options.delete(:action)
