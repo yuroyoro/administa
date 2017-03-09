@@ -89,7 +89,7 @@ export default {
 
         return val;
       } else {
-        val = this.extractLabel(name, nested,  search_columns);
+        val = this.extractLabel(name, nested, search_columns);
       }
 
       if( !wrap_tag ) return val;
@@ -113,18 +113,15 @@ export default {
 
   extractLabel(name, obj, search_columns) {
     var label = name;
-    var id = obj.id || 'new';
-
-    if ( search_columns ) {
-      for(var i = 0; i < search_columns.length; i++) {
-        var v = obj[search_columns[i]];
-        if(v)  {
-          label = v;
-          break;
-        }
+    var id = obj.id || 'new'
+    for(var i = 0; i < search_columns.length; i++) {
+      var v = obj[search_columns[i]];
+      if(v)  {
+        label = v;
+        break;
       }
     }
     return label + "(" + id + ")"
   }
-}
 
+}

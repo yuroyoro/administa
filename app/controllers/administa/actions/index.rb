@@ -20,6 +20,7 @@ module Administa
             settings:   model.settings,
             csrf_token: form_authenticity_token,
           }
+
         end
 
         def index_result
