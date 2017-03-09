@@ -3,6 +3,7 @@ module Administa
     module Show
 
       def show
+
         @result = show_result(params[:id])
 
         respond_to do |format|
