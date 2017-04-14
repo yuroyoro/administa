@@ -29,6 +29,9 @@ export default React.createClass({
         dirty = true;
       }
     }
+    if( value && this.props.column.type == 'datetime' ) {
+      value = value.replace(/ [+-]\d+/, "");
+    }
 
     return {
       value: value,
@@ -40,12 +43,26 @@ export default React.createClass({
     if ( this.props.column.type == "datetime") {
       var options = {
         lang:       this.props.settings.locale,
-        format:     'Y/m/d',
-        defaultDate:new Date(),
-        onClose: (current_time, input, event) => {
-          this.handleChange(event, jQuery(input).val());
-        }
+        format:     'Y/m/d H:i',
+        defaultDate:new Date()
       };
+      var str_min_sec = "00:00";
+      var the_value = this.props.resource[this.props.column.name];
+      if(the_value) {
+        var arr = /\d+\/\d+\/\d+ \d+:(\d+):(\d+)/.exec(the_value);
+        if(arr) {
+          str_min_sec = "" + arr[1] + ":" + arr[2];
+        }
+      }
+      options['onClose'] = (current_time, input, event) => {
+        var determined_value = jQuery(input).val();
+        var matched = /^\d+\/\d+\/\d+ \d+:/.exec(determined_value);
+        if(matched) {
+          determined_value = matched[0] + str_min_sec;
+        }
+        this.handleChange(event, determined_value);
+      }
+
       // in moment.js, default timezone offset is detected by Date.prototype.getTimezoneOffset
       jQuery("input[name='" + this.props.column.name + "'].datetimepicker").datetimepicker(options);
     }
