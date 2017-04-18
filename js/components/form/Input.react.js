@@ -29,9 +29,6 @@ export default React.createClass({
         dirty = true;
       }
     }
-    if( value && this.props.column.type == 'datetime' ) {
-      value = value.replace(/ [+-]\d+/, "");
-    }
 
     return {
       value: value,
@@ -47,18 +44,20 @@ export default React.createClass({
         defaultDate:new Date()
       };
       var str_min_sec = "00:00";
+      var str_timezone = "";
       var the_value = this.props.resource[this.props.column.name];
       if(the_value) {
-        var arr = /\d+\/\d+\/\d+ \d+:(\d+):(\d+)/.exec(the_value);
+        var arr = /\d+\/\d+\/\d+ \d+:(\d+):(\d+)( [+-]\d+)?/.exec(the_value);
         if(arr) {
           str_min_sec = "" + arr[1] + ":" + arr[2];
+          str_timezone = arr[3] || "";
         }
       }
       options['onClose'] = (current_time, input, event) => {
         var determined_value = jQuery(input).val();
         var matched = /^\d+\/\d+\/\d+ \d+:/.exec(determined_value);
         if(matched) {
-          determined_value = matched[0] + str_min_sec;
+          determined_value = matched[0] + str_min_sec + str_timezone;
         }
         this.handleChange(event, determined_value);
       }
